@@ -1,0 +1,42 @@
+{
+  "scripts": {
+    "ncu": "ncu",
+    "ncu-u": "ncu -u",
+    "server-init": "yarn install",
+    "server-start": "node server.js",
+    "server": "node server.js"
+  },
+  "keywords": [
+    "Koa",
+    "Node",
+    "Docker",
+    "Drone"
+  ],
+  "author": "lizw",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^6.2.1",
+    "koa": "^2.13.0",
+    "koa-router": "^10.0.0",
+    "koa-send": "^5.0.1",
+    "koa-static": "^5.0.0",
+    "http-proxy": "^1.18.1"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.11.6",
+    "@types/koa-router": "^7.4.1",
+    "@types/koa-send": "^4.1.2",
+    "@types/koa-static": "^4.0.1"
+  },
+  "back": {
+    "cross-env": "^7.0.3",
+    "babel-register": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-plugin-import": "^1.13.3",
+    "babel-plugin-module-resolver": "^4.1.0",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-plugin-transform-async-to-module-method": "^6.24.1",
+    "babel-plugin-transform-regenerator": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0"
+  }
+}

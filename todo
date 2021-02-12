@@ -1,0 +1,37 @@
+[OK] 1. 401未登录页面
+[  ] 2. 403无权访问页面
+[OK] 3. 404页面不存在
+[OK] 4. LayoutType.Blank
+[OK] 5. 支持iframe
+[OK] 6. RouterConfig.path 支持path-to-regexp 测试
+[OK] 7. RouterConfig.pathVariable 测试
+[OK] 8. RouterConfig.querystring 测试
+[  ] 9. RouterConfig.exact 测试
+[NO] 10.RouterConfig.redirect 测试
+[OK] 11.RouterConfig.icon 测试
+[  ] 12.RouterConfig.defaultOpen 测试
+[  ] 13.RouterConfig.breadcrumbName 测试
+[  ] 14.RouterConfig.groupName 测试
+[  ] 15.RouterConfig.hideMenu 测试
+[  ] 16.RouterConfig.state 测试
+[  ] 17.RouterConfig.authority 测试
+[OK] 18.动态菜单
+[OK] 19.菜单权限
+[OK] 20.LayoutType.NestSide 默认页
+[OK] 21.二级菜单过滤 测试
+[OK] 22.查看当前页amis代码
+[OK] 22.antd的中文语言
+[OK] 23.多详情页问题
+         1.同一个详情页可以打开多个页签
+         2.同一个详情页只打开一个页签
+         3.传参问题
+         4.页面刷新问题
+[OK] 24.NestSideMenuLayout无法关闭所有页签问题
+[OK] 25.NestSideMenuLayout页签栏“更多菜单”事件
+[OK] 26.修改当前页amis代码
+[NO] 28.NestSideMenuLayout自动隐藏一级菜单
+[OK] 27.把所有Amis页面应用挂载到Window全局对象下
+[OK] 28.系统登录页面
+[OK] 29.增加面包屑导航组件(Layout需要)
+
+
