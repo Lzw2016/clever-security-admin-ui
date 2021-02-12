@@ -1,5 +1,5 @@
-import Cookies from "js-cookie";
 import { message } from "antd";
+import Cookies from "js-cookie";
 import { request } from "@/utils/request";
 import { logger } from "@/utils/logger";
 import { LayoutConfig, LayoutType, routerHistory } from "@/utils/router";
@@ -69,12 +69,12 @@ const userLogin = (loginData: any, loginApi: string, currentUserApi: string, def
   }
   if (onStart instanceof Function) onStart();
   request.post(loginApi, loginData)
-    .then(({ success, userInfo, message }) => {
+    .then(({ success, userInfo, message: msg }) => {
       if (!success || !userInfo) {
-        message.error(message || "用户名/密码错误").then();
+        message.error(msg || "用户名/密码错误").then();
         return;
       }
-      message.success(message || "登录成功").then();
+      message.success(msg || "登录成功").then();
       getCurrentUser(currentUserApi).then(() => {
         window.appComponent.refreshMenu(() => {
           if (defaultPath) routerHistory.push({ path: defaultPath });

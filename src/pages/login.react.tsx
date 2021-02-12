@@ -3,8 +3,9 @@ import { Button, Checkbox, Form, Input, Layout } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import logo from "@/assets/images/logo.png";
 import { layoutSettings } from "@/router-config";
-import styles from "./login.react..less";
 import { userLogin } from "@/service/login-service";
+import { loginEncrypt } from "@/utils/crypto";
+import styles from "./login.react.less";
 
 interface LoginPageProps {
 }
@@ -23,8 +24,9 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
 
   /** 登录请求 */
   protected login = (values: any) => {
+    const { password, ...otherValues } = values;
     userLogin(
-      values,
+      { password: loginEncrypt(password), ...otherValues },
       layoutSettings.loginApi!,
       layoutSettings.currentUserApi!,
       layoutSettings.defaultPath!,
