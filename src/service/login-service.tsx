@@ -75,11 +75,15 @@ const userLogin = (loginData: any, loginApi: string, currentUserApi: string, def
         return;
       }
       message.success(msg || "登录成功").then();
-      getCurrentUser(currentUserApi).then(() => {
-        window.appComponent.refreshMenu(() => {
-          if (defaultPath) routerHistory.push({ path: defaultPath });
-        }).then();
-      });
+      if (currentUserApi) {
+        getCurrentUser(currentUserApi).then(() => {
+          window.appComponent.refreshMenu(() => {
+            if (defaultPath) routerHistory.push({ path: defaultPath });
+          }).then();
+        });
+      } else if (defaultPath) {
+        routerHistory.push({ path: defaultPath });
+      }
     }).finally(onFinally);
 };
 

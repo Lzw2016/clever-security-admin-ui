@@ -192,7 +192,10 @@ class ReactAppPage extends Component<ReactAppPageProps, ReactAppPageState> {
   public async refreshMenu(callback?: () => void) {
     const routerConfigsCopy = lodash.cloneDeep(routerConfigs);
     const newRouterConfigs = await getMenus(routerConfigsCopy, layoutSettings.menuApi!);
-    if (!newRouterConfigs) return;
+    if (!newRouterConfigs) {
+      if (callback instanceof Function) callback();
+      return;
+    }
     const runtimeLayouts = layoutToRuntime(newRouterConfigs);
     this.setState({ runtimeLayouts }, callback);
   }
