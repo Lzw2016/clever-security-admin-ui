@@ -112,7 +112,7 @@ const routerConfigs: LayoutConfig[] = [
     routes: [
       {
         path: "/security",
-        name: "权限管理",
+        name: "系统权限",
         icon: "icon-anquanbaozhang",
         routes: [
           { path: "/domain-list", name: "数据域管理", icon: "icon-yu", pagePath: "/clever-security/domain/domain-list.schema.tsx" },
