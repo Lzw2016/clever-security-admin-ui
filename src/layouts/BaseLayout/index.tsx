@@ -226,8 +226,9 @@ class BaseLayout<P extends BaseLayoutProps, S extends BaseLayoutState> extends R
     this.addOrShowTabPage();
   }
 
-  componentWillUpdate(nextProps: Readonly<P>, nextState: Readonly<S>, nextContext: any) {
+  shouldComponentUpdate(nextProps: Readonly<P>, nextState: Readonly<S>, nextContext: any): boolean {
     this.updateMultiTab(nextProps, nextState);
+    return true;
   }
 
   componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot?: any) {
