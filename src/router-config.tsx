@@ -66,7 +66,6 @@ const routerConfigs: LayoutConfig[] = [
       hideGlobalHeader: false,
       globalHeaderLeftRender: (props, className, elementMap) => {
         const { layoutMenuData } = props;
-        // elementMap.set("blank", <span key="blank" style={{ display: "inline-block", width: 8 }}/>);
         elementMap.set("breadcrumb", <BreadcrumbNav key="breadcrumb" style={{ marginLeft: 8 }} layoutMenuData={layoutMenuData}/>);
         const { rightClassName, rightStyle = {} } = props;
         return (
