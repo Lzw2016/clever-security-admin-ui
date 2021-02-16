@@ -57,6 +57,11 @@ const settings: Settings = {
         changeOrigin: true,
         pathRewrite: { "^": "" },
       },
+      "/security": {
+        target: "http://127.0.0.1:28081",
+        changeOrigin: true,
+        pathRewrite: { "^": "" },
+      },
       "/api": {
         target: "http://127.0.0.1:28081",
         changeOrigin: true,
