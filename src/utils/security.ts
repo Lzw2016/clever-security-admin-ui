@@ -12,18 +12,30 @@ class UserSecurityContext implements SecurityContext {
     this.userInfo = userInfo;
   }
 
+  /**
+   * 是否拥有指定全部角色
+   */
   hasRoles(...roles: string[]): boolean {
     return UserSecurityContext.hasAll(this.roles, ...roles);
   }
 
+  /**
+   * 是否拥有指定全部权限
+   */
   hasPermissions(...permissions: string[]): boolean {
     return UserSecurityContext.hasAll(this.permissions, ...permissions);
   }
 
+  /**
+   * 是否拥有指定任意角色
+   */
   hasAnyRoles(...roles: string[]): boolean {
     return UserSecurityContext.hasAny(this.roles, ...roles);
   }
 
+  /**
+   * 是否拥有指定任意权限
+   */
   hasAnyPermissions(...permissions: string[]): boolean {
     return UserSecurityContext.hasAny(this.permissions, ...permissions);
   }
