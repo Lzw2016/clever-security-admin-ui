@@ -132,6 +132,7 @@ const routerConfigs: LayoutConfig[] = [
           { path: "/user-security-context-list", name: "安全上下文", icon: "icon-security", pagePath: "/clever-security/empty.schema.tsx" },
           { path: "/validate-code-list", name: "验证码", icon: "icon-captcha2", pagePath: "/clever-security/empty.schema.tsx" },
           { path: "/scan-code-login-list", name: "扫码登录", icon: "icon-Scancode", pagePath: "/clever-security/empty.schema.tsx" },
+          { path: "/login-failed-count-list", name: "登录失败计数", icon: "icon-text-failed", pagePath: "/clever-security/empty.schema.tsx" },
         ],
       },
       // -------------------------------------------------------------------------
@@ -228,7 +229,7 @@ const routerConfigs: LayoutConfig[] = [
 
 const layoutSettings: LayoutSettings = {
   menu: { defaultOpen: true },
-  iconScriptUrl: "//at.alicdn.com/t/font_1326886_zhty6bty4e.js",
+  iconScriptUrl: "//at.alicdn.com/t/font_1326886_4g2fzkog94y.js",
   htmlTitleSuffix: "",
   loginPath: "/blank/login",
   defaultPath: "/nest-side/curd/00",
