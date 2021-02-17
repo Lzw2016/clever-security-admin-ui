@@ -90,7 +90,11 @@ const schema = {
         submitOnChange: false,
         // submitText: "查询",
         controls: [
-          { type: "text", label: "关键字搜索", name: "name", placeholder: "支持模糊匹配", clearable: true },
+          {
+            type: "select", label: "域名称", name: "domainId", placeholder: "请选择", clearable: true,
+            source: { method: "get", url: apiPath.DomainController.all }, labelField: "name", valueField: "id",
+          },
+          { type: "text", label: "关键字搜索", name: "name", placeholder: "类名,方法名,参数签名,api地址", clearable: true },
           { type: "select", label: "是否存在", name: "apiExist", options: apiExistMapper, clearable: true },
           { type: "date", label: "创建时间", name: "createAtStart", placeholder: "创建时间-开始", format: "YYYY-MM-DD 00:00:00", clearable: true, maxDate: "$createAtEnd" },
           { type: "date", label: "创建时间", name: "createAtEnd", placeholder: "创建时间-结束", format: "YYYY-MM-DD 23:59:59", clearable: true, minDate: "$createAtStart" },

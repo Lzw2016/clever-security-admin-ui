@@ -33,6 +33,14 @@ const apiPath = {
     pageQuery: `${serverHost}/security/admin/api/jwt_token/page_query`,
     disableJwtToken: `${serverHost}/security/admin/api/jwt_token/disable`,
   },
+
+  UserLoginLogController: {
+    pageQuery: `${serverHost}/security/admin/api/user_login_log/page_query`,
+  },
+
+  LoginFailedCountController: {
+    pageQuery: `${serverHost}/security/admin/api/login_failed_count/page_query`,
+  },
 };
 
 export { apiPath }
