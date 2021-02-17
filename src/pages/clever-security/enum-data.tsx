@@ -28,4 +28,18 @@ const jwtToken: {
   ],
 };
 
-export { serverAccessToken, jwtToken }
+const scanCodeLogin: {
+  /** 扫描二维码状态，0:已创建(待扫描)，1:已扫描(待确认)，2:已确认(待登录)，3:登录成功，4:已失效 */
+  scanCodeState: EnumArray;
+  [name: string]: EnumArray;
+} = {
+  scanCodeState: [
+    { label: "已创建(待扫描)", value: "0" },
+    { label: "已扫描(待确认)", value: "1" },
+    { label: "已确认(待登录)", value: "2" },
+    { label: "登录成功", value: "3" },
+    { label: "已失效", value: "4" },
+  ],
+};
+
+export { serverAccessToken, jwtToken, scanCodeLogin }

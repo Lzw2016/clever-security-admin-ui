@@ -33,6 +33,10 @@ const apiPath = {
     pageQuery: `${serverHost}/security/admin/api/jwt_token/page_query`,
     disableJwtToken: `${serverHost}/security/admin/api/jwt_token/disable`,
   },
+
+  ScanCodeLoginController: {
+    pageQuery: `${serverHost}/security/admin/api/scan_code_login/page_query`,
+  },
 };
 
 export { apiPath }
