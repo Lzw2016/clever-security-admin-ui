@@ -131,10 +131,8 @@ const routerConfigs: LayoutConfig[] = [
           { path: "/user-register-log-list", name: "用户注册日志", icon: "UsergroupAddOutlined", pagePath: "/clever-security/empty.schema.tsx" },
           { path: "/user-security-context-list", name: "安全上下文", icon: "icon-security", pagePath: "/clever-security/empty.schema.tsx" },
           { path: "/validate-code-list", name: "验证码查询", icon: "icon-captcha2", pagePath: "/clever-security/empty.schema.tsx" },
-          { path: "/scan-code-login-list", name: "扫码登录查询", icon: "icon-Scancode", pagePath: "/clever-security/empty.schema.tsx" },
-          { path: "/login-failed-count-list", name: "登录失败计数", icon: "icon-text-failed", pagePath: "/clever-security/login-failed-count/list.schema.tsx" },
           { path: "/scan-code-login-list", name: "扫码登录查询", icon: "icon-Scancode", pagePath: "/clever-security/scan-code-login-list.schema.tsx" },
-          { path: "/login-failed-count-list", name: "登录失败计数", icon: "icon-text-failed", pagePath: "/clever-security/empty.schema.tsx" },
+          { path: "/login-failed-count-list", name: "登录失败计数", icon: "icon-text-failed", pagePath: "/clever-security/login-failed-count/list.schema.tsx" },
         ],
       },
       // -------------------------------------------------------------------------
