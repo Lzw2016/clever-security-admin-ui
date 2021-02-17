@@ -2,6 +2,7 @@ import classnames from "classnames";
 import { apiPath } from "@/api/clever-security-api";
 import { FormClassName } from "@/amis-types";
 import { enum2object, EnumArray } from "@/utils/enum";
+import styles from "./user-list.schema.less";
 
 const enabledMapper: EnumArray = [
   { label: "禁用", value: "0" },
@@ -167,7 +168,7 @@ const schema = {
       columns: [
         { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
         { name: "uid", label: "UID", sortable: true },
-        { name: "avatar", label: "用户头像", type: "image", thumbMode: "h-full" },
+        { name: "avatar", label: "用户头像", type: "image", thumbMode: "h-full", className: styles.avatar },
         { name: "nickname", label: "昵称", sortable: true },
         { name: "loginName", label: "登录名", sortable: true },
         { name: "telephone", label: "手机号", sortable: true },
