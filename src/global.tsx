@@ -17,7 +17,8 @@ setConfig({
   level: 'log',
   // moduleNameRegExp: /.*/,
   // moduleNameRegExp: /^src\/schema-app|src\/utils\/|src\/service\/.*/,
-  moduleNameRegExp: /src\/schema-app\.tsx/,
+  // moduleNameRegExp: /src\/schema-app\.tsx/,
+  moduleNameRegExp: /src\/utils\/amis-render-options\.tsx/,
 });
 
 log.info("global.tsx加载完成");

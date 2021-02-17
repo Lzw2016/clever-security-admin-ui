@@ -84,9 +84,15 @@ function editDialog() {
         },
         controls: [
           { type: "text", name: "id", label: "域ID", disabled: true },
-          { type: "text", name: "redisNameSpace", label: "Redis前缀", disabled: true },
-          { type: "text", name: "name", label: "域名称" },
-          { type: "textarea", name: "description", label: "说明" },
+          { type: "text", name: "redisNameSpace", label: "Redis前缀", disabled: true }, ,
+          {
+            type: "text", name: "name", label: "域名称", placeholder: "请输入域名称",
+            required: true, validations: { minLength: 4, maxLength: 100 }, validationErrors: {},
+          },
+          {
+            type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 2, maxRows: 6,
+            validations: { maxLength: 500 }, validationErrors: {},
+          },
         ]
       }
     }

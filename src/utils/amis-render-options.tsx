@@ -1,12 +1,13 @@
-import { RenderOptions } from 'amis/lib/factory';
+import { CSSProperties } from "react";
+import copy from "copy-to-clipboard";
 import qs from "qs";
 import axios, { AxiosRequestConfig, Canceler, ResponseType } from "axios";
-import { notification } from 'antd';
+import { message, notification } from 'antd';
+import { RenderOptions } from 'amis/lib/factory';
 import { logger } from "@/utils/logger";
 import { axiosCreate, errorMsg } from "@/utils/request";
 import { getUrlParam, hasValue } from "@/utils/utils";
 import { TypeEnum, variableTypeOf } from "@/utils/typeof";
-import { CSSProperties } from "react";
 
 const log = logger.getLogger("src/utils/amis-render-options.tsx");
 
@@ -126,10 +127,13 @@ const amisRenderOptions: RenderOptions = {
   /** 用来实现确认框 */
   // confirm: (msg, title) => confirm(msg, title),
   /** 用来实现内容复制 */
-  // copy: contents => {
-  //   copy(contents);
-  //   toast.success('内容已复制到粘贴板');
-  // },
+  copy: contents => {
+    if (copy(contents)) {
+      message.success("内容已复制到粘贴板").then();
+    } else {
+      message.warn("内容复制到粘贴板失败").then();
+    }
+  },
   /** 用来实现页面跳转 */
   // jumpTo: (to, action, ctx) => {
   // },
