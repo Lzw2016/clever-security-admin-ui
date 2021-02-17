@@ -24,6 +24,7 @@ const apiPath = {
 
   JwtTokenController: {
     pageQuery: `${serverHost}/security/admin/api/jwt_token/page_query`,
+    disableJwtToken: `${serverHost}/security/admin/api/jwt_token/disable`,
   },
 };
 

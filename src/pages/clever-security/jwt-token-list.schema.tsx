@@ -13,7 +13,7 @@ function detailsDialog() {
     size: "xs",
     actionType: "dialog",
     dialog: {
-      title: "JwtToken详情",
+      title: "JwtToken详情 - ${loginName}",
       className: classnames(DialogClassName.width45x),
       closeOnEsc: true,
       actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
@@ -68,6 +68,24 @@ function detailsDialog() {
   };
 }
 
+/** 禁用Token */
+function disableDialog() {
+  return {
+    type: "button",
+    label: "禁用",
+    level: "danger",
+    size: "xs",
+    hiddenOn: "disable === 1",
+    actionType: "ajax",
+    api: {
+      method: "post",
+      url: `${apiPath.JwtTokenController.disableJwtToken}?id=$id`,
+      adaptor: (payload: any) => ({ ...payload, data: {} }),
+    },
+    confirmText: "确认要禁用JwtToken: ${loginName}?",
+  };
+}
+
 const schema = {
   type: "page",
   title: "",
@@ -101,19 +119,20 @@ const schema = {
         submitOnChange: false,
         // submitText: "查询",
         controls: [
-          // {
-          //   type: "select", label: "域名称", name: "domainId", placeholder: "请选择", clearable: true,
-          //   source: { method: "get", url: apiPath.DomainController.all }, labelField: "name", valueField: "id",
-          // },
-          // { type: "text", label: "Token标签", name: "tag", placeholder: "支持模糊匹配", clearable: true },
-          // { type: "text", label: "Token名称", name: "tokenName", placeholder: "支持模糊匹配", clearable: true },
-          // // { type: "text", label: "Token值", name: "tokenValue", placeholder: "支持模糊匹配", clearable: true },
-          // { type: "select", label: "是否禁用", name: "disable", placeholder: "请选择", clearable: true, options: serverAccessToken.disable },
-          // { type: "html", html: "<br />" },
-          // { type: "date", label: "过期时间", name: "expiredTimeStart", placeholder: "过期时间-开始", format: "YYYY-MM-DD 00:00:00", clearable: true, maxDate: "$expiredTimeEnd" },
-          // { type: "date", label: "过期时间", name: "expiredTimeEnd", placeholder: "过期时间-结束", format: "YYYY-MM-DD 23:59:59", clearable: true, minDate: "$expiredTimeStart" },
-          // { type: "date", label: "创建时间", name: "createAtStart", placeholder: "创建时间-开始", format: "YYYY-MM-DD 00:00:00", clearable: true, maxDate: "$createAtEnd" },
-          // { type: "date", label: "创建时间", name: "createAtEnd", placeholder: "创建时间-结束", format: "YYYY-MM-DD 23:59:59", clearable: true, minDate: "$createAtStart" },
+          {
+            type: "select", label: "域名称", name: "domainId", placeholder: "请选择", clearable: true,
+            source: { method: "get", url: apiPath.DomainController.all }, labelField: "name", valueField: "id",
+          },
+          { type: "text", label: "登录用户", name: "userSearchKey", placeholder: "登录名、手机号、邮箱、昵称", clearable: true },
+          { type: "select", label: "是否禁用", name: "disable", placeholder: "请选择", clearable: true, options: jwtToken.disable },
+          { type: "select", label: "刷新Token", name: "refreshTokenState", placeholder: "请选择", clearable: true, options: jwtToken.refreshTokenState },
+          // { type: "text", label: "刷新Token", name: "refreshToken", placeholder: "请输入刷新Token", clearable: true },
+          // { type: "text", label: "JWT-Token-ID", name: "id", placeholder: "请输入JWT-Token-ID", clearable: true },
+          { type: "html", html: "<br />" },
+          { type: "date", label: "过期时间", name: "expiredTimeStart", placeholder: "过期时间-开始", format: "YYYY-MM-DD 00:00:00", clearable: true, maxDate: "$expiredTimeEnd" },
+          { type: "date", label: "过期时间", name: "expiredTimeEnd", placeholder: "过期时间-结束", format: "YYYY-MM-DD 23:59:59", clearable: true, minDate: "$expiredTimeStart" },
+          { type: "date", label: "创建时间", name: "createAtStart", placeholder: "创建时间-开始", format: "YYYY-MM-DD 00:00:00", clearable: true, maxDate: "$createAtEnd" },
+          { type: "date", label: "创建时间", name: "createAtEnd", placeholder: "创建时间-结束", format: "YYYY-MM-DD 23:59:59", clearable: true, minDate: "$createAtStart" },
           { label: "查询", level: "primary", type: "submit" },
           { label: "重置", type: "reset" },
         ],
@@ -138,7 +157,7 @@ const schema = {
         // { name: "refreshTokenUseTime", label: "刷新Token使用时间", sortable: true },
         { name: "createAt", label: "创建时间", sortable: true },
         { name: "updateAt", label: "更新时间", sortable: true },
-        { type: "operation", label: "操作", width: 35, toggled: true, buttons: [detailsDialog(), /*editDialog(), deleteDialog()*/] },
+        { type: "operation", label: "操作", width: 80, toggled: true, buttons: [detailsDialog(), disableDialog()] },
       ],
       // --------------------------------------------------------------- 表格工具栏配置
       headerToolbar: [
