@@ -77,7 +77,7 @@ function detailsDialog() {
           { type: "static", name: "domainName", label: "域名称" },
           { type: "static", name: "tag", label: "Token标签" },
           { type: "static", name: "tokenName", label: "Token名称", copyable: true },
-          { type: "static", name: "tokenValue", label: "Token值", copyable: true },
+          { type: "static", name: "tokenValue", label: "Token值", copyable: true, inputClassName: "break-words" },
           { type: "static", name: "expiredTime", label: "过期时间" },
           { type: "static-mapping", name: "disable", label: "是否禁用", map: enum2object(serverAccessToken.disable) },
           { type: "static", name: "description", label: "说明" },

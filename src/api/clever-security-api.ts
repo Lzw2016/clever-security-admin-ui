@@ -21,6 +21,10 @@ const apiPath = {
     updateUser: `${serverHost}/security/admin/api/user/update`,
     uploadReceiver: `${serverHost}/security/admin/api/user/upload-receiver`,
   },
+
+  JwtTokenController: {
+    pageQuery: `${serverHost}/security/admin/api/jwt_token/page_query`,
+  },
 };
 
 export { apiPath }
