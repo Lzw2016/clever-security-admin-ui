@@ -99,6 +99,9 @@ axiosInstance.interceptors.response.use(
       notification.error({ message: "服务器异常", description: "请求服务端异常" });
       return Promise.reject(error);
     }
+    if (response?.status === 401) {
+      // TODO 跳转到登录页面
+    }
     const { data: { message, validMessageList } } = response;
     if (validMessageList) {
       notification.error({

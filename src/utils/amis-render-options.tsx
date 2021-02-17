@@ -46,6 +46,10 @@ axiosInstance.interceptors.request.use(request => {
 axiosInstance.interceptors.response.use(response => {
     log.info("全局响应拦截[开始] response -> ", response);
     const { status, data } = response;
+    if (status === 401) {
+      // TODO 跳转到登录页面
+      return response;
+    }
     // 支持amis返回值
     if (variableTypeOf(data.status) === TypeEnum.number && (variableTypeOf(data.msg) === TypeEnum.string || hasValue(data.data))) return response;
     // 错误处理 - 500
