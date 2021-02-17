@@ -125,7 +125,7 @@ const routerConfigs: LayoutConfig[] = [
               { path: "/menu", name: "菜单管理", pagePath: "/clever-security/empty.schema.tsx" },
             ]
           },
-          { path: "/server-token-list", name: "ServerToken管理", icon: "icon-token1", pagePath: "/clever-security/empty.schema.tsx" },
+          { path: "/server-token-list", name: "ServerToken管理", icon: "icon-token1", pagePath: "/clever-security/server-access-token-list.schema.tsx" },
           { path: "/jwt-token-list", name: "JwtToken管理", icon: "icon-key", pagePath: "/clever-security/empty.schema.tsx" },
           { path: "/login-log-list", name: "用户登录日志", icon: "icon-log1", pagePath: "/clever-security/empty.schema.tsx" },
           { path: "/user-register-log-list", name: "用户注册日志", icon: "UsergroupAddOutlined", pagePath: "/clever-security/empty.schema.tsx" },

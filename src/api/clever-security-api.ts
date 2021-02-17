@@ -6,6 +6,10 @@ const apiPath = {
     addDomain: `${serverHost}/security/admin/api/domain/add`,
     updateDomain: `${serverHost}/security/admin/api/domain/update`,
   },
+
+  ServerAccessTokenController: {
+    pageQuery: `${serverHost}/security/admin/api/server_access_token/page_query`,
+  },
 };
 
 export { apiPath }

@@ -120,8 +120,8 @@ const schema = {
       // 条件过滤表单
       filterTogglable: true,
       filter: {
-        title: "查询条件",
-        className: classnames(FormClassName.label4x, FormClassName.input14x),
+        title: "",
+        className: classnames(FormClassName.label4x, FormClassName.input12x),
         trimValues: true,
         submitOnChange: false,
         // submitText: "查询",
