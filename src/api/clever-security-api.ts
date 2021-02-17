@@ -19,7 +19,14 @@ const apiPath = {
     pageQuery: `${serverHost}/security/admin/api/user/page_query`,
     addUser: `${serverHost}/security/admin/api/user/add`,
     updateUser: `${serverHost}/security/admin/api/user/update`,
-    uploadReceiver: `${serverHost}/security/admin/api/user/upload-receiver`,
+    uploadReceiver: `${serverHost}/security/admin/api/user/upload_receiver`,
+  },
+
+  ApiPermissionController: {
+    pageQuery: `${serverHost}/security/admin/api/api_permission/page_query`,
+    addApiPermission: `${serverHost}/security/admin/api/api_permission/add`,
+    updateApiPermission: `${serverHost}/security/admin/api/api_permission/update`,
+    delApiPermission: `${serverHost}/security/admin/api/api_permission/del`,
   },
 
   JwtTokenController: {

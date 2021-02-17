@@ -120,7 +120,7 @@ const routerConfigs: LayoutConfig[] = [
           {
             path: "/permission", name: "权限管理", icon: "icon-quanxian",
             routes: [
-              { path: "/api", name: "API权限", pagePath: "/clever-security/empty.schema.tsx" },
+              { path: "/api", name: "API权限", pagePath: "/clever-security/api-permission/api-permission-list.schema.tsx" },
               { path: "/ui", name: "UI权限", pagePath: "/clever-security/empty.schema.tsx" },
               { path: "/menu", name: "菜单管理", pagePath: "/clever-security/empty.schema.tsx" },
             ]
