@@ -14,6 +14,12 @@ const apiPath = {
     updateServerAccessToken: `${serverHost}/security/admin/api/server_access_token/update`,
     delServerAccessToken: `${serverHost}/security/admin/api/server_access_token/del`,
   },
+  UserController: {
+    pageQuery: `${serverHost}/security/admin/api/user/page_query`,
+    addUser: `${serverHost}/security/admin/api/user/add`,
+    updateUser: `${serverHost}/security/admin/api/user/update`,
+    uploadReceiver: `${serverHost}/security/admin/api/user/upload-receiver`,
+  },
 };
 
 export { apiPath }
