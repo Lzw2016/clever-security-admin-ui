@@ -189,7 +189,7 @@ const schema = {
         // submitText: "查询",
         controls: [
           {
-            type: "select", label: "域名称", name: "domainId", placeholder: "支持模糊匹配", clearable: true,
+            type: "select", label: "域名称", name: "domainId", placeholder: "请选择", clearable: true,
             source: { method: "get", url: apiPath.DomainController.all }, labelField: "name", valueField: "id",
           },
           { type: "text", label: "Token标签", name: "tag", placeholder: "支持模糊匹配", clearable: true },
