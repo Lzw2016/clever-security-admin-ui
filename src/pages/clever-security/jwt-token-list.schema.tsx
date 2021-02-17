@@ -13,7 +13,7 @@ function detailsDialog() {
     size: "xs",
     actionType: "dialog",
     dialog: {
-      title: "JwtToken详情 - ${loginName}",
+      title: "JWT-Token详情 - ${loginName}",
       className: classnames(DialogClassName.width45x),
       closeOnEsc: true,
       actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
@@ -22,7 +22,7 @@ function detailsDialog() {
         controls: [
           {
             type: "fieldSet",
-            title: "JwtToken基础信息",
+            title: "JWT-Token基础信息",
             collapsable: true,
             className: classnames(FormClassName.flex_label6x),
             controls: [
@@ -38,7 +38,7 @@ function detailsDialog() {
           },
           {
             type: "fieldSet",
-            title: "JwtToken状态信息",
+            title: "JWT-Token状态信息",
             collapsable: true,
             collapsed: true,
             className: classnames(FormClassName.flex_label9x),
@@ -82,7 +82,7 @@ function disableDialog() {
       url: `${apiPath.JwtTokenController.disableJwtToken}?id=$id`,
       adaptor: (payload: any) => ({ ...payload, data: {} }),
     },
-    confirmText: "确认要禁用JwtToken: ${loginName}?",
+    confirmText: "确认要禁用JWT-Token: ${loginName}?",
   };
 }
 
