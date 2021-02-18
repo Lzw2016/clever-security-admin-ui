@@ -18,10 +18,27 @@ function detailsDialog() {
       body: {
         type: "form",
         controls: [
-          { type: "editor", name: "securityContext", label: false, language: "json", disabled: true },
+          { type: "editor", name: "securityContext", label: false, language: "json", disabled: true, size: "xxl" },
         ]
       }
     }
+  };
+}
+
+/** 重新加载对话框 */
+function reloadDialog() {
+  return {
+    type: "button",
+    label: "重新加载",
+    level: "info", //danger
+    size: "xs",
+    actionType: "ajax",
+    api: {
+      method: "post",
+      url: `${apiPath.UserSecurityContextController.reloadUserSecurityContext}?id=$id`,
+      adaptor: (payload: any) => ({ ...payload, data: {} }),
+    },
+    confirmText: "重新加载安全上下文: ${loginName}?",
   };
 }
 
@@ -65,7 +82,6 @@ const schema = {
           { type: "text", label: "用户信息", name: "userSearchKey", placeholder: "登录名、手机号、邮箱、昵称", clearable: true },
           { type: "date", label: "创建时间", name: "createAtStart", placeholder: "创建时间-开始", format: "YYYY-MM-DD 00:00:00", clearable: true, maxDate: "$createAtEnd" },
           { type: "date", label: "创建时间", name: "createAtEnd", placeholder: "创建时间-结束", format: "YYYY-MM-DD 23:59:59", clearable: true, minDate: "$createAtStart" },
-          // { type: "html", html: "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" },
           { label: "查询", level: "primary", type: "submit" },
           { label: "重置", type: "reset" },
         ],
@@ -82,7 +98,7 @@ const schema = {
         { name: "nickname", label: "用户昵称", sortable: true },
         { name: "createAt", label: "创建时间", sortable: true },
         { name: "updateAt", label: "更新时间", sortable: true },
-        { type: "operation", label: "操作", width: 35, toggled: true, buttons: [detailsDialog()] },
+        { type: "operation", label: "操作", width: 105, toggled: true, buttons: [detailsDialog(), reloadDialog()] },
       ],
       // --------------------------------------------------------------- 表格工具栏配置
       headerToolbar: [

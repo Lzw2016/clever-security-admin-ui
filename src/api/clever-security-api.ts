@@ -36,6 +36,7 @@ const apiPath = {
 
   UserSecurityContextController: {
     pageQuery: `${serverHost}/security/admin/api/user_security_context/page_query`,
+    reloadUserSecurityContext: `${serverHost}/security/admin/api/user_security_context/reload`,
   },
 
   ValidateCodeController: {
