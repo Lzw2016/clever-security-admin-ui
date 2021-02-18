@@ -151,6 +151,12 @@ enum FormClassName {
   flex_label9x = "flex-form-label-9x",
   /** flex label宽度为10rem */
   flex_label10x = "flex-form-label-10x",
+  /** flex label宽度为12rem */
+  flex_label12x = "flex-form-label-12x",
+  /** flex label宽度为14rem */
+  flex_label14x = "flex-form-label-14x",
+  /** flex label宽度为16rem */
+  flex_label16x = "flex-form-label-16x",
 
   /** flex input宽度为10rem */
   flex_input10x = "flex-form-input-10x",

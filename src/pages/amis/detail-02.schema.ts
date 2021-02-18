@@ -1,8 +1,8 @@
-import { serverHost } from "@/api/server-api";
 import { enum2object } from "@/utils/enum";
 import { statusMapper } from "@/pages/amis/enum-data";
 import classnames from "classnames";
 import { FormClassName } from "@/amis-types";
+import { serverHost } from "./server-api";
 
 const amisPageName = "detail2";
 

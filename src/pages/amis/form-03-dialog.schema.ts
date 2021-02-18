@@ -2,7 +2,7 @@ import classnames from "classnames";
 import { DialogClassName, FormClassName, GeneralClassName, HeightClassName, WidthClassName } from "@/amis-types";
 import { payStatusMapper, payTypeMapper, statusMapper } from "./enum-data";
 import { enum2object } from "@/utils/enum";
-import { serverHost } from "@/api/server-api";
+import { serverHost } from "./server-api";
 import styles from "./form-03-dialog.schema.less";
 
 const schema = {

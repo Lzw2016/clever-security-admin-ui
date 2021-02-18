@@ -1,7 +1,7 @@
 import classnames from "classnames";
 import { FormClassName, WidthClassName } from "@/amis-types";
-import { serverHost } from "@/api/server-api";
 import { statusMapper } from "./enum-data";
+import { serverHost } from "./server-api";
 
 // const api = {
 //   api_1: "https://houtai.baidu.com/api/mock2/options/chainedOptions?waitSeconds=1&parentId=$parentId&level=$level&maxLevel=4",

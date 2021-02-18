@@ -2,7 +2,103 @@ import { apiPath } from "@/api/clever-security-api";
 import classnames from "classnames";
 import { FormClassName } from "@/amis-types";
 import { enum2object } from "@/utils/enum";
-import { scanCodeLogin } from "./enum-data";
+import { jwtToken, scanCodeLogin } from "./enum-data";
+
+/** 详情对话框 */
+function detailsDialog() {
+  return {
+    type: "button",
+    label: "查看",
+    level: "info",
+    size: "xs",
+    actionType: "dialog",
+    dialog: {
+      title: "扫码登录详情",
+      size: "md",
+      closeOnEsc: true,
+      actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
+      body: {
+        type: "service",
+        api: { method: "get", url: apiPath.ScanCodeLoginController.detailScanCodeLogin, data: { id: "${id}" } },
+        body: {
+          type: "tabs",
+          mode: "radio",
+          tabs: [
+            {
+              title: "扫描二维码信息",
+              body: {
+                type: "form",
+                mode: "horizontal",
+                className: classnames(FormClassName.flex_label12x),
+                wrapWithPanel: false,
+                controls: [
+                  { type: "static", name: "domain.name", label: "域名称" },
+                  { type: "static", name: "scanCodeLogin.scanCode", label: "二维码内容" },
+                  { type: "static-mapping", name: "scanCodeLogin.scanCodeState", label: "二维码状态", map: enum2object(scanCodeLogin.scanCodeState) },
+                  { type: "static", name: "scanCodeLogin.expiredTime", label: "扫描二维码过期时间" },
+                  { type: "static", name: "scanCodeLogin.bindTokenId", label: "绑定的JWT Token ID" },
+                  { type: "static", name: "scanCodeLogin.bindTokenTime", label: "扫描时间" },
+                  { type: "static", name: "scanCodeLogin.confirmExpiredTime", label: "确认登录过期时间" },
+                  { type: "static", name: "scanCodeLogin.confirmTime", label: "确认登录时间" },
+                  { type: "static", name: "scanCodeLogin.getTokenExpiredTime", label: "获取登录Token过期时间" },
+                  { type: "static", name: "scanCodeLogin.loginTime", label: "获取登录Token时间" },
+                  { type: "static", name: "scanCodeLogin.tokenId", label: "登录生成的JWT Token ID" },
+                  { type: "static", name: "scanCodeLogin.invalidReason", label: "二维码失效原因" },
+                  { type: "static", name: "scanCodeLogin.createAt", label: "创建时间" },
+                  { type: "static", name: "scanCodeLogin.updateAt", label: "更新时间" },
+                ]
+              }
+            },
+            {
+              title: "扫码信息",
+              hiddenOn: "!bindTokenUser && !bindToken",
+              body: {
+                type: "form",
+                mode: "horizontal",
+                className: classnames(FormClassName.flex_label6x),
+                wrapWithPanel: false,
+                controls: [
+                  { type: "static", name: "bindTokenUser.loginName", label: "登录名" },
+                  { type: "static", name: "bindTokenUser.telephone", label: "手机号" },
+                  { type: "static", name: "bindTokenUser.email", label: "邮箱" },
+                  { type: "static", name: "bindTokenUser.nickname", label: "昵称" },
+                  { type: "divider" },
+                  { type: "static", name: "bindToken.id", label: "JWT Token ID" },
+                  { type: "static", name: "bindToken.token", label: "JWT Token", copyable: true, inputClassName: "break-words" },
+                  { type: "static-mapping", name: "bindToken.disable", label: "Token状态", map: enum2object(jwtToken.disable) },
+                  { type: "static", name: "bindToken.expiredTime", label: "过期时间" },
+                  { type: "static", name: "bindToken.createAt", label: "创建时间" },
+                ]
+              }
+            },
+            {
+              title: "登录信息",
+              hiddenOn: "!tokenUser && !token",
+              body: {
+                type: "form",
+                mode: "horizontal",
+                className: classnames(FormClassName.flex_label6x),
+                wrapWithPanel: false,
+                controls: [
+                  { type: "static", name: "tokenUser.loginName", label: "登录名" },
+                  { type: "static", name: "tokenUser.telephone", label: "手机号" },
+                  { type: "static", name: "tokenUser.email", label: "邮箱" },
+                  { type: "static", name: "tokenUser.nickname", label: "昵称" },
+                  { type: "divider" },
+                  { type: "static", name: "token.id", label: "JWT Token ID" },
+                  { type: "static", name: "token.token", label: "JWT Token", copyable: true, inputClassName: "break-words" },
+                  { type: "static-mapping", name: "token.disable", label: "Token状态", map: enum2object(jwtToken.disable) },
+                  { type: "static", name: "token.expiredTime", label: "过期时间" },
+                  { type: "static", name: "token.createAt", label: "创建时间" },
+                ]
+              }
+            }
+          ]
+        }
+      },
+    }
+  };
+}
 
 const schema = {
   type: "page",
@@ -71,7 +167,7 @@ const schema = {
         { name: "invalidReason", label: "二维码失效原因", sortable: true, type: "tpl", tpl: "${invalidReason|truncate:10}" },
         { name: "createAt", label: "创建时间", sortable: true },
         { name: "updateAt", label: "更新时间", sortable: true },
-        // { type: "operation", label: "操作", width: 80, toggled: true, buttons: [detailsDialog(), disableDialog()] },
+        { type: "operation", label: "操作", width: 35, toggled: true, buttons: [detailsDialog()] },
       ],
       // --------------------------------------------------------------- 表格工具栏配置
       headerToolbar: [

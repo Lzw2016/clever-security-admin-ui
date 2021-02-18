@@ -36,6 +36,7 @@ const apiPath = {
 
   ScanCodeLoginController: {
     pageQuery: `${serverHost}/security/admin/api/scan_code_login/page_query`,
+    detailScanCodeLogin: `${serverHost}/security/admin/api/scan_code_login/detail`,
   },
 
   UserLoginLogController: {

@@ -1,6 +1,6 @@
 import classnames from "classnames";
 import { FormClassName } from "@/amis-types";
-import { serverHost } from "@/api/server-api";
+import { serverHost } from "./server-api";
 
 const schema = {
   type: "page",
