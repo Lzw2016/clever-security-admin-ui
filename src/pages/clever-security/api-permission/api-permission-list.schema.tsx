@@ -1,12 +1,8 @@
 import classnames from "classnames";
 import { apiPath } from "@/api/clever-security-api";
 import { FormClassName } from "@/amis-types";
-import { enum2object, EnumArray } from "@/utils/enum";
-
-const apiExistMapper: EnumArray = [
-  { label: "不存在", value: "0" },
-  { label: "存在", value: "1" },
-];
+import { enum2object } from "@/utils/enum";
+import { exist } from "@/pages/clever-security/enum-data";
 
 /** 详情对话框 */
 function detailsDialog() {
@@ -29,7 +25,7 @@ function detailsDialog() {
           { name: "methodName", label: "controller类的方法名称", type: "static" },
           { name: "methodParams", label: "controller类的方法参数签名", type: "static" },
           { name: "apiPath", label: "API接口地址", type: "static" },
-          { name: "apiExist", label: "API接口是否存在", type: "mapping", map: enum2object(apiExistMapper) },
+          { name: "apiExist", label: "API接口是否存在", type: "static-mapping", map: enum2object(exist) },
           { name: "description", label: "说明", type: "static" },
           { name: "createAt", label: "创建时间", type: "static" },
           { name: "updateAt", label: "更新时间", type: "static" }
@@ -95,7 +91,7 @@ const schema = {
             source: { method: "get", url: apiPath.DomainController.all }, labelField: "name", valueField: "id",
           },
           { type: "text", label: "关键字搜索", name: "name", placeholder: "类名,方法名,参数签名,api地址", clearable: true },
-          { type: "select", label: "是否存在", name: "apiExist", options: apiExistMapper, clearable: true },
+          { type: "select", label: "是否存在", name: "apiExist", options: exist, clearable: true },
           { type: "date", label: "创建时间", name: "createAtStart", placeholder: "创建时间-开始", format: "YYYY-MM-DD 00:00:00", clearable: true, maxDate: "$createAtEnd" },
           { type: "date", label: "创建时间", name: "createAtEnd", placeholder: "创建时间-结束", format: "YYYY-MM-DD 23:59:59", clearable: true, minDate: "$createAtStart" },
           { label: "查询", level: "primary", type: "submit" },
@@ -108,7 +104,7 @@ const schema = {
         { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
         { name: "permissionId", label: "权限id", sortable: false },
         { name: "apiPath", label: "API接口地址", sortable: true },
-        { name: "apiExist", label: "API接口是否存在", sortable: true, type: "mapping", map: enum2object(apiExistMapper) },
+        { name: "apiExist", label: "API接口是否存在", sortable: true, type: "mapping", map: enum2object(exist) },
         { name: "description", label: "说明", sortable: false },
         { name: "createAt", label: "创建时间", sortable: true },
         { name: "updateAt", label: "更新时间", sortable: true },

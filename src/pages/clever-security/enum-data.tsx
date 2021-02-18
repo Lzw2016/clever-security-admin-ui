@@ -70,4 +70,52 @@ const validateCode: {
   ],
 };
 
-export { serverAccessToken, jwtToken, scanCodeLogin, validateCode }
+const exist: EnumArray = [
+  { label: "不存在", value: "0" },
+  { label: "存在", value: "1" },
+];
+
+const enabled: EnumArray = [
+  { label: "禁用", value: "0" },
+  { label: "启用", value: "1" },
+];
+
+const userLogin: {
+  /** 登录管道 */
+  channel: EnumArray;
+  /** 登录类型 */
+  type: EnumArray;
+  /** 登录状态 */
+  state: EnumArray;
+  [name: string]: EnumArray;
+} = {
+  channel: [
+    { label: "PC-Admin", value: 0 },
+    { label: "PC-Web", value: 1 },
+    { label: "H5", value: 2 },
+    { label: "IOS-APP", value: 3 },
+    { label: "Android-APP", value: 4 },
+    { label: "微信小程序", value: 5 },
+  ],
+  type: [
+    { label: "用户名密码", value: 1 },
+    { label: "手机号验证码", value: 2 },
+    { label: "邮箱验证码", value: 3 },
+    { label: "刷新token", value: 4 },
+    { label: "微信小程序", value: 5 },
+    { label: "扫码登录", value: 6 },
+  ],
+  state: [
+    { label: "登录成功", value: 1 },
+    { label: "登录失败", value: 0 }
+  ]
+}
+export {
+  serverAccessToken,
+  jwtToken,
+  scanCodeLogin,
+  validateCode,
+  exist,
+  enabled,
+  userLogin
+}

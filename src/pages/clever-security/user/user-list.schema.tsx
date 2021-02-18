@@ -1,21 +1,9 @@
 import classnames from "classnames";
 import { apiPath } from "@/api/clever-security-api";
 import { FormClassName } from "@/amis-types";
-import { enum2object, EnumArray } from "@/utils/enum";
+import { enum2object } from "@/utils/enum";
 import styles from "./user-list.schema.less";
-
-const enabledMapper: EnumArray = [
-  { label: "禁用", value: "0" },
-  { label: "启用", value: "1" },
-];
-const registerChannelMapper: EnumArray = [
-  { label: "管理员", value: "0" },
-  { label: "PC-Web", value: "1" },
-  { label: "H5", value: "2" },
-  { label: "IOS-APP", value: "3" },
-  { label: "Android-APP", value: "4" },
-  { label: "微信小程序", value: "5" },
-];
+import { enabled, userLogin } from "@/pages/clever-security/enum-data";
 
 /** 新增对话框 */
 function addDialog() {
@@ -74,9 +62,9 @@ function detailsDialog() {
           { name: "loginName", label: "登录名", type: "static" },
           { name: "telephone", label: "手机号", type: "static" },
           { name: "email", label: "email", type: "static" },
-          { name: "enabled", label: "是否启用", type: "mapping", map: enum2object(enabledMapper), sortable: false },
+          { name: "enabled", label: "是否启用", type: "mapping", map: enum2object(enabled), sortable: false },
           { name: "expiredTime", label: "帐号过期时间", type: "static" },
-          { name: "registerChannel", label: "用户注册渠道", type: "mapping", map: enum2object(registerChannelMapper), sortable: false },
+          { name: "registerChannel", label: "用户注册渠道", type: "mapping", map: enum2object(userLogin.channel), sortable: false },
           { name: "description", label: "说明", type: "static" },
           { name: "createAt", label: "创建时间", type: "static" },
           { name: "updateAt", label: "更新时间", type: "static" }
@@ -109,9 +97,9 @@ function editDialog() {
           { name: "loginName", label: "登录名", type: "text" },
           { name: "telephone", label: "手机号", type: "text" },
           { name: "email", label: "邮箱", type: "text" },
-          { name: "enabled", label: "是否启用", type: "select", options: enabledMapper },
+          { name: "enabled", label: "是否启用", type: "select", options: enabled },
           { name: "expiredTime", label: "过期时间", type: "text" },
-          { name: "registerChannel", label: "注册渠道", type: "select", options: registerChannelMapper, disabled: true },
+          { name: "registerChannel", label: "注册渠道", type: "select", options: userLogin.channel, disabled: true },
           { name: "createAt", label: "创建时间", type: "text", disabled: true },
           { name: "updateAt", label: "更新时间", type: "text", disabled: true },
           { type: "textarea", name: "description", label: "说明" },
@@ -175,6 +163,25 @@ const schema = {
         { name: "telephone", label: "手机号", copyable: true, sortable: true },
         { name: "email", label: "邮箱", copyable: true, sortable: true },
         { name: "enabled", label: "是否启用", type: "switch", trueValue: 1, falseValue: 0 },
+        {
+          name: "enabled", label: "是否启用", type: "custom",
+          // @ts-ignore
+          onMount: (dom, value, onChange, props) => {
+            const button = document.createElement('button');
+            let a = 1;
+            button.innerText = '0';
+            button.onclick = event => {
+              props.onAction(
+                event,
+                { type: 'action', actionType: 'dialog', dialog: { title: '提示', body: '确定禁用/启用?' } }
+              );
+              // 调接口禁用账号重新渲染开关......
+              button.innerText = (a++) + '';
+              event.preventDefault();
+            };
+            dom.appendChild(button);
+          }
+        },
         { name: "createAt", label: "创建时间", sortable: true },
         { name: "updateAt", label: "更新时间", sortable: true },
         { type: "operation", label: "操作", width: 120, toggled: true, buttons: [detailsDialog(), editDialog(), /*deleteDialog()*/] },

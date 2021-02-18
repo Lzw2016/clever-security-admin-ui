@@ -111,7 +111,7 @@ const schema = {
       columns: [
         { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
         { name: "domainName", label: "所属域", type: "text", sortable: true },
-        { name: "uid", label: "UID", type: "text", sortable: true },
+        { name: "telephone", label: "手机号", type: "text", sortable: true },
         { name: "loginType", label: "登录方式", sortable: true, type: "mapping", map: enum2object(loginTypeMapper) },
         { name: "failedCount", label: "失败次数", type: "text" },
         { name: "lastLoginTime", label: "最后登录时间", sortable: true, type: "text" },
