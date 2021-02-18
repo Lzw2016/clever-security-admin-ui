@@ -99,7 +99,7 @@ const schema = {
             type: "select", label: "域名称", name: "domainId", placeholder: "请选择", clearable: true,
             source: { method: "get", url: apiPath.DomainController.all }, labelField: "name", valueField: "id",
           },
-          { type: "text", label: "验证用户", name: "userSearchKey", placeholder: "登录名、手机号、邮箱、昵称", clearable: true },
+          { type: "text", label: "用户信息", name: "userSearchKey", placeholder: "登录名、手机号、邮箱、昵称", clearable: true },
           { type: "select", label: "验证码类型", name: "type", placeholder: "请选择", clearable: true, options: validateCode.type },
           { type: "select", label: "发送渠道", name: "sendChannel", placeholder: "请选择", clearable: true, options: validateCode.sendChannel },
           { type: "html", html: "<br />" },

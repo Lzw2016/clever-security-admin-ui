@@ -123,7 +123,7 @@ const schema = {
             type: "select", label: "域名称", name: "domainId", placeholder: "请选择", clearable: true,
             source: { method: "get", url: apiPath.DomainController.all }, labelField: "name", valueField: "id",
           },
-          { type: "text", label: "登录用户", name: "userSearchKey", placeholder: "登录名、手机号、邮箱、昵称", clearable: true },
+          { type: "text", label: "用户信息", name: "userSearchKey", placeholder: "登录名、手机号、邮箱、昵称", clearable: true },
           { type: "select", label: "是否禁用", name: "disable", placeholder: "请选择", clearable: true, options: jwtToken.disable },
           { type: "select", label: "刷新Token", name: "refreshTokenState", placeholder: "请选择", clearable: true, options: jwtToken.refreshTokenState },
           // { type: "text", label: "刷新Token", name: "refreshToken", placeholder: "请输入刷新Token", clearable: true },

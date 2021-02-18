@@ -34,6 +34,10 @@ const apiPath = {
     disableJwtToken: `${serverHost}/security/admin/api/jwt_token/disable`,
   },
 
+  UserSecurityContextController: {
+    pageQuery: `${serverHost}/security/admin/api/user_security_context/page_query`,
+  },
+
   ValidateCodeController: {
     pageQuery: `${serverHost}/security/admin/api/validate_code/page_query`,
   },
