@@ -34,6 +34,10 @@ const apiPath = {
     disableJwtToken: `${serverHost}/security/admin/api/jwt_token/disable`,
   },
 
+  ValidateCodeController: {
+    pageQuery: `${serverHost}/security/admin/api/validate_code/page_query`,
+  },
+
   ScanCodeLoginController: {
     pageQuery: `${serverHost}/security/admin/api/scan_code_login/page_query`,
     detailScanCodeLogin: `${serverHost}/security/admin/api/scan_code_login/detail`,

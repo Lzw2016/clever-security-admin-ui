@@ -42,4 +42,32 @@ const scanCodeLogin: {
   ],
 };
 
-export { serverAccessToken, jwtToken, scanCodeLogin }
+const validateCode: {
+  /** 验证码类型 */
+  type: EnumArray;
+  /** 验证码发送渠道，0:不需要发送，1:短信，2:email */
+  sendChannel: EnumArray;
+  [name: string]: EnumArray;
+} = {
+  type: [
+    { label: "登录验证码", value: "1" },
+    { label: "找回密码验证码", value: "2" },
+    { label: "重置密码(修改密码)验证码", value: "3" },
+    { label: "登录名注册验证码", value: "4" },
+    { label: "短信注册图片验证码", value: "5" },
+    { label: "短信注册短信验证码", value: "6" },
+    { label: "邮箱注册图片验证码", value: "7" },
+    { label: "邮箱注册邮箱验证码", value: "8" },
+    { label: "短信换绑图片验证码", value: "9" },
+    { label: "短信换绑短信验证码", value: "10" },
+    { label: "邮箱换绑图片验证码", value: "11" },
+    { label: "邮箱换绑邮箱验证码", value: "12" },
+  ],
+  sendChannel: [
+    { label: "不需要发送", value: "0" },
+    { label: "短信", value: "1" },
+    { label: "Email", value: "2" },
+  ],
+};
+
+export { serverAccessToken, jwtToken, scanCodeLogin, validateCode }
