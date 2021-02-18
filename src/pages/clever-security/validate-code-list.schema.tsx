@@ -13,7 +13,7 @@ function detailsDialog() {
     size: "xs",
     actionType: "dialog",
     dialog: {
-      title: "ServerAccessToken详情 - ${tag}",
+      title: "验证码详情 - ${code}",
       closeOnEsc: true,
       actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
       body: {
