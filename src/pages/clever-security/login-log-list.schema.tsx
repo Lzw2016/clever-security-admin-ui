@@ -1,6 +1,6 @@
 import classnames from "classnames";
 import { apiPath } from "@/api/clever-security-api";
-import { FormClassName } from "@/amis-types";
+import { FormClassName, GeneralClassName } from "@/amis-types";
 import { enum2object } from "@/utils/enum";
 import { login } from "@/pages/clever-security/enum-data";
 
@@ -10,7 +10,7 @@ function detailsDialog() {
     type: "button",
     label: "查看",
     level: "info",
-    size: "sm",
+    size: "xs",
     actionType: "dialog",
     dialog: {
       title: "登录详情 - ${uid}",
