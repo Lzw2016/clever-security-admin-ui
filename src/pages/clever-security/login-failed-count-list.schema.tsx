@@ -80,7 +80,7 @@ const schema = {
       // 条件过滤表单
       filterTogglable: true,
       filter: {
-        title: "查询条件",
+        title: "",
         className: classnames(FormClassName.label4x, FormClassName.input14x),
         trimValues: true,
         submitOnChange: false,
