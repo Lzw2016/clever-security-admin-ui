@@ -1,6 +1,6 @@
 import classnames from "classnames";
 import { apiPath } from "@/api/clever-security-api";
-import { FormClassName } from "@/amis-types";
+import { FormClassName, GeneralClassName } from "@/amis-types";
 import { enum2object } from "@/utils/enum";
 import { login, register } from "@/pages/clever-security/enum-data";
 
@@ -10,7 +10,7 @@ function detailsDialog() {
     type: "button",
     label: "查看",
     level: "info",
-    size: "sm",
+    size: "xs",
     actionType: "dialog",
     dialog: {
       title: "注册详情",
@@ -30,7 +30,7 @@ function detailsDialog() {
                 className: classnames(FormClassName.flex_label5x),
                 wrapWithPanel: false,
                 controls: [
-                  { name: "domainName", label: "域名", type: "static" },
+                  { name: "domainName", label: "域名称", type: "static" },
                   { name: "registerUid", label: "注册成功的用户id", type: "static" },
                   { name: "registerTime", label: "注册时间", type: "static" },
                   { name: "registerIp", label: "注册IP", type: "static" },
@@ -45,13 +45,14 @@ function detailsDialog() {
             },
             {
               title: "注册数据",
+              className: "p-none",
               body: {
                 type: "form",
                 mode: "horizontal",
                 className: classnames(FormClassName.flex_label5x),
                 wrapWithPanel: false,
                 controls: [
-                  { name: "requestData", type: "editor", label: false, language: "json", disabled: true, size: "lg" },
+                  { name: "requestData", type: "editor", label: false, language: "json", disabled: true, size: "lg", className: GeneralClassName.MB_None },
                 ],
               }
             },
@@ -115,9 +116,10 @@ const schema = {
             source: { method: "get", url: apiPath.DomainController.all }, labelField: "name", valueField: "id",
           },
           { type: "text", label: "用户信息", name: "userKeyword", placeholder: "登录名、手机号、邮箱、昵称", clearable: true },
-          { type: "text", label: "IP", name: "registerIp", placeholder: "支持模糊匹配", clearable: true },
-          { type: "select", label: "渠道", name: "registerChannel", clearable: true, options: login.channel },
-          { type: "select", label: "方式", name: "registerType", clearable: true, options: login.type },
+          { type: "text", label: "注册IP", name: "registerIp", placeholder: "支持模糊匹配", clearable: true },
+          { type: "select", label: "注册方式", name: "registerType", clearable: true, options: login.type },
+          { type: "html", html: "<br />" },
+          { type: "select", label: "注册渠道", name: "registerChannel", clearable: true, options: login.channel },
           { type: "select", label: "注册结果", name: "requestResult", clearable: true, options: register.result },
           { type: "date", label: "注册时间", name: "registerTimeStart", placeholder: "注册时间-开始", format: "YYYY-MM-DD 00:00:00", clearable: true, maxDate: "registerTimeEnd" },
           { type: "date", label: "注册时间", name: "registerTimeEnd", placeholder: "注册时间-结束", format: "YYYY-MM-DD 23:59:59", clearable: true, minDate: "registerTimeStart" },
@@ -129,14 +131,14 @@ const schema = {
       primaryField: "id",
       columns: [
         { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
-        { name: "domainName", label: "域名", type: "text", sortable: true },
-        { name: "telephone", label: "手机号", type: "text", sortable: true },
-        { name: "registerTime", label: "注册时间", type: "text", sortable: true },
-        { name: "registerIp", label: "注册IP", sortable: true },
-        { name: "registerType", label: "注册方式", sortable: true, type: "mapping", map: enum2object(login.type) },
+        { name: "domainName", label: "域名称", type: "text" },
+        { name: "telephone", label: "手机号", type: "text" },
+        { name: "registerIp", label: "注册IP" },
+        { name: "registerType", label: "注册方式", type: "mapping", map: enum2object(login.type) },
+        { name: "registerChannel", label: "注册渠道", type: "mapping", map: enum2object(login.channel) },
         { name: "requestResult", label: "注册结果", type: "mapping", map: enum2object(register.result) },
-        { name: "createAt", label: "创建时间", sortable: true },
-        { type: "operation", label: "操作", width: 120, toggled: true, buttons: [detailsDialog()] },
+        { name: "registerTime", label: "注册时间", type: "text", sortable: true },
+        { type: "operation", label: "操作", width: 35, toggled: true, buttons: [detailsDialog()] },
       ],
       // --------------------------------------------------------------- 表格工具栏配置
       headerToolbar: [
