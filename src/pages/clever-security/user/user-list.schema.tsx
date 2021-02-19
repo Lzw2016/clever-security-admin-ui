@@ -3,7 +3,7 @@ import { apiPath } from "@/api/clever-security-api";
 import { FormClassName } from "@/amis-types";
 import { enum2object } from "@/utils/enum";
 import styles from "./user-list.schema.less";
-import { enabled, userLogin } from "@/pages/clever-security/enum-data";
+import { enabled, login } from "@/pages/clever-security/enum-data";
 
 /** 新增对话框 */
 function addDialog() {
@@ -49,7 +49,7 @@ function detailsDialog() {
     size: "xs",
     actionType: "dialog",
     dialog: {
-      title: "数据域详情 - ${nickname}",
+      title: "用户详情 - ${uid}",
       closeOnEsc: true,
       actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
       body: {
@@ -64,7 +64,7 @@ function detailsDialog() {
           { name: "email", label: "email", type: "static" },
           { name: "enabled", label: "是否启用", type: "mapping", map: enum2object(enabled), sortable: false },
           { name: "expiredTime", label: "帐号过期时间", type: "static" },
-          { name: "registerChannel", label: "用户注册渠道", type: "mapping", map: enum2object(userLogin.channel), sortable: false },
+          { name: "registerChannel", label: "用户注册渠道", type: "mapping", map: enum2object(login.channel), sortable: false },
           { name: "description", label: "说明", type: "static" },
           { name: "createAt", label: "创建时间", type: "static" },
           { name: "updateAt", label: "更新时间", type: "static" }
@@ -99,7 +99,7 @@ function editDialog() {
           { name: "email", label: "邮箱", type: "text" },
           { name: "enabled", label: "是否启用", type: "select", options: enabled },
           { name: "expiredTime", label: "过期时间", type: "text" },
-          { name: "registerChannel", label: "注册渠道", type: "select", options: userLogin.channel, disabled: true },
+          { name: "registerChannel", label: "注册渠道", type: "select", options: login.channel, disabled: true },
           { name: "createAt", label: "创建时间", type: "text", disabled: true },
           { name: "updateAt", label: "更新时间", type: "text", disabled: true },
           { type: "textarea", name: "description", label: "说明" },
@@ -146,7 +146,7 @@ const schema = {
             type: "select", label: "域名称", name: "domainId", placeholder: "请选择", clearable: true,
             source: { method: "get", url: apiPath.DomainController.all }, labelField: "name", valueField: "id",
           },
-          { type: "text", label: "关键字", name: "keyword", placeholder: "登录名、手机号、邮箱、昵称", clearable: true },
+          { type: "text", label: "用户信息", name: "keyword", placeholder: "登录名、手机号、邮箱、昵称", clearable: true },
           { type: "date", label: "创建时间", name: "createAtStart", placeholder: "创建时间-开始", format: "YYYY-MM-DD 00:00:00", clearable: true, maxDate: "$createAtEnd" },
           { type: "date", label: "创建时间", name: "createAtEnd", placeholder: "创建时间-结束", format: "YYYY-MM-DD 23:59:59", clearable: true, minDate: "$createAtStart" },
           { label: "查询", level: "primary", type: "submit" },

@@ -52,6 +52,10 @@ const apiPath = {
     pageQuery: `${serverHost}/security/admin/api/user_login_log/page_query`,
   },
 
+  UserRegisterLogController: {
+    pageQuery: `${serverHost}/security/admin/api/user_register_log/page_query`,
+  },
+
   LoginFailedCountController: {
     pageQuery: `${serverHost}/security/admin/api/login_failed_count/page_query`,
   },

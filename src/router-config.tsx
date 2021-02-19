@@ -128,7 +128,7 @@ const routerConfigs: LayoutConfig[] = [
           { path: "/server-token-list", name: "ServerToken管理", icon: "icon-token1", pagePath: "/clever-security/server-access-token-list.schema.tsx" },
           { path: "/jwt-token-list", name: "JwtToken管理", icon: "icon-key", pagePath: "/clever-security/jwt-token-list.schema.tsx" },
           { path: "/login-log-list", name: "用户登录日志", icon: "icon-log1", pagePath: "/clever-security/login-log-list.schema.tsx" },
-          { path: "/user-register-log-list", name: "用户注册日志", icon: "UsergroupAddOutlined", pagePath: "/clever-security/empty.schema.tsx" },
+          { path: "/user-register-log-list", name: "用户注册日志", icon: "UsergroupAddOutlined", pagePath: "/clever-security/register-log-list.schema.tsx" },
           { path: "/user-security-context-list", name: "安全上下文", icon: "icon-security", pagePath: "/clever-security/user-security-context-list.schema.tsx" },
           { path: "/validate-code-list", name: "验证码查询", icon: "icon-captcha2", pagePath: "/clever-security/validate-code-list.schema.tsx" },
           { path: "/scan-code-login-list", name: "扫码登录查询", icon: "icon-Scancode", pagePath: "/clever-security/scan-code-login-list.schema.tsx" },

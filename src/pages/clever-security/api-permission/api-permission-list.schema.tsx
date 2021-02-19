@@ -13,7 +13,7 @@ function detailsDialog() {
     size: "xs",
     actionType: "dialog",
     dialog: {
-      title: "数据域详情 - ${permissionId}",
+      title: "api权限详情 - ${permissionId}",
       closeOnEsc: true,
       actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
       body: {

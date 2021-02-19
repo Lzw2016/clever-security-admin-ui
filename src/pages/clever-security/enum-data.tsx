@@ -80,7 +80,7 @@ const enabled: EnumArray = [
   { label: "启用", value: "1" },
 ];
 
-const userLogin: {
+const login: {
   /** 登录管道 */
   channel: EnumArray;
   /** 登录类型 */
@@ -110,6 +110,17 @@ const userLogin: {
     { label: "登录失败", value: 0 }
   ]
 }
+const register: {
+  /** 登录管道 */
+  result: EnumArray;
+  [name: string]: EnumArray;
+} = {
+  result: [
+    { label: "注册失败", value: 0 },
+    { label: "注册成功且创建用户", value: 1 },
+    { label: "注册成功仅关联到域", value: 2 }
+  ]
+}
 export {
   serverAccessToken,
   jwtToken,
@@ -117,5 +128,6 @@ export {
   validateCode,
   exist,
   enabled,
-  userLogin
+  login,
+  register
 }

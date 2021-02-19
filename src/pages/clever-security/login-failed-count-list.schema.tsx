@@ -1,16 +1,8 @@
 import classnames from "classnames";
 import { apiPath } from "@/api/clever-security-api";
 import { DialogClassName, FormClassName } from "@/amis-types";
-import { enum2object, EnumArray } from "@/utils/enum";
-
-const loginTypeMapper: EnumArray = [
-  { label: "用户名密码", value: 1 },
-  { label: "手机号验证码", value: 2 },
-  { label: "邮箱验证码", value: 3 },
-  { label: "刷新token", value: 4 },
-  { label: "微信小程序", value: 5 },
-  { label: "扫码登录", value: 6 },
-];
+import { enum2object } from "@/utils/enum";
+import { login } from "@/pages/clever-security/enum-data";
 
 /** 详情对话框 */
 function detailsDialog() {
@@ -21,7 +13,7 @@ function detailsDialog() {
     size: "xs",
     actionType: "dialog",
     dialog: {
-      title: "数据域详情 - ${uid}",
+      title: "详情 - ${uid}",
       closeOnEsc: true,
       actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
       body: {
@@ -34,9 +26,9 @@ function detailsDialog() {
             collapsable: true,
             className: classnames(FormClassName.flex_label6x),
             controls: [
-              { name: "domainName", label: "所属域", type: "static" },
+              { name: "domainName", label: "域名", type: "static" },
               { name: "uid", label: "UID", type: "static" },
-              { name: "loginType", label: "登录方式", type: "mapping", map: enum2object(loginTypeMapper) },
+              { name: "loginType", label: "登录方式", type: "static-mapping", map: enum2object(login.type) },
               { name: "failedCount", label: "失败次数", type: "static" },
               { name: "lastLoginTime", label: "最后登录时间", type: "static" },
               { name: "createAt", label: "创建时间", type: "static" },
@@ -99,7 +91,7 @@ const schema = {
             source: { method: "get", url: apiPath.DomainController.all }, labelField: "name", valueField: "id",
           },
           { type: "text", label: "用户名", name: "userKeyword", placeholder: "登录名、手机号、邮箱、昵称", clearable: true },
-          { type: "select", label: "方式", name: "loginType", clearable: true, options: loginTypeMapper },
+          { type: "select", label: "方式", name: "loginType", clearable: true, options: login.type },
           { type: "date", label: "登录时间", name: "lastLoginTimeStart", placeholder: "最后登录时间-开始", format: "YYYY-MM-DD 00:00:00", clearable: true, maxDate: "$lastLoginTimeEnd" },
           { type: "date", label: "登录时间", name: "lastLoginTimeEnd", placeholder: "最后登录时间-结束", format: "YYYY-MM-DD 23:59:59", clearable: true, minDate: "$lastLoginTimeStart" },
           { label: "查询", level: "primary", type: "submit" },
@@ -112,7 +104,7 @@ const schema = {
         { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
         { name: "domainName", label: "所属域", type: "text", sortable: true },
         { name: "telephone", label: "手机号", type: "text", sortable: true },
-        { name: "loginType", label: "登录方式", sortable: true, type: "mapping", map: enum2object(loginTypeMapper) },
+        { name: "loginType", label: "登录方式", sortable: true, type: "mapping", map: enum2object(login.type) },
         { name: "failedCount", label: "失败次数", type: "text" },
         { name: "lastLoginTime", label: "最后登录时间", sortable: true, type: "text" },
         { name: "createAt", label: "创建时间", sortable: true },
