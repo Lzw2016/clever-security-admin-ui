@@ -1,5 +1,6 @@
 enum GeneralClassName {
   Inline_Block = "global-inline-block",
+  MB_None = "mb-none",
 }
 
 enum WidthClassName {

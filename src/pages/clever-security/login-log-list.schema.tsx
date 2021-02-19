@@ -1,6 +1,6 @@
 import classnames from "classnames";
 import { apiPath } from "@/api/clever-security-api";
-import { FormClassName } from "@/amis-types";
+import { FormClassName, GeneralClassName } from "@/amis-types";
 import { enum2object } from "@/utils/enum";
 import { login } from "@/pages/clever-security/enum-data";
 
@@ -42,13 +42,14 @@ function detailsDialog() {
             },
             {
               title: "登录数据",
+              className: "p-none",
               body: {
                 type: "form",
                 mode: "horizontal",
                 className: classnames(FormClassName.flex_label5x),
                 wrapWithPanel: false,
                 controls: [
-                  { name: "requestData", type: "editor", label: false, language: "json", disabled: true, size: "xxl" },
+                  { name: "requestData", type: "editor", label: false, language: "json", disabled: true, className: GeneralClassName.MB_None },
                 ],
               }
             },

@@ -1,6 +1,6 @@
 import { apiPath } from "@/api/clever-security-api";
 import classnames from "classnames";
-import { FormClassName } from "@/amis-types";
+import { FormClassName, GeneralClassName } from "@/amis-types";
 
 /** 详情对话框 */
 function detailsDialog() {
@@ -18,7 +18,7 @@ function detailsDialog() {
       body: {
         type: "form",
         controls: [
-          { type: "editor", name: "securityContext", label: false, language: "json", disabled: true, size: "xxl" },
+          { type: "editor", name: "securityContext", label: false, language: "json", disabled: true, size: "xxl", className: GeneralClassName.MB_None },
         ]
       }
     }
