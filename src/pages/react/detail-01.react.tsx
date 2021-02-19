@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Card, Descriptions } from 'antd';
 import { request } from '@/utils/request';
-import { serverHost } from "@/api/server-api";
+import { serverHost } from "../amis/server-api";
 
 interface ReactPageProps extends ReactPageComponentProps {
 }
