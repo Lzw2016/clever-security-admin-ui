@@ -10,7 +10,7 @@ function detailsDialog() {
     type: "button",
     label: "查看",
     level: "info",
-    size: "xs",
+    size: "sm",
     actionType: "dialog",
     dialog: {
       title: "注册详情",
@@ -51,7 +51,7 @@ function detailsDialog() {
                 className: classnames(FormClassName.flex_label5x),
                 wrapWithPanel: false,
                 controls: [
-                  { name: "requestData", type: "editor", label: false, language: "json", disabled: true, size: "xxl" },
+                  { name: "requestData", type: "editor", label: false, language: "json", disabled: true, size: "lg" },
                 ],
               }
             },
