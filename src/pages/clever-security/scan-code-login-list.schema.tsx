@@ -25,7 +25,7 @@ function detailsDialog() {
           mode: "radio",
           tabs: [
             {
-              title: "扫描二维码信息",
+              title: "扫描码信息",
               body: {
                 type: "form",
                 mode: "horizontal",
@@ -50,7 +50,7 @@ function detailsDialog() {
               }
             },
             {
-              title: "扫码信息",
+              title: "扫码行为信息",
               hiddenOn: "!bindTokenUser && !bindToken",
               body: {
                 type: "form",
@@ -72,7 +72,7 @@ function detailsDialog() {
               }
             },
             {
-              title: "登录信息",
+              title: "登录行为信息",
               hiddenOn: "!tokenUser && !token",
               body: {
                 type: "form",
@@ -92,7 +92,16 @@ function detailsDialog() {
                   { type: "static", name: "token.createAt", label: "创建时间" },
                 ]
               }
-            }
+            },
+            {
+              title: "扫描二维码",
+              body: {
+                type: "form",
+                mode: "horizontal",
+                wrapWithPanel: false,
+                controls: [{ type: "qr-code", name: "scanCodeLogin.scanCode", label: false, codeSize: 256, level: "M" },]
+              }
+            },
           ]
         }
       },
