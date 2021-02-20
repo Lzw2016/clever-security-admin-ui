@@ -163,7 +163,7 @@ const schema = {
         { name: "confirmTime", label: "确认登录时间", sortable: true },
         // { name: "getTokenExpiredTime", label: "登录过期时间", sortable: true },
         { name: "loginTime", label: "登录时间", sortable: true },
-        // { name: "tokenId", label: "登录生成的JWT-Token-ID", sortable: true },
+        // { name: "tokenId", label: "登录生成的JWT Token ID", sortable: true },
         { name: "invalidReason", label: "二维码失效原因", sortable: true, type: "tpl", tpl: "${invalidReason|truncate:10}" },
         { name: "createAt", label: "创建时间", sortable: true },
         { name: "updateAt", label: "更新时间", sortable: true },
