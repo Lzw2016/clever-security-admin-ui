@@ -18,51 +18,60 @@ function detailsDialog() {
       closeOnEsc: true,
       actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
       body: {
-        type: "form",
-        controls: [
+        type: "tabs",
+        mode: "radio",
+        tabs: [
           {
-            type: "fieldSet",
             title: "JWT-Token基础信息",
-            collapsable: true,
-            className: classnames(FormClassName.flex_label6x),
-            controls: [
-              { type: "static", name: "id", label: "TokenID" },
-              { type: "static", name: "domainName", label: "域名称" },
-              { type: "static", name: "token", label: "Token数据", copyable: true, inputClassName: "break-words" },
-              { type: "static-mapping", name: "disable", label: "Token状态", map: enum2object(jwtToken.disable) },
-              { type: "static", name: "refreshToken", label: "刷新Token", copyable: true },
-              { type: "static-mapping", name: "refreshTokenState", label: "刷新Token状态", map: enum2object(jwtToken.refreshTokenState) },
-              { type: "static", name: "createAt", label: "创建时间" },
-              { type: "static", name: "updateAt", label: "更新时间" },
-            ],
+            body: {
+              type: "form",
+              mode: "horizontal",
+              className: classnames(FormClassName.flex_label6x),
+              wrapWithPanel: false,
+              controls: [
+                { type: "static", name: "id", label: "TokenID" },
+                { type: "static", name: "domainName", label: "域名称" },
+                { type: "static", name: "token", label: "Token数据", copyable: true, inputClassName: "break-words" },
+                { type: "static-mapping", name: "disable", label: "Token状态", map: enum2object(jwtToken.disable) },
+                { type: "static", name: "refreshToken", label: "刷新Token", copyable: true },
+                { type: "static-mapping", name: "refreshTokenState", label: "刷新Token状态", map: enum2object(jwtToken.refreshTokenState) },
+                { type: "static", name: "createAt", label: "创建时间" },
+                { type: "static", name: "updateAt", label: "更新时间" },
+              ]
+            }
           },
           {
-            type: "fieldSet",
             title: "JWT-Token状态信息",
-            collapsable: true,
-            collapsed: true,
-            className: classnames(FormClassName.flex_label9x),
-            controls: [
-              { type: "static", name: "expiredTime", label: "Token过期时间" },
-              { type: "static", name: "disableReason", label: "Token禁用原因" },
-              { type: "static", name: "refreshTokenExpiredTime", label: "刷新Token过期时间" },
-              { type: "static", name: "refreshTokenUseTime", label: "刷新Token使用时间" },
-              { type: "static", name: "refreshCreateTokenId", label: "刷新token创建的JWT-Token-ID" },
-            ],
+            body: {
+              type: "form",
+              mode: "horizontal",
+              className: classnames(FormClassName.flex_label9x),
+              wrapWithPanel: false,
+              controls: [
+                { type: "static", name: "expiredTime", label: "Token过期时间" },
+                { type: "static", name: "disableReason", label: "Token禁用原因" },
+                { type: "static", name: "refreshTokenExpiredTime", label: "刷新Token过期时间" },
+                { type: "static", name: "refreshTokenUseTime", label: "刷新Token使用时间" },
+                { type: "static", name: "refreshCreateTokenId", label: "刷新token创建的 JWT Token ID" },
+              ]
+            }
           },
           {
-            type: "fieldSet",
-            title: "用户数据",
-            collapsable: true,
-            className: classnames(FormClassName.flex_label5x),
-            controls: [
-              { type: "static", name: "loginName", label: "登录名" },
-              { type: "static", name: "nickname", label: "昵称" },
-              { type: "static", name: "telephone", label: "手机号" },
-              { type: "static", name: "email", label: "邮箱" },
-            ],
-          },
-        ],
+            title: "用户信息",
+            body: {
+              type: "form",
+              mode: "horizontal",
+              className: classnames(FormClassName.flex_label4x),
+              wrapWithPanel: false,
+              controls: [
+                { type: "static", name: "loginName", label: "登录名" },
+                { type: "static", name: "nickname", label: "昵称" },
+                { type: "static", name: "telephone", label: "手机号" },
+                { type: "static", name: "email", label: "邮箱" },
+              ]
+            }
+          }
+        ]
       },
     },
   };
@@ -127,7 +136,7 @@ const schema = {
           { type: "select", label: "是否禁用", name: "disable", placeholder: "请选择", clearable: true, options: jwtToken.disable },
           { type: "select", label: "刷新Token", name: "refreshTokenState", placeholder: "请选择", clearable: true, options: jwtToken.refreshTokenState },
           // { type: "text", label: "刷新Token", name: "refreshToken", placeholder: "请输入刷新Token", clearable: true },
-          // { type: "text", label: "JWT-Token-ID", name: "id", placeholder: "请输入JWT-Token-ID", clearable: true },
+          // { type: "text", label: "JWT Token ID", name: "id", placeholder: "请输入JWT Token ID", clearable: true },
           { type: "html", html: "<br />" },
           { type: "date", label: "过期时间", name: "expiredTimeStart", placeholder: "过期时间-开始", format: "YYYY-MM-DD 00:00:00", clearable: true, maxDate: "$expiredTimeEnd" },
           { type: "date", label: "过期时间", name: "expiredTimeEnd", placeholder: "过期时间-结束", format: "YYYY-MM-DD 23:59:59", clearable: true, minDate: "$expiredTimeStart" },
