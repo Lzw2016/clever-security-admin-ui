@@ -79,7 +79,7 @@ function detailsDialog() {
             },
             {
               title: "扫码行为信息",
-              hiddenOn: "!bindTokenUser && !bindToken",
+              hiddenOn: "!data.bindTokenUser && !data.bindToken",
               body: {
                 type: "form",
                 mode: "horizontal",
@@ -101,7 +101,7 @@ function detailsDialog() {
             },
             {
               title: "登录行为信息",
-              hiddenOn: "!tokenUser && !token",
+              hiddenOn: "!data.tokenUser && !data.token",
               body: {
                 type: "form",
                 mode: "horizontal",
