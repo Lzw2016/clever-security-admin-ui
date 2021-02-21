@@ -163,25 +163,6 @@ const schema = {
         { name: "telephone", label: "手机号", copyable: true, sortable: true },
         { name: "email", label: "邮箱", copyable: true, sortable: true },
         { name: "enabled", label: "是否启用", type: "switch", trueValue: 1, falseValue: 0 },
-        {
-          name: "enabled", label: "是否启用", type: "custom",
-          // @ts-ignore
-          onMount: (dom, value, onChange, props) => {
-            const button = document.createElement('button');
-            let a = 1;
-            button.innerText = '0';
-            button.onclick = event => {
-              props.onAction(
-                event,
-                { type: 'action', actionType: 'dialog', dialog: { title: '提示', body: '确定禁用/启用?' } }
-              );
-              // 调接口禁用账号重新渲染开关......
-              button.innerText = (a++) + '';
-              event.preventDefault();
-            };
-            dom.appendChild(button);
-          }
-        },
         { name: "createAt", label: "创建时间", sortable: true },
         { name: "updateAt", label: "更新时间", sortable: true },
         { type: "operation", label: "操作", width: 120, toggled: true, buttons: [detailsDialog(), editDialog(), /*deleteDialog()*/] },

@@ -1,6 +1,7 @@
 import classnames from "classnames";
 import { apiPath } from "@/api/clever-security-api";
 import { FormClassName } from "@/amis-types";
+import { routerHistory } from "@/utils/router";
 
 /** 新增对话框 */
 function addDialog() {
@@ -38,7 +39,7 @@ function addDialog() {
 }
 
 /** 详情对话框 */
-function detailsDialog() {
+/*function detailsDialog() {
   return {
     type: "button",
     label: "查看",
@@ -63,10 +64,10 @@ function detailsDialog() {
       }
     }
   };
-}
+}*/
 
 /** 编辑对话框 */
-function editDialog() {
+/*function editDialog() {
   return {
     type: "button",
     label: "编辑",
@@ -97,7 +98,7 @@ function editDialog() {
       }
     }
   };
-}
+}*/
 
 const schema = {
   type: "page",
@@ -144,13 +145,26 @@ const schema = {
       primaryField: "id",
       columns: [
         { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
-        { name: "id", label: "域ID", sortable: true },
+        { name: "id", label: "域ID", sortable: true, type: "link", body: "${id}", href: "#/nest-side/security/domain-list/detail?domainId=${id}", },
         { name: "name", label: "域名称", sortable: true },
         { name: "redisNameSpace", label: "Redis前缀", sortable: true },
         { name: "description", label: "说明", sortable: true, type: "tpl", tpl: "${description|truncate:20}" },
         { name: "createAt", label: "创建时间", sortable: true },
         { name: "updateAt", label: "更新时间", sortable: true },
-        { type: "operation", label: "操作", width: 80, toggled: true, buttons: [detailsDialog(), editDialog()] },
+        {
+          type: "operation", label: "操作", width: 80, toggled: true,
+          buttons: [
+            /*detailsDialog(), editDialog(),*/
+            {
+              type: "action",
+              label: "详情",
+              size: "xs",
+              onClick: (_: any, context: any) => {
+                routerHistory.push({ path: "/nest-side/security/domain-list/detail", query: { domainId: context.data.id }, state: context.data });
+              }
+            },
+          ]
+        },
       ],
       // --------------------------------------------------------------- 表格工具栏配置
       headerToolbar: [

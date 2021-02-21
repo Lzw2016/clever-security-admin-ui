@@ -652,8 +652,10 @@ class BaseLayout<P extends BaseLayoutProps, S extends BaseLayoutState> extends R
             let shouldPageUpdate = false;
             if (component.shouldPageUpdate instanceof Function) shouldPageUpdate = component.shouldPageUpdate(globalData);
             if (shouldPageUpdate) {
+              amisRender(multiTab.mountedDomId, { type: "page", body: "" }); // TODO 优化性能
               const amisPage = amisRender(multiTab.mountedDomId, component.schema, { data: globalData });
               if (amisPage) window.amisPages[multiTab.amisPageName] = amisPage;
+              // if (component.pageDidUpdate instanceof Function) component.pageDidUpdate(window.amisPages[multiTab.amisPageName]);
             }
           }
         }

@@ -22,11 +22,24 @@ const apiPath = {
     uploadReceiver: `${serverHost}/security/admin/api/user/upload_receiver`,
   },
 
+  RoleController: {
+    pageQuery: `${serverHost}/security/admin/api/role/page_query`,
+    delRole: `${serverHost}/security/admin/api/role/del`,
+  },
+
   ApiPermissionController: {
     pageQuery: `${serverHost}/security/admin/api/api_permission/page_query`,
     addApiPermission: `${serverHost}/security/admin/api/api_permission/add`,
     updateApiPermission: `${serverHost}/security/admin/api/api_permission/update`,
     delApiPermission: `${serverHost}/security/admin/api/api_permission/del`,
+  },
+
+  UiPermissionController: {
+    pageQuery: `${serverHost}/security/admin/api/ui_permission/page_query`,
+  },
+
+  MenuPermissionController: {
+    pageQuery: `${serverHost}/security/admin/api/menu_permission/page_query`,
   },
 
   JwtTokenController: {

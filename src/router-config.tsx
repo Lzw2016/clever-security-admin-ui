@@ -114,7 +114,10 @@ const routerConfigs: LayoutConfig[] = [
         name: "系统权限",
         icon: "icon-anquanbaozhang",
         routes: [
-          { path: "/domain-list", name: "数据域管理", icon: "icon-yu", pagePath: "/clever-security/domain/domain-list.schema.tsx" },
+          {
+            path: "/domain-list", name: "数据域管理", icon: "icon-yu", pagePath: "/clever-security/domain/domain-list.schema.tsx", hideChildrenMenu: true,
+            routes: [{ path: "/detail", name: "数据域详情", pagePath: "/clever-security/domain/domain-detail.schema.tsx" }]
+          },
           { path: "/user-list", name: "用户管理", icon: "icon-yonghuguanli1", pagePath: "/clever-security/user/user-list.schema.tsx" },
           { path: "/role-list", name: "角色管理", icon: "icon-jiaoseguanli1", pagePath: "/clever-security/empty.schema.tsx" },
           {

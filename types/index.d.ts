@@ -41,6 +41,12 @@ interface AmisPage {
    * @param nextGlobalData 全局数据
    */
   shouldPageUpdate?: (nextGlobalData: AmisPageGlobalData) => boolean;
+
+  /**
+   * 页面更新成功之后的操作
+   * @param amisApp 更新之后的页面对象
+   */
+  pageDidUpdate?: (amisApp: AmisApp) => void;
 }
 
 interface ReactPage {
