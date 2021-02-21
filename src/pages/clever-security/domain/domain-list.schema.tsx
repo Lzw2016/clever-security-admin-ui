@@ -38,68 +38,6 @@ function addDialog() {
   };
 }
 
-/** 详情对话框 */
-/*function detailsDialog() {
-  return {
-    type: "button",
-    label: "查看",
-    level: "info",
-    size: "xs",
-    actionType: "dialog",
-    dialog: {
-      title: "数据域详情 - ${name}",
-      closeOnEsc: true,
-      actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
-      body: {
-        type: "form",
-        className: classnames(FormClassName.flex_label5x),
-        controls: [
-          { type: "static", name: "id", label: "域ID" },
-          { type: "static", name: "name", label: "域名称" },
-          { type: "static", name: "redisNameSpace", label: "Redis前缀" },
-          { type: "static", name: "description", label: "说明" },
-          { type: "static", name: "createAt", label: "创建时间" },
-          { type: "static", name: "updateAt", label: "更新时间" },
-        ]
-      }
-    }
-  };
-}*/
-
-/** 编辑对话框 */
-/*function editDialog() {
-  return {
-    type: "button",
-    label: "编辑",
-    level: "info",
-    size: "xs",
-    actionType: "dialog",
-    dialog: {
-      title: "编辑数据域 - ${name}",
-      body: {
-        type: "form",
-        className: classnames(FormClassName.flex_label5x),
-        api: {
-          method: "put",
-          url: apiPath.DomainController.updateDomain,
-        },
-        controls: [
-          { type: "text", name: "id", label: "域ID", disabled: true },
-          { type: "text", name: "redisNameSpace", label: "Redis前缀", disabled: true }, ,
-          {
-            type: "text", name: "name", label: "域名称", placeholder: "请输入域名称",
-            required: true, validations: { minLength: 4, maxLength: 100 }, validationErrors: {},
-          },
-          {
-            type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 2, maxRows: 6,
-            validations: { maxLength: 500 }, validationErrors: {},
-          },
-        ]
-      }
-    }
-  };
-}*/
-
 const schema = {
   type: "page",
   title: "",

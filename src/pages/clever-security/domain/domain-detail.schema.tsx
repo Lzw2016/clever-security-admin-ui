@@ -153,11 +153,11 @@ const schema = {
               { name: "enabled", label: "是否启用", type: "switch", trueValue: 1, falseValue: 0 },
               { name: "createAt", label: "创建时间", sortable: true },
               { name: "updateAt", label: "更新时间", sortable: true },
-              { type: "operation", label: "操作", width: 35, toggled: true, buttons: [RemoveDialog()] },
+              { type: "operation", label: "操作", width: 35, toggled: true, buttons: [untieUser()] },
             ],
             // --------------------------------------------------------------- 表格工具栏配置
             headerToolbar: [
-              { align: "left", type: 'button', level: 'primary', size: "sm", ...addDialog() },
+              { align: "left", type: 'button', level: 'primary', size: "sm", ...addUser() },
               { align: "right", type: "columns-toggler" },
             ],
             footerToolbar: [
@@ -187,8 +187,9 @@ const schema = {
                 pageNo: "$pageNo",
                 pageSize: "$pageSize",
                 domainId: "$location.query.domainId",
-                createAtStart: "$createAtStart",
-                createAtEnd: "$createAtEnd",
+                id: "$id",
+                name: "$name",
+                enabled: "$enabled",
               },
             },
             defaultParams: { pageNo: 1, pageSize: 10 },
@@ -203,8 +204,8 @@ const schema = {
               trimValues: true,
               submitOnChange: false,
               controls: [
-                { type: "date", label: "创建时间", name: "createAtStart", placeholder: "创建时间-开始", format: "YYYY-MM-DD 00:00:00", clearable: true, maxDate: "$createAtEnd" },
-                { type: "date", label: "创建时间", name: "createAtEnd", placeholder: "创建时间-结束", format: "YYYY-MM-DD 23:59:59", clearable: true, minDate: "$createAtStart" },
+                { type: "text", label: "角色名称", name: "name", placeholder: "支持模糊匹配", clearable: true },
+                { type: "select", label: "是否启用", name: "enabled", options: enabled, clearable: true },
                 { label: "查询", level: "primary", type: "submit" },
                 { label: "重置", type: "reset" },
               ],
@@ -216,11 +217,11 @@ const schema = {
               { name: "name", label: "角色名称", type: "text" },
               { name: "enabled", label: "是否启用", type: "switch", trueValue: 1, falseValue: 0 },
               { name: "createAt", label: "创建时间", sortable: true },
-              { type: "operation", label: "操作", width: 35, toggled: true, buttons: [RemoveRoleDialog()] },
+              { type: "operation", label: "操作", width: 80, toggled: true, buttons: [updateRole(), removeRole()] },
             ],
             // --------------------------------------------------------------- 表格工具栏配置
             headerToolbar: [
-              { align: "left", type: 'button', level: 'primary', size: "sm", ...addDialog() },
+              { align: "left", type: 'button', level: 'primary', size: "sm", ...addRole() },
               { align: "right", type: "columns-toggler" },
             ],
             footerToolbar: [
@@ -237,7 +238,7 @@ const schema = {
             mode: "radio",
             tabs: [
               {
-                title: "api权限",
+                title: "API权限",
                 body: {
                   type: "crud",
                   // --------------------------------------------------------------- 常规配置
@@ -295,7 +296,7 @@ const schema = {
                     { name: "description", label: "说明", sortable: false },
                     { name: "createAt", label: "创建时间", sortable: true },
                     { name: "updateAt", label: "更新时间", sortable: true },
-                    { type: "operation", label: "操作", width: 120, toggled: true, buttons: [RemoveDialog()] },
+                    { type: "operation", label: "操作", width: 120, toggled: true, buttons: [] },
                   ],
                   // --------------------------------------------------------------- 表格工具栏配置
                   headerToolbar: [
@@ -309,7 +310,7 @@ const schema = {
                 },
               },
               {
-                title: "ui权限",
+                title: "UI权限",
                 body: {
                   type: "crud",
                   // --------------------------------------------------------------- 常规配置
@@ -358,7 +359,7 @@ const schema = {
                     { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
                     { name: "createAt", label: "创建时间", sortable: true },
                     { name: "updateAt", label: "更新时间", sortable: true },
-                    { type: "operation", label: "操作", width: 120, toggled: true, buttons: [RemoveDialog()] },
+                    { type: "operation", label: "操作", width: 120, toggled: true, buttons: [] },
                   ],
                   // --------------------------------------------------------------- 表格工具栏配置
                   headerToolbar: [
@@ -423,7 +424,7 @@ const schema = {
                     { name: "menuSort", label: "菜单排序", sortable: false },
                     { name: "createAt", label: "创建时间", sortable: true },
                     { name: "updateAt", label: "更新时间", sortable: true },
-                    { type: "operation", label: "操作", width: 120, toggled: true, buttons: [RemoveDialog()] },
+                    { type: "operation", label: "操作", width: 120, toggled: true, buttons: [] },
                   ],
                   // --------------------------------------------------------------- 表格工具栏配置
                   headerToolbar: [
@@ -445,30 +446,74 @@ const schema = {
 };
 
 /** 新增用户对话框 */
-function addDialog() {
+function addUser() {
   return {
     label: "新增",
     icon: "fa fa-plus",
     actionType: "dialog",
     dialog: {
-      title: "新增数据域-",
+      title: "新增数据域",
+      body: ""
+    }
+  };
+}
+
+/** 解绑用户对话框 */
+function untieUser() {
+  return {
+    label: "解绑",
+    type: "button",
+    size: "xs",
+    actionType: "ajax",
+    api: {
+      method: "delete",
+      url: `${apiPath.UserDomainController.delUserDomain}?domainId=$location.query.domainId&uid=$uid`,
+      adaptor: (payload: any) => ({ ...payload, data: {} }),
+    },
+    confirmText: "确认要解绑该用户: ${nickname}?",
+  }
+}
+
+/** 删除角色 */
+function removeRole() {
+  return {
+    label: "删除",
+    type: "button",
+    size: "xs",
+    level: "danger",
+    actionType: "ajax",
+    api: {
+      method: "delete",
+      url: `${apiPath.RoleController.delRole}?domainId=$location.query.domainId&id=$id`,
+      adaptor: (payload: any) => ({ ...payload, data: {} }),
+    },
+    confirmText: "确认要删除该角色: ${name}?",
+  };
+}
+
+/** 新增角色 */
+function addRole() {
+  return {
+    label: "新增",
+    icon: "fa fa-plus",
+    actionType: "dialog",
+    dialog: {
+      title: "新增数据域",
       body: {
         type: "form",
         className: classnames(FormClassName.flex_label5x),
         api: {
           method: "post",
-          url: apiPath.UserController.addUser,
+          url: apiPath.RoleController.addRole,
+          data: {
+            domainId: "$location.query.domainId",
+            name: "$name",
+            description: "$description",
+          },
         },
         trimValues: true,
         controls: [
-          {
-            type: "text", name: "name", label: "域名称", placeholder: "请输入域名称",
-            required: true, validations: { minLength: 4, maxLength: 100 }, validationErrors: {},
-          },
-          {
-            type: "text", name: "redisNameSpace", label: "Redis前缀", placeholder: "请输入Redis前缀",
-            required: true, validations: { minLength: 6, maxLength: 60 }, validationErrors: {},
-          },
+          { type: "text", name: "name", label: "角色名", placeholder: "请输入角色名", required: true },
           {
             type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 2, maxRows: 6,
             validations: { maxLength: 500 }, validationErrors: {},
@@ -479,34 +524,41 @@ function addDialog() {
   };
 }
 
-/** 移除用户对话框 */
-function RemoveDialog() {
+/** 修改角色 */
+function updateRole() {
   return {
-    label: "解绑",
-    type: "action",
+    type: "button",
+    label: "编辑",
+    level: "info",
+    size: "xs",
     actionType: "dialog",
     dialog: {
-      title: "提示",
-      body: "确定解绑该用户?"
+      title: "修改角色",
+      body: {
+        type: "form",
+        className: classnames(FormClassName.flex_label5x),
+        api: {
+          method: "put",
+          url: apiPath.RoleController.updateRole,
+          data: {
+            domainId: "$location.query.domainId",
+            id: "$id",
+            name: "$name",
+            enabled: "$enabled",
+            description: "$description",
+          },
+        },
+        controls: [
+          { type: "text", name: "id", label: "ID", disabled: true },
+          { type: "text", name: "name", label: "角色名称", },
+          { type: "select", name: "enabled", label: "是否启用", options: enabled },
+          {
+            type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 2, maxRows: 6,
+            validations: { maxLength: 500 }, validationErrors: {},
+          },
+        ]
+      }
     }
-  }
-}
-
-/**
- * 删除角色
- */
-function RemoveRoleDialog() {
-  return {
-    label: "删除",
-    type: "button",
-    level: "danger",
-    actionType: "ajax",
-    api: {
-      method: "post",
-      url: `${apiPath.RoleController.delRole}?id=$id`,
-      adaptor: (payload: any) => ({ ...payload, data: {} }),
-    },
-    confirmText: "确认要删除该角色: ${name}?",
   };
 }
 

@@ -22,8 +22,14 @@ const apiPath = {
     uploadReceiver: `${serverHost}/security/admin/api/user/upload_receiver`,
   },
 
+  UserDomainController: {
+    delUserDomain: `${serverHost}/security/admin/api/user_domain/del`,
+  },
+
   RoleController: {
     pageQuery: `${serverHost}/security/admin/api/role/page_query`,
+    addRole: `${serverHost}/security/admin/api/role/add`,
+    updateRole: `${serverHost}/security/admin/api/role/update`,
     delRole: `${serverHost}/security/admin/api/role/del`,
   },
 
