@@ -28,23 +28,51 @@ function detailsDialog() {
               title: "扫描码信息",
               body: {
                 type: "form",
-                mode: "horizontal",
-                className: classnames(FormClassName.flex_label12x),
+                mode: "inline",
+                className: classnames(FormClassName.label9x),
                 wrapWithPanel: false,
                 controls: [
                   { type: "static", name: "domain.name", label: "域名称" },
+                  { type: "html", html: "<br />" },
                   { type: "static", name: "scanCodeLogin.scanCode", label: "二维码内容" },
+                  {
+                    type: "button", actionType: "dialog", label: "查看二维码", size: "xs", className: classnames("m-none", "relative", "top-1"),
+                    dialog: {
+                      title: "扫码登录二维码",
+                      size: "sm",
+                      body: {
+                        type: "form",
+                        wrapWithPanel: false,
+                        controls: [
+                          { type: "qr-code", name: "scanCodeLogin.scanCode", label: false, codeSize: 256, level: "Q", inputClassName: "text-center" }
+                        ]
+                      },
+                      actions: [{ type: "button", actionType: "confirm", label: "关闭", primary: false }],
+                    }
+                  },
+                  { type: "html", html: "<br />" },
                   { type: "static-mapping", name: "scanCodeLogin.scanCodeState", label: "二维码状态", map: enum2object(scanCodeLogin.scanCodeState) },
+                  { type: "html", html: "<br />" },
                   { type: "static", name: "scanCodeLogin.expiredTime", label: "扫描二维码过期时间" },
+                  { type: "html", html: "<br />" },
                   { type: "static", name: "scanCodeLogin.bindTokenId", label: "绑定的JWT Token ID" },
+                  { type: "html", html: "<br />" },
                   { type: "static", name: "scanCodeLogin.bindTokenTime", label: "扫描时间" },
+                  { type: "html", html: "<br />" },
                   { type: "static", name: "scanCodeLogin.confirmExpiredTime", label: "确认登录过期时间" },
+                  { type: "html", html: "<br />" },
                   { type: "static", name: "scanCodeLogin.confirmTime", label: "确认登录时间" },
+                  { type: "html", html: "<br />" },
                   { type: "static", name: "scanCodeLogin.getTokenExpiredTime", label: "获取登录Token过期时间" },
+                  { type: "html", html: "<br />" },
                   { type: "static", name: "scanCodeLogin.loginTime", label: "获取登录Token时间" },
+                  { type: "html", html: "<br />" },
                   { type: "static", name: "scanCodeLogin.tokenId", label: "登录生成的JWT Token ID" },
+                  { type: "html", html: "<br />" },
                   { type: "static", name: "scanCodeLogin.invalidReason", label: "二维码失效原因" },
+                  { type: "html", html: "<br />" },
                   { type: "static", name: "scanCodeLogin.createAt", label: "创建时间" },
+                  { type: "html", html: "<br />" },
                   { type: "static", name: "scanCodeLogin.updateAt", label: "更新时间" },
                 ]
               }
@@ -91,15 +119,6 @@ function detailsDialog() {
                   { type: "static", name: "token.expiredTime", label: "过期时间" },
                   { type: "static", name: "token.createAt", label: "创建时间" },
                 ]
-              }
-            },
-            {
-              title: "扫描二维码",
-              body: {
-                type: "form",
-                mode: "horizontal",
-                wrapWithPanel: false,
-                controls: [{ type: "qr-code", name: "scanCodeLogin.scanCode", label: false, codeSize: 256, level: "M" },]
               }
             },
           ]
