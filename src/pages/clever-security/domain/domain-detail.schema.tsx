@@ -25,11 +25,11 @@ const shouldPageUpdate: AmisPage["shouldPageUpdate"] = nextGlobalData => {
   return flag;
 }
 
-const pageDidUpdate: AmisPage["pageDidUpdate"] = amisApp => {
-  // console.log("pageDidUpdateAAAAAAAAAAAAAAA", amisApp.getComponentByName("page.tabs"));
-  // console.log("pageDidUpdateAAAAAAAAAAAAAAA", Object.keys(amisApp.getComponents()[0].reload()) );
-  // console.log("pageDidUpdateAAAAAAAAAAAAAAA", Object.keys(amisApp.getComponents()[0].__proto__.__proto__) );
-};
+// const pageDidUpdate: AmisPage["pageDidUpdate"] = amisApp => {
+//   // console.log("pageDidUpdateAAAAAAAAAAAAAAA", amisApp.getComponentByName("page.tabs"));
+//   // console.log("pageDidUpdateAAAAAAAAAAAAAAA", Object.keys(amisApp.getComponents()[0].reload()) );
+//   // console.log("pageDidUpdateAAAAAAAAAAAAAAA", Object.keys(amisApp.getComponents()[0].__proto__.__proto__) );
+// };
 
 const schema = {
   type: "page",
@@ -562,4 +562,4 @@ function updateRole() {
   };
 }
 
-export { schema, amisPageName, initGlobalData, shouldPageUpdate, pageDidUpdate }
+export { schema, amisPageName, initGlobalData, shouldPageUpdate, /*pageDidUpdate*/ }
