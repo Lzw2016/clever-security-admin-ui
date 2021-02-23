@@ -2,7 +2,7 @@ import { apiPath } from "@/api/clever-security-api";
 import classnames from "classnames";
 import { FormClassName } from "@/amis-types";
 import styles from "@/pages/clever-security/user/user-list.schema.less";
-import { enabled, exist } from "@/pages/clever-security/enum-data";
+import { enabled, exist, ishideMenu } from "@/pages/clever-security/enum-data";
 import { enum2object } from "@/utils/enum";
 
 const amisPageName = "domainId";
@@ -48,7 +48,7 @@ const schema = {
       wrapWithPanel: false,
       mode: "inline",
       controls: [
-        { type: "static", name: "location.query.domainId", label: "域ID" },
+        { type: "static", name: "location.query.name", label: "域名" },
       ]
     },
     {
@@ -61,33 +61,14 @@ const schema = {
           body: {
             type: "form",
             mode: "horizontal",
-            className: classnames(FormClassName.flex_label5x, FormClassName.input20x),
-            // initApi: {
-            //   method: "get",
-            //   url: `${apiPath.DomainController.pageQuery}?id=$location.query.domainId`,
-            // },
-            api: {
-              method: "put",
-              url: apiPath.DomainController.updateDomain,
-              data: {
-                id: "$location.query.domainId",
-                name: "$location.query.domainId",
-                redisNameSpace: "$location.query.domainId",
-                description: "$location.query.domainId",
-                createAt: "$location.query.domainId",
-                updateAt: "$location.query.domainId"
-              },
-            },
+            className: classnames(FormClassName.flex_label6x),
             controls: [
-              { type: "static", name: "location.query.domainId", label: "域ID", disabled: true },
-              {
-                type: "text", name: "location.query.domainId", label: "域名称", placeholder: "请输入域名称",
-                required: true, validations: { minLength: 4, maxLength: 100 }, validationErrors: {},
-              },
-              { type: "static", name: "location.query.domainId", label: "Redis前缀", disabled: true },
-              { type: "textarea", name: "location.query.domainId", label: "说明" },
-              { type: "static", name: "location.query.domainId", label: "创建时间", disabled: true },
-              { type: "static", name: "location.query.domainId", label: "更新时间", disabled: true },
+              { type: "static", name: "location.query.domainId", label: "域ID" },
+              { type: "static", name: "location.query.name", label: "域名称" },
+              { type: "static", name: "location.query.redisNameSpace", label: "Redis前缀" },
+              { type: "static", name: "location.query.description", label: "说明" },
+              { type: "static", name: "location.query.createAt", label: "创建时间" },
+              { type: "static", name: "location.query.updateAt", label: "更新时间" },
             ],
             actions: [
               {
@@ -295,13 +276,13 @@ const schema = {
                   primaryField: "id",
                   columns: [
                     { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
-                    { name: "permissionId", label: "权限id", sortable: false },
+                    { name: "methodName", label: "方法名", sortable: false },
                     { name: "apiPath", label: "API接口地址", sortable: true },
                     { name: "apiExist", label: "API接口是否存在", sortable: true, type: "mapping", map: enum2object(exist) },
                     { name: "description", label: "说明", sortable: false },
                     { name: "createAt", label: "创建时间", sortable: true },
                     { name: "updateAt", label: "更新时间", sortable: true },
-                    { type: "operation", label: "操作", width: 120, toggled: true, buttons: [] },
+                    { type: "operation", label: "操作", width: 35, toggled: true, buttons: [apiDetail()] },
                   ],
                   // --------------------------------------------------------------- 表格工具栏配置
                   headerToolbar: [
@@ -364,7 +345,7 @@ const schema = {
                     { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
                     { name: "createAt", label: "创建时间", sortable: true },
                     { name: "updateAt", label: "更新时间", sortable: true },
-                    { type: "operation", label: "操作", width: 120, toggled: true, buttons: [] },
+                    { type: "operation", label: "操作", width: 35, toggled: true, buttons: [uiDetail()] },
                   ],
                   // --------------------------------------------------------------- 表格工具栏配置
                   headerToolbar: [
@@ -429,7 +410,7 @@ const schema = {
                     { name: "menuSort", label: "菜单排序", sortable: false },
                     { name: "createAt", label: "创建时间", sortable: true },
                     { name: "updateAt", label: "更新时间", sortable: true },
-                    { type: "operation", label: "操作", width: 120, toggled: true, buttons: [] },
+                    { type: "operation", label: "操作", width: 35, toggled: true, buttons: [menuDetail()] },
                   ],
                   // --------------------------------------------------------------- 表格工具栏配置
                   headerToolbar: [
@@ -561,6 +542,99 @@ function updateRole() {
             type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 2, maxRows: 6,
             validations: { maxLength: 500 }, validationErrors: {},
           },
+        ]
+      }
+    }
+  };
+}
+
+/** api权限详情 */
+function apiDetail() {
+  return {
+    type: "button",
+    label: "详情",
+    level: "info",
+    size: "xs",
+    actionType: "dialog",
+    dialog: {
+      title: "api权限详情",
+      closeOnEsc: true,
+      actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
+      body: {
+        type: "form",
+        className: classnames(FormClassName.flex_label5x),
+        controls: [
+          { name: "className", label: "controller类名称", type: "static" },
+          { name: "methodName", label: "controller类的方法名称", type: "static" },
+          { name: "methodParams", label: "controller类的方法参数签名", type: "static" },
+          { name: "apiPath", label: "API接口地址", type: "static" },
+          { name: "apiExist", label: "API接口是否存在", type: "static-mapping", map: enum2object(exist) },
+          { name: "createAt", label: "创建时间", type: "static" },
+          { name: "updateAt", label: "更新时间", type: "static" },
+          { type: "static", name: "description", label: "说明" },
+        ]
+      }
+    }
+  };
+}
+
+/** ui权限详情 */
+function uiDetail() {
+  return {
+    type: "button",
+    label: "详情",
+    level: "info",
+    size: "xs",
+    actionType: "dialog",
+    dialog: {
+      title: "ui权限详情",
+      closeOnEsc: true,
+      actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
+      body: {
+        type: "form",
+        className: classnames(FormClassName.flex_label5x),
+        controls: [
+          { name: "uiName", label: "UI组件名", type: "static" },
+          { name: "title", label: "标题", type: "static" },
+          { name: "enabled", label: "是否启用", type: "static-mapping", map: enum2object(enabled) },
+          { name: "createAt", label: "创建时间", type: "static" },
+          { name: "updateAt", label: "更新时间", type: "static" },
+          { name: "description", label: "描述", type: "static" },
+        ]
+      }
+    }
+  };
+}
+
+/** menu权限详情 */
+function menuDetail() {
+  return {
+    type: "button",
+    label: "详情",
+    level: "info",
+    size: "xs",
+    actionType: "dialog",
+    dialog: {
+      title: "菜单权限详情",
+      closeOnEsc: true,
+      actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
+      body: {
+        type: "form",
+        className: classnames(FormClassName.flex_label5x),
+        controls: [
+          { name: "name", label: "菜单名称", type: "text" },
+          { name: "icon", label: "菜单图标", type: "text" },
+          { name: "path", label: "菜单路径", type: "text" },
+          { name: "pagePath", label: "页面路径", type: "text" },
+          { name: "hideMenu", label: "隐藏当前菜单和子菜单", type: "mapping", map: enum2object(ishideMenu) },
+          { name: "hideChildrenMenu", label: "隐藏子菜单", type: "mapping", map: enum2object(ishideMenu) },
+          { name: "extConfig", label: "菜单扩展配置", type: "text" },
+          { name: "menuSort", label: "菜单排序", type: "text" },
+          { name: "title", label: "标题", type: "text" },
+          { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
+          { name: "createAt", label: "创建时间", type: "text" },
+          { name: "updateAt", label: "更新时间", type: "text" },
+          { name: "description", label: "说明", type: "text" },
         ]
       }
     }

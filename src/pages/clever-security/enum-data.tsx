@@ -80,6 +80,11 @@ const enabled: EnumArray = [
   { label: "启用", value: "1" },
 ];
 
+const ishideMenu: EnumArray = [
+  { label: "显示", value: 0 },
+  { label: "隐藏", value: 1 },
+];
+
 const login: {
   /** 登录管道 */
   channel: EnumArray;
@@ -128,6 +133,7 @@ export {
   validateCode,
   exist,
   enabled,
+  ishideMenu,
   login,
   register
 }
