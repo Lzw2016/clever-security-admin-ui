@@ -1,9 +1,9 @@
 import { apiPath } from "@/api/clever-security-api";
 import classnames from "classnames";
 import { FormClassName } from "@/amis-types";
-import styles from "@/pages/clever-security/user/user-list.schema.less";
-import { enabled, exist, ishideMenu } from "@/pages/clever-security/enum-data";
 import { enum2object } from "@/utils/enum";
+import { enabled, exist, ishideMenu } from "../enum-data";
+import styles from "./user-list.schema.less";
 
 const amisPageName = "domainId";
 
