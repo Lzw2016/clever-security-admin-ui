@@ -3,7 +3,7 @@ import classnames from "classnames";
 import { FormClassName } from "@/amis-types";
 import { enum2object } from "@/utils/enum";
 import { enabled, exist, ishideMenu } from "../enum-data";
-import styles from "./user-list.schema.less";
+import styles from "./domain-detail.schema.less";
 
 const amisPageName = "domainId";
 

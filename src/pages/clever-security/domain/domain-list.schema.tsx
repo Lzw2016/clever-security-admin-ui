@@ -133,16 +133,18 @@ const schema = {
               size: "xs",
               onClick: (_: any, context: any) => {
                 console.log(context.data)
-                  routerHistory.push({
-                    path: "/nest-side/security/domain-list/detail", query: {
-                      domainId: context.data.id,
-                      name: context.data.name,
-                      redisNameSpace: context.data.redisNameSpace,
-                      description: context.data.description,
-                      createAt: context.data.createAt,
-                      updateAt: context.data.updateAt
-                    }
-                  });
+                routerHistory.push({
+                  path: "/nest-side/security/domain-list/detail",
+                  query: {
+                    domainId: context.data.id,
+                    name: context.data.name,
+                    redisNameSpace: context.data.redisNameSpace,
+                    description: context.data.description,
+                    createAt: context.data.createAt,
+                    updateAt: context.data.updateAt
+                  },
+                  state: context.data
+                });
               }
             },
           ]
