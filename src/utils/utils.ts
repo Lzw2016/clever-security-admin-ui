@@ -1,6 +1,6 @@
 import lodash from 'lodash';
 import { parse } from 'qs'
-import { routerHistory } from "@/utils/router";
+import { routerHistory } from "./router";
 
 /**
  * 检查 name 是否是 o 对象的直接或继承属性。
