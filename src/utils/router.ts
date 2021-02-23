@@ -122,6 +122,15 @@ class RouterHistory {
     if (!path) return;
     return this.locationStateMap.get(path);
   }
+
+  /**
+   * 删除页面状态
+   * @param path 页面路径
+   */
+  public removeLocationState(path: string): boolean {
+    if (!path) return false;
+    return this.locationStateMap.delete(path);
+  }
 }
 
 /** 路由跳转工具 */
