@@ -235,7 +235,7 @@ const layoutSettings: LayoutSettings = {
   iconScriptUrl: "//at.alicdn.com/t/font_1326886_4g2fzkog94y.js",
   htmlTitleSuffix: "",
   loginPath: "/blank/login",
-  defaultPath: "/nest-side/curd/00",
+  defaultPath: "/nest-side/security/domain-list",
   loginApi: "/login",
   logoutApi: "/logout",
   currentUserApi: "/current_user",
