@@ -153,6 +153,8 @@ type TabPageType = "amis" | "react" | "iframe";
 interface MultiTabItem {
   /** 挂载的Dom节点ID */
   mountedDomId: string,
+  /** 多标签页显示页签名 */
+  tabTitle?: string;
   /** 路由菜单项 */
   menuItem: RuntimeMenuItem;
   /** 路由页签项唯一Key */

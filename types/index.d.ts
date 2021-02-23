@@ -41,12 +41,19 @@ interface AmisPage {
    * @param nextGlobalData 全局数据
    */
   shouldPageUpdate?: (nextGlobalData: AmisPageGlobalData) => boolean;
-
   /**
    * 页面更新成功之后的操作
    * @param amisApp 更新之后的页面对象
    */
   pageDidUpdate?: (amisApp: AmisApp) => void;
+  /**
+   * 获取多标签页显示页签名
+   * @param defaultName   默认的多标签页显示页签名
+   * @param currentMenu   运行时菜单项
+   * @param location      组件的RouterLocation信息
+   * @param match         路由匹配参数
+   */
+  getTabTitle?: (defaultName: string, currentMenu: RuntimeMenuItem, location: RouterLocation, match: RouteMatchParams) => string;
 }
 
 interface ReactPage {

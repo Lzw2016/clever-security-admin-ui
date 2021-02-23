@@ -31,6 +31,11 @@ const shouldPageUpdate: AmisPage["shouldPageUpdate"] = nextGlobalData => {
 //   // console.log("pageDidUpdateAAAAAAAAAAAAAAA", Object.keys(amisApp.getComponents()[0].__proto__.__proto__) );
 // };
 
+const getTabTitle: AmisPage["getTabTitle"] = (defaultName, currentMenu, location, match) => {
+  if (location.state?.name) return `${defaultName}-${location.state.name}`;
+  return defaultName;
+}
+
 const schema = {
   type: "page",
   name: "page",
@@ -562,4 +567,4 @@ function updateRole() {
   };
 }
 
-export { schema, amisPageName, initGlobalData, shouldPageUpdate, /*pageDidUpdate*/ }
+export { schema, amisPageName, initGlobalData, shouldPageUpdate, /*pageDidUpdate,*/ getTabTitle }

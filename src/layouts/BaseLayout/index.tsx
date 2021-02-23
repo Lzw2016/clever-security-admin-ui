@@ -500,7 +500,7 @@ class BaseLayout<P extends BaseLayoutProps, S extends BaseLayoutState> extends R
   /** 获取多标签页页面 */
   protected getTabPages(multiTabs: MultiTabItem[]) {
     return multiTabs.map(tab => {
-      const { mountedDomId, multiTabKey, menuItem: { runtimeRouter }, loading } = tab;
+      const { mountedDomId, tabTitle, multiTabKey, menuItem: { runtimeRouter }, loading } = tab;
       if (tab.pageType === "iframe") {
         return (
           <Tabs.TabPane key={multiTabKey} tab={runtimeRouter.name} forceRender={true} closable={true}>
@@ -509,7 +509,7 @@ class BaseLayout<P extends BaseLayoutProps, S extends BaseLayoutState> extends R
         );
       }
       return (
-        <Tabs.TabPane key={multiTabKey} tab={runtimeRouter.name} forceRender={true} closable={true}>
+        <Tabs.TabPane key={multiTabKey} tab={tabTitle || runtimeRouter.name} forceRender={true} closable={true}>
           <Spin size={"default"} spinning={loading} delay={200} tip="页面加载中..." style={{ height: "100%" }} wrapperClassName={styles.spinWrapper}>
             <PageContent>
               <SimpleBarReact className={classNames(styles.simpleBar)} autoHide={true}>
@@ -645,18 +645,25 @@ class BaseLayout<P extends BaseLayoutProps, S extends BaseLayoutState> extends R
         if (multiTab.pageType === "react") {
         } else if (multiTab.pageType === "amis") {
           window.currentAmisId = multiTab.mountedDomId;
-          // 重新加载amis组件
-          if (multiTab.amisPageName && window.amisPages && window.amisPages[multiTab.amisPageName]) {
+          if (multiTab.component) {
             const component = multiTab.component as AmisPage;
+            if (component.getTabTitle instanceof Function) {
+              const tabTitle = component.getTabTitle(multiTab.menuItem?.runtimeRouter?.name, currentMenu, location, match);
+              if (tabTitle) multiTab.tabTitle = tabTitle;
+            }
             const globalData: AmisPageGlobalData = { menuItem: multiTab.menuItem, location: multiTab.location, match: multiTab.match };
             let shouldPageUpdate = false;
             if (component.shouldPageUpdate instanceof Function) shouldPageUpdate = component.shouldPageUpdate(globalData);
+            // 重新加载amis组件
             if (shouldPageUpdate) {
               const usePageDidUpdate = component.pageDidUpdate instanceof Function;
               if (!usePageDidUpdate) amisRender(multiTab.mountedDomId, { type: "page", body: "" });
               const amisPage = amisRender(multiTab.mountedDomId, component.schema, { data: globalData });
-              if (amisPage) window.amisPages[multiTab.amisPageName] = amisPage;
-              if (usePageDidUpdate && component.pageDidUpdate) component.pageDidUpdate(window.amisPages[multiTab.amisPageName]);
+              if (usePageDidUpdate && component.pageDidUpdate) component.pageDidUpdate(amisPage);
+              if (multiTab.amisPageName && amisPage) {
+                if (!window.amisPages) window.amisPages = {};
+                window.amisPages[multiTab.amisPageName] = amisPage;
+              }
             }
           }
         }
@@ -692,6 +699,10 @@ class BaseLayout<P extends BaseLayoutProps, S extends BaseLayoutState> extends R
           const component = await loadAmisPageByPath(pagePath!);
           newMultiTab.component = component;
           newMultiTab.amisPageName = component.amisPageName;
+          if (component.getTabTitle instanceof Function) {
+            const tabTitle = component.getTabTitle(runtimeRouter.name, currentMenu, location, match);
+            if (tabTitle) newMultiTab.tabTitle = tabTitle;
+          }
           // 初始化全局数据
           const globalData: AmisPageGlobalData = { menuItem: newMultiTab.menuItem, location: newMultiTab.location, match: newMultiTab.match };
           if (component.initGlobalData instanceof Function) component.initGlobalData(globalData);
