@@ -38,6 +38,40 @@ function addDialog() {
   };
 }
 
+/** 编辑对话框 */
+function editDialog() {
+  return {
+    type: "button",
+    label: "编辑",
+    level: "info",
+    size: "xs",
+    actionType: "dialog",
+    dialog: {
+      title: "编辑数据域 - ${name}",
+      body: {
+        type: "form",
+        className: classnames(FormClassName.flex_label5x),
+        api: {
+          method: "put",
+          url: apiPath.DomainController.updateDomain,
+        },
+        controls: [
+          { type: "text", name: "id", label: "域ID", disabled: true },
+          { type: "text", name: "redisNameSpace", label: "Redis前缀", disabled: true },
+          {
+            type: "text", name: "name", label: "域名称", placeholder: "请输入域名称",
+            required: true, validations: { minLength: 4, maxLength: 100 }, validationErrors: {},
+          },
+          {
+            type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 2, maxRows: 6,
+            validations: { maxLength: 500 }, validationErrors: {},
+          },
+        ]
+      }
+    }
+  };
+}
+
 const schema = {
   type: "page",
   title: "",
@@ -83,7 +117,7 @@ const schema = {
       primaryField: "id",
       columns: [
         { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
-        { name: "id", label: "域ID", sortable: true, type: "link", body: "${id}", href: "#/nest-side/security/domain-list/detail?domainId=${id}", },
+        { name: "id", label: "域ID", sortable: true/*, type: "link", body: "${id}", href: "#/nest-side/security/domain-list/detail?domainId=${id}", */ },
         { name: "name", label: "域名称", sortable: true },
         { name: "redisNameSpace", label: "Redis前缀", sortable: true },
         { name: "description", label: "说明", sortable: true, type: "tpl", tpl: "${description|truncate:20}" },
@@ -92,13 +126,23 @@ const schema = {
         {
           type: "operation", label: "操作", width: 80, toggled: true,
           buttons: [
-            /*detailsDialog(), editDialog(),*/
+            editDialog(),
             {
               type: "action",
               label: "详情",
               size: "xs",
               onClick: (_: any, context: any) => {
-                routerHistory.push({ path: "/nest-side/security/domain-list/detail", query: { domainId: context.data.id }, state: context.data });
+                console.log(context.data)
+                  routerHistory.push({
+                    path: "/nest-side/security/domain-list/detail", query: {
+                      domainId: context.data.id,
+                      name: context.data.name,
+                      redisNameSpace: context.data.redisNameSpace,
+                      description: context.data.description,
+                      createAt: context.data.createAt,
+                      updateAt: context.data.updateAt
+                    }
+                  });
               }
             },
           ]
