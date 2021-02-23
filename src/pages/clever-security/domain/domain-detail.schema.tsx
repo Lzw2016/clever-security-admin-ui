@@ -21,7 +21,7 @@ const shouldPageUpdate: AmisPage["shouldPageUpdate"] = nextGlobalData => {
     flag = false;
   }
   globalData = nextGlobalData;
-  console.log("####################### flag -> ", flag);
+  console.log("####################### flag -> ", flag, "| state -> ", nextGlobalData.location.state);
   return flag;
 }
 

@@ -1,5 +1,6 @@
 import lodash from 'lodash';
 import { parse } from 'qs'
+import { routerHistory } from "@/utils/router";
 
 /**
  * 检查 name 是否是 o 对象的直接或继承属性。
@@ -86,7 +87,8 @@ const getRouterLocation = (): RouterLocation => {
   const searchExists = lodash.trim(searchStr).length > 0;
   const search = searchExists ? searchStr : undefined;
   const query = searchExists ? parse(searchStr) : undefined;
-  return { path, search, query };
+  const state = routerHistory.getLocationState(path)?.state ?? {};
+  return { path, search, query, state };
 }
 
 export { hasPropertyIn, getPropOrStateValue, noValue, hasValue, getStrValue, getUrlParam, getPageLocation, getRouterLocation };
