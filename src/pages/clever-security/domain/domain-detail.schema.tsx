@@ -32,7 +32,7 @@ const shouldPageUpdate: AmisPage["shouldPageUpdate"] = nextGlobalData => {
 // };
 
 const getTabTitle: AmisPage["getTabTitle"] = (defaultName, currentMenu, location, match) => {
-  if (location.state?.name) return `${defaultName}-${location.state.name}`;
+  if (location.query?.name) return `${defaultName}-${location.query.name}`;
   return defaultName;
 }
 
