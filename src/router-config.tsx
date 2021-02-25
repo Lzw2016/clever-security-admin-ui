@@ -119,13 +119,13 @@ const routerConfigs: LayoutConfig[] = [
             routes: [{ path: "/detail", name: "数据域详情", pagePath: "/clever-security/domain/domain-detail.schema.tsx" }]
           },
           { path: "/user-list", name: "用户管理", icon: "icon-yonghuguanli1", pagePath: "/clever-security/user/user-list.schema.tsx" },
-          { path: "/role-list", name: "角色管理", icon: "icon-jiaoseguanli1", pagePath: "/clever-security/empty.schema.tsx" },
+          { path: "/role-list", name: "角色管理", icon: "icon-jiaoseguanli1", pagePath: "/clever-security/role-list.schema.tsx" },
           {
             path: "/permission", name: "权限管理", icon: "icon-quanxian",
             routes: [
               { path: "/api", name: "API权限", pagePath: "/clever-security/api-permission/api-permission-list.schema.tsx" },
-              { path: "/ui", name: "UI权限", pagePath: "/clever-security/empty.schema.tsx" },
-              { path: "/menu", name: "菜单管理", pagePath: "/clever-security/empty.schema.tsx" },
+              { path: "/ui", name: "UI权限", pagePath: "/clever-security/ui-permission-list.schema.tsx" },
+              { path: "/menu", name: "菜单管理", pagePath: "/clever-security/menu-permission-list.schema.tsx" },
             ]
           },
           { path: "/server-token-list", name: "ServerToken管理", icon: "icon-token1", pagePath: "/clever-security/server-access-token-list.schema.tsx" },
