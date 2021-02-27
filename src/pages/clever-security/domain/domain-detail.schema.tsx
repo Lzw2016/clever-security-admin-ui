@@ -11,7 +11,6 @@ let globalData: AmisPageGlobalData | undefined;
 
 const initGlobalData: AmisPage["initGlobalData"] = initGlobalData => {
   globalData = initGlobalData;
-  console.log("####################### globalData -> ", globalData);
 }
 
 const shouldPageUpdate: AmisPage["shouldPageUpdate"] = nextGlobalData => {
@@ -21,19 +20,222 @@ const shouldPageUpdate: AmisPage["shouldPageUpdate"] = nextGlobalData => {
     flag = false;
   }
   globalData = nextGlobalData;
-  console.log("####################### flag -> ", flag, "| state -> ", nextGlobalData.location.state);
   return flag;
 }
-
-// const pageDidUpdate: AmisPage["pageDidUpdate"] = amisApp => {
-//   // console.log("pageDidUpdateAAAAAAAAAAAAAAA", amisApp.getComponentByName("page.tabs"));
-//   // console.log("pageDidUpdateAAAAAAAAAAAAAAA", Object.keys(amisApp.getComponents()[0].reload()) );
-//   // console.log("pageDidUpdateAAAAAAAAAAAAAAA", Object.keys(amisApp.getComponents()[0].__proto__.__proto__) );
-// };
 
 const getTabTitle: AmisPage["getTabTitle"] = (defaultName, currentMenu, location, match) => {
   if (location.query?.name) return `${defaultName}-${location.query.name}`;
   return defaultName;
+}
+
+/** 新增用户对话框(未完成) */
+function addUser() {
+  return {
+    label: "新增",
+    icon: "fa fa-plus",
+    actionType: "dialog",
+    dialog: {
+      title: "新增数据域",
+      body: ""
+    }
+  };
+}
+
+/** 解绑用户对话框 */
+function untieUser() {
+  return {
+    label: "解绑",
+    type: "button",
+    size: "xs",
+    actionType: "ajax",
+    api: {
+      method: "delete",
+      url: `${apiPath.UserDomainController.delUserDomain}?domainId=$location.query.domainId&uid=$uid`,
+      adaptor: (payload: any) => ({ ...payload, data: {} }),
+    },
+    confirmText: "确认要解绑该用户: ${nickname}?",
+  }
+}
+
+/** 删除角色 */
+function removeRole() {
+  return {
+    label: "删除",
+    type: "button",
+    size: "xs",
+    level: "danger",
+    actionType: "ajax",
+    api: {
+      method: "delete",
+      url: `${apiPath.RoleController.delRole}?domainId=$location.query.domainId&id=$id`,
+      adaptor: (payload: any) => ({ ...payload, data: {} }),
+    },
+    confirmText: "确认要删除该角色: ${name}?",
+  };
+}
+
+/** 新增角色 */
+function addRole() {
+  return {
+    label: "新增",
+    icon: "fa fa-plus",
+    actionType: "dialog",
+    dialog: {
+      title: "新增数据域",
+      body: {
+        type: "form",
+        className: classnames(FormClassName.flex_label5x),
+        api: {
+          method: "post",
+          url: apiPath.RoleController.addRole,
+          data: {
+            domainId: "$location.query.domainId",
+            name: "$name",
+            description: "$description",
+          },
+        },
+        trimValues: true,
+        controls: [
+          { type: "text", name: "name", label: "角色名", placeholder: "请输入角色名", required: true },
+          {
+            type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 2, maxRows: 6,
+            validations: { maxLength: 500 }, validationErrors: {},
+          },
+        ]
+      }
+    }
+  };
+}
+
+/** 修改角色 */
+function updateRole() {
+  return {
+    type: "button",
+    label: "编辑",
+    level: "info",
+    size: "xs",
+    actionType: "dialog",
+    dialog: {
+      title: "修改角色",
+      body: {
+        type: "form",
+        className: classnames(FormClassName.flex_label5x),
+        api: {
+          method: "put",
+          url: apiPath.RoleController.updateRole,
+          data: {
+            domainId: "$location.query.domainId",
+            id: "$id",
+            name: "$name",
+            enabled: "$enabled",
+            description: "$description",
+          },
+        },
+        controls: [
+          { type: "text", name: "id", label: "ID", disabled: true },
+          { type: "text", name: "name", label: "角色名称", },
+          { type: "select", name: "enabled", label: "是否启用", options: enabled },
+          {
+            type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 2, maxRows: 6,
+            validations: { maxLength: 500 }, validationErrors: {},
+          },
+        ]
+      }
+    }
+  };
+}
+
+/** api权限详情 */
+function apiDetail() {
+  return {
+    type: "button",
+    label: "详情",
+    level: "info",
+    size: "xs",
+    actionType: "dialog",
+    dialog: {
+      title: "api权限详情",
+      closeOnEsc: true,
+      actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
+      body: {
+        type: "form",
+        className: classnames(FormClassName.flex_label5x),
+        controls: [
+          { name: "className", label: "controller类名称", type: "static" },
+          { name: "methodName", label: "controller类的方法名称", type: "static" },
+          { name: "methodParams", label: "controller类的方法参数签名", type: "static" },
+          { name: "apiPath", label: "API接口地址", type: "static" },
+          { name: "apiExist", label: "API接口是否存在", type: "static-mapping", map: enum2object(exist) },
+          { name: "createAt", label: "创建时间", type: "static" },
+          { name: "updateAt", label: "更新时间", type: "static" },
+          { type: "static", name: "description", label: "说明" },
+        ]
+      }
+    }
+  };
+}
+
+/** ui权限详情 */
+function uiDetail() {
+  return {
+    type: "button",
+    label: "详情",
+    level: "info",
+    size: "xs",
+    actionType: "dialog",
+    dialog: {
+      title: "ui权限详情",
+      closeOnEsc: true,
+      actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
+      body: {
+        type: "form",
+        className: classnames(FormClassName.flex_label5x),
+        controls: [
+          { name: "uiName", label: "UI组件名", type: "static" },
+          { name: "title", label: "标题", type: "static" },
+          { name: "enabled", label: "是否启用", type: "static-mapping", map: enum2object(enabled) },
+          { name: "createAt", label: "创建时间", type: "static" },
+          { name: "updateAt", label: "更新时间", type: "static" },
+          { name: "description", label: "描述", type: "static" },
+        ]
+      }
+    }
+  };
+}
+
+/** menu权限详情 */
+function menuDetail() {
+  return {
+    type: "button",
+    label: "详情",
+    level: "info",
+    size: "xs",
+    actionType: "dialog",
+    dialog: {
+      title: "菜单权限详情",
+      closeOnEsc: true,
+      actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
+      body: {
+        type: "form",
+        className: classnames(FormClassName.flex_label5x),
+        controls: [
+          { name: "name", label: "菜单名称", type: "text" },
+          { name: "icon", label: "菜单图标", type: "text" },
+          { name: "path", label: "菜单路径", type: "text" },
+          { name: "pagePath", label: "页面路径", type: "text" },
+          { name: "hideMenu", label: "隐藏当前菜单和子菜单", type: "mapping", map: enum2object(ishideMenu) },
+          { name: "hideChildrenMenu", label: "隐藏子菜单", type: "mapping", map: enum2object(ishideMenu) },
+          { name: "extConfig", label: "菜单扩展配置", type: "text" },
+          { name: "menuSort", label: "菜单排序", type: "text" },
+          { name: "title", label: "标题", type: "text" },
+          { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
+          { name: "createAt", label: "创建时间", type: "text" },
+          { name: "updateAt", label: "更新时间", type: "text" },
+          { name: "description", label: "说明", type: "text" },
+        ]
+      }
+    }
+  };
 }
 
 const schema = {
@@ -42,15 +244,6 @@ const schema = {
   title: "",
   toolbar: [],
   body: [
-    {
-      type: "form",
-      name: "form",
-      wrapWithPanel: false,
-      mode: "inline",
-      controls: [
-        { type: "static", name: "location.query.name", label: "域名" },
-      ]
-    },
     {
       type: "tabs",
       mode: "line",
@@ -61,7 +254,8 @@ const schema = {
           body: {
             type: "form",
             mode: "horizontal",
-            className: classnames(FormClassName.flex_label6x),
+            className: classnames(FormClassName.label5x),
+            wrapWithPanel: false,
             controls: [
               { type: "static", name: "location.query.domainId", label: "域ID" },
               { type: "static", name: "location.query.name", label: "域名称" },
@@ -69,16 +263,6 @@ const schema = {
               { type: "static", name: "location.query.description", label: "说明" },
               { type: "static", name: "location.query.createAt", label: "创建时间" },
               { type: "static", name: "location.query.updateAt", label: "更新时间" },
-            ],
-            actions: [
-              {
-                type: "action",
-                label: "返回",
-                onClick: () => {
-                  history.back()
-                }
-              },
-              { type: "submit", level: "primary", label: "提交" },
             ],
           }
         },
@@ -431,214 +615,4 @@ const schema = {
   ],
 };
 
-/** 新增用户对话框(未完成) */
-function addUser() {
-  return {
-    label: "新增",
-    icon: "fa fa-plus",
-    actionType: "dialog",
-    dialog: {
-      title: "新增数据域",
-      body: ""
-    }
-  };
-}
-
-/** 解绑用户对话框 */
-function untieUser() {
-  return {
-    label: "解绑",
-    type: "button",
-    size: "xs",
-    actionType: "ajax",
-    api: {
-      method: "delete",
-      url: `${apiPath.UserDomainController.delUserDomain}?domainId=$location.query.domainId&uid=$uid`,
-      adaptor: (payload: any) => ({ ...payload, data: {} }),
-    },
-    confirmText: "确认要解绑该用户: ${nickname}?",
-  }
-}
-
-/** 删除角色 */
-function removeRole() {
-  return {
-    label: "删除",
-    type: "button",
-    size: "xs",
-    level: "danger",
-    actionType: "ajax",
-    api: {
-      method: "delete",
-      url: `${apiPath.RoleController.delRole}?domainId=$location.query.domainId&id=$id`,
-      adaptor: (payload: any) => ({ ...payload, data: {} }),
-    },
-    confirmText: "确认要删除该角色: ${name}?",
-  };
-}
-
-/** 新增角色 */
-function addRole() {
-  return {
-    label: "新增",
-    icon: "fa fa-plus",
-    actionType: "dialog",
-    dialog: {
-      title: "新增数据域",
-      body: {
-        type: "form",
-        className: classnames(FormClassName.flex_label5x),
-        api: {
-          method: "post",
-          url: apiPath.RoleController.addRole,
-          data: {
-            domainId: "$location.query.domainId",
-            name: "$name",
-            description: "$description",
-          },
-        },
-        trimValues: true,
-        controls: [
-          { type: "text", name: "name", label: "角色名", placeholder: "请输入角色名", required: true },
-          {
-            type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 2, maxRows: 6,
-            validations: { maxLength: 500 }, validationErrors: {},
-          },
-        ]
-      }
-    }
-  };
-}
-
-/** 修改角色 */
-function updateRole() {
-  return {
-    type: "button",
-    label: "编辑",
-    level: "info",
-    size: "xs",
-    actionType: "dialog",
-    dialog: {
-      title: "修改角色",
-      body: {
-        type: "form",
-        className: classnames(FormClassName.flex_label5x),
-        api: {
-          method: "put",
-          url: apiPath.RoleController.updateRole,
-          data: {
-            domainId: "$location.query.domainId",
-            id: "$id",
-            name: "$name",
-            enabled: "$enabled",
-            description: "$description",
-          },
-        },
-        controls: [
-          { type: "text", name: "id", label: "ID", disabled: true },
-          { type: "text", name: "name", label: "角色名称", },
-          { type: "select", name: "enabled", label: "是否启用", options: enabled },
-          {
-            type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 2, maxRows: 6,
-            validations: { maxLength: 500 }, validationErrors: {},
-          },
-        ]
-      }
-    }
-  };
-}
-
-/** api权限详情 */
-function apiDetail() {
-  return {
-    type: "button",
-    label: "详情",
-    level: "info",
-    size: "xs",
-    actionType: "dialog",
-    dialog: {
-      title: "api权限详情",
-      closeOnEsc: true,
-      actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
-      body: {
-        type: "form",
-        className: classnames(FormClassName.flex_label5x),
-        controls: [
-          { name: "className", label: "controller类名称", type: "static" },
-          { name: "methodName", label: "controller类的方法名称", type: "static" },
-          { name: "methodParams", label: "controller类的方法参数签名", type: "static" },
-          { name: "apiPath", label: "API接口地址", type: "static" },
-          { name: "apiExist", label: "API接口是否存在", type: "static-mapping", map: enum2object(exist) },
-          { name: "createAt", label: "创建时间", type: "static" },
-          { name: "updateAt", label: "更新时间", type: "static" },
-          { type: "static", name: "description", label: "说明" },
-        ]
-      }
-    }
-  };
-}
-
-/** ui权限详情 */
-function uiDetail() {
-  return {
-    type: "button",
-    label: "详情",
-    level: "info",
-    size: "xs",
-    actionType: "dialog",
-    dialog: {
-      title: "ui权限详情",
-      closeOnEsc: true,
-      actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
-      body: {
-        type: "form",
-        className: classnames(FormClassName.flex_label5x),
-        controls: [
-          { name: "uiName", label: "UI组件名", type: "static" },
-          { name: "title", label: "标题", type: "static" },
-          { name: "enabled", label: "是否启用", type: "static-mapping", map: enum2object(enabled) },
-          { name: "createAt", label: "创建时间", type: "static" },
-          { name: "updateAt", label: "更新时间", type: "static" },
-          { name: "description", label: "描述", type: "static" },
-        ]
-      }
-    }
-  };
-}
-
-/** menu权限详情 */
-function menuDetail() {
-  return {
-    type: "button",
-    label: "详情",
-    level: "info",
-    size: "xs",
-    actionType: "dialog",
-    dialog: {
-      title: "菜单权限详情",
-      closeOnEsc: true,
-      actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
-      body: {
-        type: "form",
-        className: classnames(FormClassName.flex_label5x),
-        controls: [
-          { name: "name", label: "菜单名称", type: "text" },
-          { name: "icon", label: "菜单图标", type: "text" },
-          { name: "path", label: "菜单路径", type: "text" },
-          { name: "pagePath", label: "页面路径", type: "text" },
-          { name: "hideMenu", label: "隐藏当前菜单和子菜单", type: "mapping", map: enum2object(ishideMenu) },
-          { name: "hideChildrenMenu", label: "隐藏子菜单", type: "mapping", map: enum2object(ishideMenu) },
-          { name: "extConfig", label: "菜单扩展配置", type: "text" },
-          { name: "menuSort", label: "菜单排序", type: "text" },
-          { name: "title", label: "标题", type: "text" },
-          { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
-          { name: "createAt", label: "创建时间", type: "text" },
-          { name: "updateAt", label: "更新时间", type: "text" },
-          { name: "description", label: "说明", type: "text" },
-        ]
-      }
-    }
-  };
-}
-
-export { schema, amisPageName, initGlobalData, shouldPageUpdate, /*pageDidUpdate,*/ getTabTitle }
+export { schema, amisPageName, initGlobalData, shouldPageUpdate, getTabTitle }
