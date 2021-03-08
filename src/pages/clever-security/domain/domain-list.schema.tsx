@@ -132,12 +132,8 @@ const schema = {
               label: "详情",
               size: "xs",
               onClick: (_: any, context: any) => {
-                const { id, name, redisNameSpace, description, createAt, updateAt } = context.data ?? {};
-                routerHistory.push({
-                  path: "/nest-side/security/domain-list/detail",
-                  query: { domainId: id, name, redisNameSpace, description, createAt, updateAt },
-                  // state: context.data
-                });
+                const { id, name } = context.data ?? {};
+                routerHistory.push({ path: "/nest-side/security/domain-list/detail", query: { domainId: id, name } });
               }
             },
           ]

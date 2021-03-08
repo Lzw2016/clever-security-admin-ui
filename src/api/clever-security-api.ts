@@ -4,6 +4,7 @@ const apiPath = {
   DomainController: {
     all: `${serverHost}/security/admin/api/domain/all`,
     pageQuery: `${serverHost}/security/admin/api/domain/page_query`,
+    domainDetail: `${serverHost}/security/admin/api/domain/detail`,
     addDomain: `${serverHost}/security/admin/api/domain/add`,
     updateDomain: `${serverHost}/security/admin/api/domain/update`,
   },

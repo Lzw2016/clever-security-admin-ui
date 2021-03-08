@@ -1,7 +1,7 @@
 import classnames from "classnames";
 import { apiPath } from "@/api/clever-security-api";
 import { FormClassName } from "@/amis-types";
-import { enabled, ishideMenu } from "@/pages/clever-security/enum-data";
+import { enabled, isHideMenu } from "@/pages/clever-security/enum-data";
 import { enum2object } from "@/utils/enum";
 
 /** 菜单权限详情 */
@@ -24,8 +24,8 @@ function menuDetail() {
           { name: "icon", label: "菜单图标", type: "text" },
           { name: "path", label: "菜单路径", type: "text" },
           { name: "pagePath", label: "页面路径", type: "text" },
-          { name: "hideMenu", label: "隐藏当前菜单和子菜单", type: "mapping", map: enum2object(ishideMenu) },
-          { name: "hideChildrenMenu", label: "隐藏子菜单", type: "mapping", map: enum2object(ishideMenu) },
+          { name: "hideMenu", label: "隐藏当前菜单和子菜单", type: "mapping", map: enum2object(isHideMenu) },
+          { name: "hideChildrenMenu", label: "隐藏子菜单", type: "mapping", map: enum2object(isHideMenu) },
           { name: "extConfig", label: "菜单扩展配置", type: "text" },
           { name: "menuSort", label: "菜单排序", type: "text" },
           { name: "title", label: "标题", type: "text" },

@@ -70,6 +70,18 @@ const validateCode: {
   ],
 };
 
+const user: {
+  /** 是否启用，0:禁用，1:启用 */
+  enabled: EnumArray;
+  [name: string]: EnumArray;
+} = {
+  enabled: [
+    { label: "禁用", value: "0" },
+    { label: "启用", value: "1" },
+  ],
+};
+
+// ------------------------------------------------------------
 const exist: EnumArray = [
   { label: "不存在", value: "0" },
   { label: "存在", value: "1" },
@@ -80,7 +92,7 @@ const enabled: EnumArray = [
   { label: "启用", value: "1" },
 ];
 
-const ishideMenu: EnumArray = [
+const isHideMenu: EnumArray = [
   { label: "显示", value: 0 },
   { label: "隐藏", value: 1 },
 ];
@@ -126,14 +138,16 @@ const register: {
     { label: "注册成功仅关联到域", value: 2 }
   ]
 }
+
 export {
   serverAccessToken,
   jwtToken,
   scanCodeLogin,
   validateCode,
+  user,
   exist,
   enabled,
-  ishideMenu,
+  isHideMenu,
   login,
   register
 }

@@ -2,17 +2,16 @@ import { apiPath } from "@/api/clever-security-api";
 import classnames from "classnames";
 import { FormClassName } from "@/amis-types";
 import { enum2object } from "@/utils/enum";
-import { enabled, exist, ishideMenu } from "../enum-data";
-import styles from "./domain-detail.schema.less";
-
-const amisPageName = "domainId";
+import { enabled, exist, isHideMenu, user } from "../enum-data";
 
 let globalData: AmisPageGlobalData | undefined;
 
+/** 初始化全局数据 */
 const initGlobalData: AmisPage["initGlobalData"] = initGlobalData => {
   globalData = initGlobalData;
 }
 
+/** 是否需要更新页面 */
 const shouldPageUpdate: AmisPage["shouldPageUpdate"] = nextGlobalData => {
   const { location: { query } } = nextGlobalData;
   let flag = true;
@@ -23,22 +22,10 @@ const shouldPageUpdate: AmisPage["shouldPageUpdate"] = nextGlobalData => {
   return flag;
 }
 
+/** 获取多标签页显示页签名 */
 const getTabTitle: AmisPage["getTabTitle"] = (defaultName, currentMenu, location, match) => {
   if (location.query?.name) return `${defaultName}-${location.query.name}`;
   return defaultName;
-}
-
-/** 新增用户对话框(未完成) */
-function addUser() {
-  return {
-    label: "新增",
-    icon: "fa fa-plus",
-    actionType: "dialog",
-    dialog: {
-      title: "新增数据域",
-      body: ""
-    }
-  };
 }
 
 /** 解绑用户对话框 */
@@ -223,8 +210,8 @@ function menuDetail() {
           { name: "icon", label: "菜单图标", type: "text" },
           { name: "path", label: "菜单路径", type: "text" },
           { name: "pagePath", label: "页面路径", type: "text" },
-          { name: "hideMenu", label: "隐藏当前菜单和子菜单", type: "mapping", map: enum2object(ishideMenu) },
-          { name: "hideChildrenMenu", label: "隐藏子菜单", type: "mapping", map: enum2object(ishideMenu) },
+          { name: "hideMenu", label: "隐藏当前菜单和子菜单", type: "mapping", map: enum2object(isHideMenu) },
+          { name: "hideChildrenMenu", label: "隐藏子菜单", type: "mapping", map: enum2object(isHideMenu) },
           { name: "extConfig", label: "菜单扩展配置", type: "text" },
           { name: "menuSort", label: "菜单排序", type: "text" },
           { name: "title", label: "标题", type: "text" },
@@ -238,6 +225,189 @@ function menuDetail() {
   };
 }
 
+// -------------------------------------------------------------------------------------------------------------------------------------------------------
+
+interface CrudTemplateParam {
+  api: any;
+  filter: any;
+  columns: any[];
+  bulkActions: any[];
+  headerToolbar: any[];
+  extProps: any;
+}
+
+/** CRUD模版代码 */
+function crudTemplate({ api, filter, columns, bulkActions, headerToolbar, extProps }: CrudTemplateParam) {
+  return {
+    type: "crud",
+    // --------------------------------------------------------------- 常规配置
+    perPageAvailable: [10, 20, 50, 100],
+    syncLocation: false,
+    // labelTpl: "${id}",
+    draggable: false,
+    hideQuickSaveBtn: false,
+    autoJumpToTopOnPagerChange: false,
+    affixHeader: false,
+    syncResponse2Query: true,
+    // --------------------------------------------------------------- 请求数据配置
+    api: api,
+    defaultParams: { pageNo: 1, pageSize: 10 },
+    pageField: "pageNo",
+    perPageField: "pageSize",
+    // --------------------------------------------------------------- 查询条件表单配置
+    // 条件过滤表单
+    filterTogglable: true,
+    filter: filter,
+    // --------------------------------------------------------------- 表格列配置
+    primaryField: "id",
+    columns: [...columns],
+    // --------------------------------------------------------------- 表格工具栏配置
+    bulkActions: [
+      ...bulkActions
+    ],
+    headerToolbar: [
+      ...headerToolbar,
+      { align: "left", type: "bulkActions" },
+      { align: "right", type: "columns-toggler" },
+    ],
+    footerToolbar: [
+      { align: "right", type: "pagination" },
+      { align: "right", type: "switch-per-page" },
+      { align: "right", type: "statistics" },
+    ],
+    ...extProps,
+  };
+}
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------------- 数据域信息
+
+/** 数据域信息 */
+function domainDetail() {
+  return {
+    title: "数据域信息",
+    body: {
+      type: "form",
+      mode: "horizontal",
+      className: classnames(FormClassName.label5x),
+      wrapWithPanel: false,
+      initApi: {
+        method: "get",
+        url: `${apiPath.DomainController.domainDetail}?id=$location.query.domainId`,
+      },
+      controls: [
+        { type: "static", name: "id", label: "域ID" },
+        { type: "static", name: "name", label: "域名称" },
+        { type: "static", name: "redisNameSpace", label: "Redis前缀" },
+        { type: "static", name: "description", label: "说明" },
+        { type: "static", name: "createAt", label: "创建时间" },
+        { type: "static", name: "updateAt", label: "更新时间" },
+      ],
+    }
+  };
+}
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------------- 用户管理
+
+/** 新增用户对话框 */
+function addUser() {
+  return {
+    label: "新增用户",
+    className: "mr-2",
+    icon: "fa fa-plus",
+    actionType: "dialog",
+    dialog: {
+      title: "新增数据域",
+      body: ""
+    }
+  };
+}
+
+/** 绑定用户对话框 */
+function bindUser() {
+  return {
+    label: "绑定用户",
+    icon: "fa fa-plus",
+    className: "mr-2",
+    actionType: "dialog",
+    dialog: {
+      title: "新增数据域",
+      body: ""
+    }
+  };
+}
+
+/** 解绑用户对话框 */
+function unbindUser() {
+  return {
+    label: "解绑用户",
+    icon: "fa fa-times",
+    actionType: "dialog",
+    dialog: {
+      title: "新增数据域",
+      body: ""
+    }
+  };
+}
+
+/** 用户管理叶签 */
+function userTab() {
+  return {
+    title: "用户管理",
+    body: crudTemplate({
+      api: {
+        method: "get",
+        url: apiPath.UserController.pageQuery,
+        data: {
+          pageNo: "$pageNo",
+          pageSize: "$pageSize",
+          domainId: "$location.query.domainId",
+          keyword: "$keyword",
+          createAtStart: "$createAtStart",
+          createAtEnd: "$createAtEnd",
+        },
+      },
+      filter: {
+        title: "",
+        className: classnames(FormClassName.label4x, FormClassName.input14x, "mb-4"),
+        wrapWithPanel: false,
+        trimValues: true,
+        submitOnChange: false,
+        controls: [
+          { type: "text", label: "用户信息", name: "keyword", placeholder: "登录名、手机号、邮箱、昵称", clearable: true },
+          { type: "date", label: "创建时间", name: "createAtStart", placeholder: "创建时间-开始", format: "YYYY-MM-DD 00:00:00", clearable: true, maxDate: "$createAtEnd" },
+          { type: "date", label: "创建时间", name: "createAtEnd", placeholder: "创建时间-结束", format: "YYYY-MM-DD 23:59:59", clearable: true, minDate: "$createAtStart" },
+          { label: "查询", level: "primary", type: "submit" },
+          { label: "重置", type: "reset" },
+        ],
+      },
+      columns: [
+        { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
+        // { name: "avatar", label: "用户头像", type: "image", thumbMode: "h-full", className: styles.avatar },
+        { name: "nickname", label: "昵称", sortable: true },
+        { name: "loginName", label: "登录名", sortable: true },
+        { name: "telephone", label: "手机号", sortable: true },
+        { name: "email", label: "邮箱", sortable: true },
+        { name: "enabled", label: "是否启用", sortable: true, type: "mapping", map: enum2object(user.enabled) },
+        { name: "createAt", label: "创建时间", sortable: true },
+        { name: "updateAt", label: "更新时间", sortable: true },
+        { type: "operation", label: "操作", width: 35, toggled: true, buttons: [untieUser()] },
+      ],
+      bulkActions: [
+        { align: "left", type: 'button', level: '', size: "sm", ...unbindUser() },
+      ],
+      headerToolbar: [
+        { align: "left", type: 'button', level: '', size: "sm", ...addUser() },
+        { align: "left", type: 'button', level: '', size: "sm", ...bindUser() },
+        // primary danger
+      ],
+      extProps: { multiple: true, keepItemSelectionOnPageChange: false },
+    }),
+  };
+}
+
+// -------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 const schema = {
   type: "page",
   name: "page",
@@ -249,94 +419,9 @@ const schema = {
       mode: "line",
       name: "tabs",
       tabs: [
-        {
-          title: "数据域信息",
-          body: {
-            type: "form",
-            mode: "horizontal",
-            className: classnames(FormClassName.label5x),
-            wrapWithPanel: false,
-            controls: [
-              { type: "static", name: "location.query.domainId", label: "域ID" },
-              { type: "static", name: "location.query.name", label: "域名称" },
-              { type: "static", name: "location.query.redisNameSpace", label: "Redis前缀" },
-              { type: "static", name: "location.query.description", label: "说明" },
-              { type: "static", name: "location.query.createAt", label: "创建时间" },
-              { type: "static", name: "location.query.updateAt", label: "更新时间" },
-            ],
-          }
-        },
-        {
-          title: "用户数据",
-          body: {
-            type: "crud",
-            name: "user_crud",
-            // --------------------------------------------------------------- 常规配置
-            perPageAvailable: [10, 20, 50, 100],
-            syncLocation: false,
-            draggable: false,
-            hideQuickSaveBtn: false,
-            autoJumpToTopOnPagerChange: false,
-            affixHeader: false,
-            syncResponse2Query: true,
-            // --------------------------------------------------------------- 请求数据配置
-            api: {
-              method: "get",
-              url: apiPath.UserController.pageQuery,
-              data: {
-                pageNo: "$pageNo",
-                pageSize: "$pageSize",
-                domainId: "$location.query.domainId",
-                keyword: "$keyword",
-                createAtStart: "$createAtStart",
-                createAtEnd: "$createAtEnd",
-              },
-            },
-            defaultParams: { pageNo: 1, pageSize: 10 },
-            pageField: "pageNo",
-            perPageField: "pageSize",
-            // --------------------------------------------------------------- 查询条件表单配置
-            // 条件过滤表单
-            filterTogglable: true,
-            filter: {
-              title: "",
-              className: classnames(FormClassName.label4x, FormClassName.input14x),
-              trimValues: true,
-              submitOnChange: false,
-              controls: [
-                { type: "text", label: "用户信息", name: "keyword", placeholder: "登录名、手机号、邮箱、昵称", clearable: true },
-                { type: "date", label: "创建时间", name: "createAtStart", placeholder: "创建时间-开始", format: "YYYY-MM-DD 00:00:00", clearable: true, maxDate: "$createAtEnd" },
-                { type: "date", label: "创建时间", name: "createAtEnd", placeholder: "创建时间-结束", format: "YYYY-MM-DD 23:59:59", clearable: true, minDate: "$createAtStart" },
-                { label: "查询", level: "primary", type: "submit" },
-                { label: "重置", type: "reset" },
-              ],
-            },
-            // --------------------------------------------------------------- 表格列配置
-            primaryField: "id",
-            columns: [
-              { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
-              { name: "avatar", label: "用户头像", type: "image", thumbMode: "h-full", className: styles.avatar },
-              { name: "nickname", label: "昵称", sortable: true },
-              { name: "loginName", label: "登录名", sortable: true },
-              { name: "telephone", label: "手机号", copyable: true, sortable: true },
-              { name: "email", label: "邮箱", copyable: true, sortable: true },
-              { name: "enabled", label: "是否启用", type: "switch", trueValue: 1, falseValue: 0 },
-              { name: "createAt", label: "创建时间", sortable: true },
-              { name: "updateAt", label: "更新时间", sortable: true },
-              { type: "operation", label: "操作", width: 35, toggled: true, buttons: [untieUser()] },
-            ],
-            // --------------------------------------------------------------- 表格工具栏配置
-            headerToolbar: [
-              { align: "left", type: 'button', level: 'primary', size: "sm", ...addUser() },
-              { align: "right", type: "columns-toggler" },
-            ],
-            footerToolbar: [
-              { align: "right", type: "pagination" },
-              { align: "right", type: "switch-per-page" },
-              { align: "right", type: "statistics" },
-            ],
-          },
-        },
+        domainDetail(),
+        userTab(),
+
         {
           title: "角色数据",
           body: {
@@ -615,4 +700,4 @@ const schema = {
   ],
 };
 
-export { schema, amisPageName, initGlobalData, shouldPageUpdate, getTabTitle }
+export { schema, initGlobalData, shouldPageUpdate, getTabTitle }
