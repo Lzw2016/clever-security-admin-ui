@@ -43,7 +43,6 @@ function editDialog() {
   return {
     type: "button",
     label: "编辑",
-    level: "info",
     size: "xs",
     actionType: "dialog",
     dialog: {
@@ -68,6 +67,19 @@ function editDialog() {
           },
         ]
       }
+    }
+  };
+}
+
+/** 详情页跳转 */
+function detailLink() {
+  return {
+    type: "action",
+    label: "详情",
+    size: "xs",
+    onClick: (_: any, context: any) => {
+      const { id, name } = context.data ?? {};
+      routerHistory.push({ path: "/nest-side/security/domain-list/detail", query: { domainId: id, name } });
     }
   };
 }
@@ -125,18 +137,7 @@ const schema = {
         { name: "updateAt", label: "更新时间", sortable: true },
         {
           type: "operation", label: "操作", width: 80, toggled: true,
-          buttons: [
-            editDialog(),
-            {
-              type: "action",
-              label: "详情",
-              size: "xs",
-              onClick: (_: any, context: any) => {
-                const { id, name } = context.data ?? {};
-                routerHistory.push({ path: "/nest-side/security/domain-list/detail", query: { domainId: id, name } });
-              }
-            },
-          ]
+          buttons: [editDialog(), detailLink()],
         },
       ],
       // --------------------------------------------------------------- 表格工具栏配置
