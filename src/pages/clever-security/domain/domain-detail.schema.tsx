@@ -484,7 +484,7 @@ const schema = {
         userTab(),
 
         {
-          title: "角色数据",
+          title: "角色管理",
           body: {
             type: "crud",
             // --------------------------------------------------------------- 常规配置
@@ -547,8 +547,9 @@ const schema = {
             ],
           }
         },
+
         {
-          title: "权限数据",
+          title: "菜单管理",
           body: {
             type: "tabs",
             mode: "radio",
@@ -755,6 +756,16 @@ const schema = {
               },
             ]
           }
+        },
+
+        {
+          title: "UI权限",
+          body: {}
+        },
+
+        {
+          title: "API权限",
+          body: {}
         },
       ]
     },
