@@ -28,22 +28,6 @@ const getTabTitle: AmisPage["getTabTitle"] = (defaultName, currentMenu, location
   return defaultName;
 }
 
-/** 解绑用户对话框 */
-function untieUser() {
-  return {
-    label: "解绑",
-    type: "button",
-    size: "xs",
-    actionType: "ajax",
-    api: {
-      method: "delete",
-      url: `${apiPath.UserDomainController.delUserDomain}?domainId=$location.query.domainId&uid=$uid`,
-      adaptor: (payload: any) => ({ ...payload, data: {} }),
-    },
-    confirmText: "确认要解绑该用户: ${nickname}?",
-  }
-}
-
 /** 删除角色 */
 function removeRole() {
   return {
@@ -230,6 +214,7 @@ function menuDetail() {
 interface CrudTemplateParam {
   api: any;
   filter: any;
+  primaryField: any;
   columns: any[];
   bulkActions: any[];
   headerToolbar: any[];
@@ -237,7 +222,7 @@ interface CrudTemplateParam {
 }
 
 /** CRUD模版代码 */
-function crudTemplate({ api, filter, columns, bulkActions, headerToolbar, extProps }: CrudTemplateParam) {
+function crudTemplate({ api, filter, primaryField, columns, bulkActions, headerToolbar, extProps }: CrudTemplateParam) {
   return {
     type: "crud",
     // --------------------------------------------------------------- 常规配置
@@ -259,7 +244,7 @@ function crudTemplate({ api, filter, columns, bulkActions, headerToolbar, extPro
     filterTogglable: true,
     filter: filter,
     // --------------------------------------------------------------- 表格列配置
-    primaryField: "id",
+    primaryField: primaryField,
     columns: [...columns],
     // --------------------------------------------------------------- 表格工具栏配置
     bulkActions: [
@@ -316,7 +301,7 @@ function addUser() {
     // icon: "fa fa-plus",
     actionType: "dialog",
     dialog: {
-      title: "新增数据域",
+      title: "新增(注册)用户",
       body: ""
     }
   };
@@ -330,8 +315,57 @@ function bindUser() {
     // icon: "fa fa-plus",
     actionType: "dialog",
     dialog: {
-      title: "新增数据域",
+      title: "选择用户绑定到当前域",
       body: ""
+    }
+  };
+}
+
+/** 解绑用户对话框 */
+function batchUnbindUser() {
+  return {
+    label: "解绑用户",
+    // icon: "fa fa-times",
+    actionType: "ajax",
+    // api: {
+    //   method: "delete",
+    //   url: `${serverHost}/!/amis-api/curd-page@mockDelete?orderId=$orderId`,
+    // },
+    confirmText: "确定解除选中用户与当前域的绑定?",
+  };
+}
+
+/** 详情对话框 */
+function userDetailsDialog() {
+  return {
+    type: "button",
+    label: "查看",
+    size: "xs",
+    actionType: "dialog",
+    dialog: {
+      title: "用户详情 - ${nickname}",
+      closeOnEsc: true,
+      actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
+      body: {
+        type: "form",
+        // mode: "inline",
+        className: classnames(FormClassName.flex_label5x),
+        controls: [
+          { name: "uid", label: "用户ID", type: "static" },
+          // { name: "avatar", label: "用户头像", type: "static-image", thumbMode: "cover" },
+          { name: "nickname", label: "用户昵称", type: "static" },
+          { name: "loginName", label: "登录名称", type: "static" },
+          { name: "telephone", label: "手机号", type: "static" },
+          { name: "email", label: "Email", type: "static" },
+          { name: "enabled", label: "是否启用", type: "mapping", map: enum2object(user.enabled) },
+          { name: "expiredTime", label: "过期时间", type: "static" },
+          { name: "registerChannel", label: "注册渠道", type: "mapping", map: enum2object(user.registerChannel) },
+          { name: "fromSource", label: "用户来源", type: "mapping", map: enum2object(user.fromSource) },
+          { name: "description", label: "说明", type: "static" },
+          { name: "createAt", label: "创建时间", type: "static" },
+          { name: "updateAt", label: "更新时间", type: "static" }
+        ]
+      }
     }
   };
 }
@@ -339,14 +373,17 @@ function bindUser() {
 /** 解绑用户对话框 */
 function unbindUser() {
   return {
-    label: "解绑用户",
-    // icon: "fa fa-times",
-    actionType: "dialog",
-    dialog: {
-      title: "新增数据域",
-      body: ""
-    }
-  };
+    label: "解绑",
+    type: "button",
+    size: "xs",
+    actionType: "ajax",
+    // api: {
+    //   method: "delete",
+    //   url: `${apiPath.UserDomainController.delUserDomain}?domainId=$location.query.domainId&uid=$uid`,
+    //   adaptor: (payload: any) => ({ ...payload, data: {} }),
+    // },
+    confirmText: "确定解除用户与当前域的绑定? 昵称: ${nickname}",
+  }
 }
 
 /** 用户管理叶签 */
@@ -361,39 +398,54 @@ function userTab() {
           pageNo: "$pageNo",
           pageSize: "$pageSize",
           domainId: "$location.query.domainId",
-          keyword: "$keyword",
+          userSearchKey: "$userSearchKey",
+          enabled: "$enabled",
+          registerChannel: "$registerChannel",
+          fromSource: "$fromSource",
+          expiredTimeStart: "$expiredTimeStart",
+          expiredTimeEnd: "$expiredTimeEnd",
           createAtStart: "$createAtStart",
           createAtEnd: "$createAtEnd",
         },
       },
       filter: {
         title: "",
-        className: classnames(FormClassName.label4x, FormClassName.input14x, "mb-4"),
+        className: classnames(FormClassName.label4x, FormClassName.input12x, "mb-4"),
         wrapWithPanel: false,
         trimValues: true,
         submitOnChange: false,
         controls: [
-          { type: "text", label: "用户信息", name: "keyword", placeholder: "登录名、手机号、邮箱、昵称", clearable: true },
+          { type: "text", label: "用户信息", name: "userSearchKey", placeholder: "登录名、手机号、邮箱、昵称", clearable: true },
+          { type: "select", label: "是否启用", name: "enabled", placeholder: "请选择", clearable: true, options: user.enabled },
+          { type: "select", label: "注册渠道", name: "registerChannel", placeholder: "请选择", clearable: true, options: user.registerChannel },
+          { type: "select", label: "用户来源", name: "fromSource", placeholder: "请选择", clearable: true, options: user.fromSource },
+          { type: "html", html: "<br />" },
+          { type: "date", label: "过期时间", name: "expiredTimeStart", placeholder: "过期时间-开始", format: "YYYY-MM-DD 00:00:00", clearable: true, maxDate: "$expiredTimeEnd" },
+          { type: "date", label: "过期时间", name: "expiredTimeEnd", placeholder: "过期时间-结束", format: "YYYY-MM-DD 23:59:59", clearable: true, minDate: "$expiredTimeStart" },
           { type: "date", label: "创建时间", name: "createAtStart", placeholder: "创建时间-开始", format: "YYYY-MM-DD 00:00:00", clearable: true, maxDate: "$createAtEnd" },
           { type: "date", label: "创建时间", name: "createAtEnd", placeholder: "创建时间-结束", format: "YYYY-MM-DD 23:59:59", clearable: true, minDate: "$createAtStart" },
           { label: "查询", level: "primary", type: "submit" },
           { label: "重置", type: "reset" },
         ],
       },
+      primaryField: "uid",
       columns: [
         { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
-        // { name: "avatar", label: "用户头像", type: "image", thumbMode: "h-full", className: styles.avatar },
+        // { name: "avatar", label: "用户头像" },
         { name: "nickname", label: "昵称", sortable: true },
         { name: "loginName", label: "登录名", sortable: true },
         { name: "telephone", label: "手机号", sortable: true },
         { name: "email", label: "邮箱", sortable: true },
         { name: "enabled", label: "是否启用", sortable: true, type: "mapping", map: enum2object(user.enabled) },
+        { name: "expiredTime", label: "过期时间", sortable: true },
+        { name: "registerChannel", label: "注册渠道", sortable: true, type: "mapping", map: enum2object(user.registerChannel) },
+        { name: "fromSource", label: "用户来源", sortable: true, type: "mapping", map: enum2object(user.fromSource) },
         { name: "createAt", label: "创建时间", sortable: true },
-        { name: "updateAt", label: "更新时间", sortable: true },
-        { type: "operation", label: "操作", width: 35, toggled: true, buttons: [untieUser()] },
+        // { name: "updateAt", label: "更新时间", sortable: true },
+        { type: "operation", label: "操作", width: 80, toggled: true, buttons: [userDetailsDialog(), unbindUser()] },
       ],
       bulkActions: [
-        { align: "left", type: 'button', level: '', size: "sm", ...unbindUser() },
+        { align: "left", type: 'button', level: '', size: "sm", ...batchUnbindUser() },
       ],
       headerToolbar: [
         { align: "left", type: 'button', level: '', size: "sm", ...addUser() },

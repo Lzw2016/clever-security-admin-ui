@@ -73,11 +73,27 @@ const validateCode: {
 const user: {
   /** 是否启用，0:禁用，1:启用 */
   enabled: EnumArray;
+  /** 用户注册渠道，0:管理员，1:PC-Web，2:H5，3:IOS-APP，4:Android-APP，5:微信小程序 */
+  registerChannel: EnumArray;
+  /** 用户来源，0:系统注册，1:外部导入(同步) */
+  fromSource: EnumArray;
   [name: string]: EnumArray;
 } = {
   enabled: [
     { label: "禁用", value: "0" },
     { label: "启用", value: "1" },
+  ],
+  registerChannel: [
+    { label: "管理员创建", value: "0" },
+    { label: "PC-Web", value: "1" },
+    { label: "H5", value: "2" },
+    { label: "IOS-APP", value: "3" },
+    { label: "Android-APP", value: "4" },
+    { label: "微信小程序", value: "5" },
+  ],
+  fromSource: [
+    { label: "系统注册", value: "0" },
+    { label: "外部导入", value: "1" },
   ],
 };
 
