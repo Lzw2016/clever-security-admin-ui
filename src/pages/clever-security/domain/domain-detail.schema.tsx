@@ -397,6 +397,10 @@ function userTab() {
         data: {
           pageNo: "$pageNo",
           pageSize: "$pageSize",
+          orderField: "$orderField",
+          sort: "$sort",
+          orderBy: "$orderBy",
+          orderDir: "$orderDir",
           domainId: "$location.query.domainId",
           userSearchKey: "$userSearchKey",
           enabled: "$enabled",
