@@ -43,6 +43,7 @@ function editDialog() {
   return {
     type: "button",
     label: "编辑",
+    level: "info",
     size: "xs",
     actionType: "dialog",
     dialog: {
@@ -135,10 +136,7 @@ const schema = {
         { name: "description", label: "说明", sortable: true, type: "tpl", tpl: "${description|truncate:20}" },
         { name: "createAt", label: "创建时间", sortable: true },
         { name: "updateAt", label: "更新时间", sortable: true },
-        {
-          type: "operation", label: "操作", width: 80, toggled: true,
-          buttons: [editDialog(), detailLink()],
-        },
+        { type: "operation", label: "操作", width: 80, toggled: true, buttons: [editDialog(), detailLink()] },
       ],
       // --------------------------------------------------------------- 表格工具栏配置
       headerToolbar: [

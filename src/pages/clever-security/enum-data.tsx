@@ -97,6 +97,29 @@ const user: {
   ],
 };
 
+const role: {
+  /** 是否启用，0:禁用，1:启用 */
+  enabled: EnumArray;
+  [name: string]: EnumArray;
+} = {
+  enabled: [
+    { label: "禁用", value: "0" },
+    { label: "启用", value: "1" },
+  ],
+};
+
+const apiPermission: {
+  /** API接口是否存在，0：不存在；1：存在 */
+  apiExist: EnumArray;
+  [name: string]: EnumArray;
+} = {
+  apiExist: [
+    { label: "不存在", value: "0" },
+    { label: "存在", value: "1" },
+  ],
+};
+
+
 // ------------------------------------------------------------
 const exist: EnumArray = [
   { label: "不存在", value: "0" },
@@ -161,6 +184,9 @@ export {
   scanCodeLogin,
   validateCode,
   user,
+  role,
+  apiPermission,
+
   exist,
   enabled,
   isHideMenu,

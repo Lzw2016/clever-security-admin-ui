@@ -2,7 +2,7 @@ import { apiPath } from "@/api/clever-security-api";
 import classnames from "classnames";
 import { FormClassName } from "@/amis-types";
 import { enum2object } from "@/utils/enum";
-import { enabled, exist, isHideMenu, user } from "../enum-data";
+import { apiPermission, enabled, isHideMenu, role, user } from "../enum-data";
 
 let globalData: AmisPageGlobalData | undefined;
 
@@ -26,124 +26,6 @@ const shouldPageUpdate: AmisPage["shouldPageUpdate"] = nextGlobalData => {
 const getTabTitle: AmisPage["getTabTitle"] = (defaultName, currentMenu, location, match) => {
   if (location.query?.name) return `${defaultName}-${location.query.name}`;
   return defaultName;
-}
-
-/** 删除角色 */
-function removeRole() {
-  return {
-    label: "删除",
-    type: "button",
-    size: "xs",
-    level: "danger",
-    actionType: "ajax",
-    api: {
-      method: "delete",
-      url: `${apiPath.RoleController.delRole}?domainId=$location.query.domainId&id=$id`,
-      adaptor: (payload: any) => ({ ...payload, data: {} }),
-    },
-    confirmText: "确认要删除该角色: ${name}?",
-  };
-}
-
-/** 新增角色 */
-function addRole() {
-  return {
-    label: "新增",
-    icon: "fa fa-plus",
-    actionType: "dialog",
-    dialog: {
-      title: "新增数据域",
-      body: {
-        type: "form",
-        className: classnames(FormClassName.flex_label5x),
-        api: {
-          method: "post",
-          url: apiPath.RoleController.addRole,
-          data: {
-            domainId: "$location.query.domainId",
-            name: "$name",
-            description: "$description",
-          },
-        },
-        trimValues: true,
-        controls: [
-          { type: "text", name: "name", label: "角色名", placeholder: "请输入角色名", required: true },
-          {
-            type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 2, maxRows: 6,
-            validations: { maxLength: 500 }, validationErrors: {},
-          },
-        ]
-      }
-    }
-  };
-}
-
-/** 修改角色 */
-function updateRole() {
-  return {
-    type: "button",
-    label: "编辑",
-    level: "info",
-    size: "xs",
-    actionType: "dialog",
-    dialog: {
-      title: "修改角色",
-      body: {
-        type: "form",
-        className: classnames(FormClassName.flex_label5x),
-        api: {
-          method: "put",
-          url: apiPath.RoleController.updateRole,
-          data: {
-            domainId: "$location.query.domainId",
-            id: "$id",
-            name: "$name",
-            enabled: "$enabled",
-            description: "$description",
-          },
-        },
-        controls: [
-          { type: "text", name: "id", label: "ID", disabled: true },
-          { type: "text", name: "name", label: "角色名称", },
-          { type: "select", name: "enabled", label: "是否启用", options: enabled },
-          {
-            type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 2, maxRows: 6,
-            validations: { maxLength: 500 }, validationErrors: {},
-          },
-        ]
-      }
-    }
-  };
-}
-
-/** api权限详情 */
-function apiDetail() {
-  return {
-    type: "button",
-    label: "详情",
-    level: "info",
-    size: "xs",
-    actionType: "dialog",
-    dialog: {
-      title: "api权限详情",
-      closeOnEsc: true,
-      actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
-      body: {
-        type: "form",
-        className: classnames(FormClassName.flex_label5x),
-        controls: [
-          { name: "className", label: "controller类名称", type: "static" },
-          { name: "methodName", label: "controller类的方法名称", type: "static" },
-          { name: "methodParams", label: "controller类的方法参数签名", type: "static" },
-          { name: "apiPath", label: "API接口地址", type: "static" },
-          { name: "apiExist", label: "API接口是否存在", type: "static-mapping", map: enum2object(exist) },
-          { name: "createAt", label: "创建时间", type: "static" },
-          { name: "updateAt", label: "更新时间", type: "static" },
-          { type: "static", name: "description", label: "说明" },
-        ]
-      }
-    }
-  };
 }
 
 /** ui权限详情 */
@@ -266,8 +148,8 @@ function crudTemplate({ api, filter, primaryField, columns, bulkActions, headerT
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------- 数据域信息
 
-/** 数据域信息 */
-function domainDetail() {
+/** 数据域信息叶签 */
+function domainTab() {
   return {
     title: "数据域信息",
     body: {
@@ -293,98 +175,102 @@ function domainDetail() {
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------- 用户管理
 
-/** 新增用户对话框 */
-function addUser() {
-  return {
-    label: "新增用户",
-    className: "mr-1",
-    // icon: "fa fa-plus",
-    actionType: "dialog",
-    dialog: {
-      title: "新增(注册)用户",
-      body: ""
-    }
-  };
-}
-
-/** 绑定用户对话框 */
-function bindUser() {
-  return {
-    label: "绑定用户",
-    className: "mr-1",
-    // icon: "fa fa-plus",
-    actionType: "dialog",
-    dialog: {
-      title: "选择用户绑定到当前域",
-      body: ""
-    }
-  };
-}
-
-/** 解绑用户对话框 */
-function batchUnbindUser() {
-  return {
-    label: "解绑用户",
-    // icon: "fa fa-times",
-    actionType: "ajax",
-    // api: {
-    //   method: "delete",
-    //   url: `${serverHost}/!/amis-api/curd-page@mockDelete?orderId=$orderId`,
-    // },
-    confirmText: "确定解除选中用户与当前域的绑定?",
-  };
-}
-
-/** 详情对话框 */
-function userDetailsDialog() {
-  return {
-    type: "button",
-    label: "查看",
-    size: "xs",
-    actionType: "dialog",
-    dialog: {
-      title: "用户详情 - ${nickname}",
-      closeOnEsc: true,
-      actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
-      body: {
-        type: "form",
-        // mode: "inline",
-        className: classnames(FormClassName.flex_label5x),
-        controls: [
-          { name: "uid", label: "用户ID", type: "static" },
-          // { name: "avatar", label: "用户头像", type: "static-image", thumbMode: "cover" },
-          { name: "nickname", label: "用户昵称", type: "static" },
-          { name: "loginName", label: "登录名称", type: "static" },
-          { name: "telephone", label: "手机号", type: "static" },
-          { name: "email", label: "Email", type: "static" },
-          { name: "enabled", label: "是否启用", type: "mapping", map: enum2object(user.enabled) },
-          { name: "expiredTime", label: "过期时间", type: "static" },
-          { name: "registerChannel", label: "注册渠道", type: "mapping", map: enum2object(user.registerChannel) },
-          { name: "fromSource", label: "用户来源", type: "mapping", map: enum2object(user.fromSource) },
-          { name: "description", label: "说明", type: "static" },
-          { name: "createAt", label: "创建时间", type: "static" },
-          { name: "updateAt", label: "更新时间", type: "static" }
-        ]
+const userTabOperations = {
+  /** 新增用户对话框 */
+  addUser: () => {
+    return {
+      label: "新增用户",
+      className: "mr-1",
+      icon: "fa fa-plus",
+      actionType: "dialog",
+      dialog: {
+        title: "新增(注册)用户",
+        body: ""
       }
-    }
-  };
-}
+    };
+  },
 
-/** 解绑用户对话框 */
-function unbindUser() {
-  return {
-    label: "解绑",
-    type: "button",
-    size: "xs",
-    actionType: "ajax",
-    // api: {
-    //   method: "delete",
-    //   url: `${apiPath.UserDomainController.delUserDomain}?domainId=$location.query.domainId&uid=$uid`,
-    //   adaptor: (payload: any) => ({ ...payload, data: {} }),
-    // },
-    confirmText: "确定解除用户与当前域的绑定? 昵称: ${nickname}",
-  }
-}
+  /** 绑定用户对话框 */
+  bindUser: () => {
+    return {
+      label: "绑定用户",
+      className: "mr-1",
+      icon: "fa fa-plus",
+      actionType: "dialog",
+      dialog: {
+        title: "选择用户绑定到当前域",
+        body: ""
+      }
+    };
+  },
+
+  /** 解绑用户对话框 */
+  batchUnbindUser: () => {
+    return {
+      label: "解绑用户",
+      icon: "fa fa-times",
+      actionType: "ajax",
+      // api: {
+      //   method: "delete",
+      //   url: `${serverHost}/!/amis-api/curd-page@mockDelete?orderId=$orderId`,
+      // },
+      confirmText: "确定解除选中用户与当前域的绑定?",
+    };
+  },
+
+  /** 详情对话框 */
+  userDetailsDialog: () => {
+    return {
+      type: "button",
+      label: "查看",
+      level: "info",
+      size: "xs",
+      actionType: "dialog",
+      dialog: {
+        title: "用户详情 - ${nickname}",
+        closeOnEsc: true,
+        actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
+        body: {
+          type: "form",
+          // mode: "inline",
+          className: classnames(FormClassName.flex_label5x),
+          controls: [
+            { name: "uid", label: "用户ID", type: "static" },
+            // { name: "avatar", label: "用户头像", type: "static-image", thumbMode: "cover" },
+            { name: "nickname", label: "用户昵称", type: "static" },
+            { name: "loginName", label: "登录名称", type: "static" },
+            { name: "telephone", label: "手机号", type: "static" },
+            { name: "email", label: "Email", type: "static" },
+            { name: "enabled", label: "是否启用", type: "mapping", map: enum2object(user.enabled) },
+            { name: "expiredTime", label: "过期时间", type: "static" },
+            { name: "registerChannel", label: "注册渠道", type: "mapping", map: enum2object(user.registerChannel) },
+            { name: "fromSource", label: "用户来源", type: "mapping", map: enum2object(user.fromSource) },
+            { name: "description", label: "说明", type: "static" },
+            { name: "createAt", label: "创建时间", type: "static" },
+            { name: "updateAt", label: "更新时间", type: "static" }
+          ]
+        }
+      }
+    };
+  },
+
+  /** 解绑用户对话框 */
+  unbindUser: () => {
+    return {
+      label: "解绑",
+      type: "button",
+      level: 'danger',
+      size: "xs",
+      actionType: "ajax",
+      // api: {
+      //   method: "delete",
+      //   url: `${apiPath.UserDomainController.delUserDomain}?domainId=$location.query.domainId&uid=$uid`,
+      //   adaptor: (payload: any) => ({ ...payload, data: {} }),
+      // },
+      confirmText: "确定解除用户与当前域的绑定? 昵称: ${nickname}",
+    }
+  },
+};
 
 /** 用户管理叶签 */
 function userTab() {
@@ -446,15 +332,14 @@ function userTab() {
         { name: "fromSource", label: "用户来源", sortable: true, type: "mapping", map: enum2object(user.fromSource) },
         { name: "createAt", label: "创建时间", sortable: true },
         // { name: "updateAt", label: "更新时间", sortable: true },
-        { type: "operation", label: "操作", width: 80, toggled: true, buttons: [userDetailsDialog(), unbindUser()] },
+        { type: "operation", label: "操作", width: 80, buttons: [userTabOperations.userDetailsDialog(), userTabOperations.unbindUser()] },
       ],
       bulkActions: [
-        { align: "left", type: 'button', level: '', size: "sm", ...batchUnbindUser() },
+        { align: "left", type: 'button', level: 'danger', size: "sm", ...userTabOperations.batchUnbindUser() },
       ],
       headerToolbar: [
-        { align: "left", type: 'button', level: '', size: "sm", ...addUser() },
-        { align: "left", type: 'button', level: '', size: "sm", ...bindUser() },
-        // primary danger
+        { align: "left", type: 'button', level: 'primary', size: "sm", ...userTabOperations.addUser() },
+        { align: "left", type: 'button', level: 'primary', size: "sm", ...userTabOperations.bindUser() },
       ],
       extProps: { multiple: true, keepItemSelectionOnPageChange: false },
     }),
@@ -463,7 +348,276 @@ function userTab() {
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------- 角色管理
 
+const roleTabOperations = {
+  /** 新增角色 */
+  addRole: () => {
+    return {
+      label: "新增",
+      icon: "fa fa-plus",
+      actionType: "dialog",
+      dialog: {
+        title: "新增数据域",
+        body: {
+          type: "form",
+          className: classnames(FormClassName.flex_label5x),
+          api: {
+            method: "post",
+            url: apiPath.RoleController.addRole,
+            data: {
+              domainId: "$location.query.domainId",
+              name: "$name",
+              enabled: "$enabled",
+              description: "$description",
+            },
+          },
+          trimValues: true,
+          data: { enabled: 1 },
+          controls: [
+            { type: "text", name: "name", label: "角色名", placeholder: "请输入角色名", required: true },
+            {
+              type: "radios", name: "enabled", label: "是否启用", options: role.enabled, columnsCount: role.enabled.length,
+              inputClassName: "w-40", required: true,
+            },
+            {
+              type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 2, maxRows: 6,
+              validations: { maxLength: 500 }, validationErrors: {},
+            },
+          ]
+        }
+      }
+    };
+  },
+
+  /** 修改角色 */
+  updateRole: () => {
+    return {
+      type: "button",
+      label: "编辑",
+      level: "info",
+      size: "xs",
+      actionType: "dialog",
+      dialog: {
+        title: "修改角色 - ${name}",
+        body: {
+          type: "form",
+          className: classnames(FormClassName.flex_label5x),
+          api: {
+            method: "put",
+            url: apiPath.RoleController.updateRole,
+            data: {
+              domainId: "$location.query.domainId",
+              id: "$id",
+              name: "$name",
+              enabled: "$enabled",
+              description: "$description",
+            },
+          },
+          controls: [
+            { type: "text", name: "id", label: "角色ID", disabled: true },
+            { type: "text", name: "name", label: "角色名", placeholder: "请输入角色名", required: true },
+            {
+              type: "radios", name: "enabled", label: "是否启用", options: role.enabled, columnsCount: role.enabled.length,
+              inputClassName: "w-40", required: true,
+            },
+            {
+              type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 2, maxRows: 6,
+              validations: { maxLength: 500 }, validationErrors: {},
+            },
+          ]
+        }
+      }
+    };
+  },
+
+  /** 角色绑定权限 */
+  roleBindPermissionDialog: () => {
+    return {
+      type: "button",
+      label: "授权",
+      level: "info",
+      size: "xs",
+      actionType: "dialog",
+      dialog: {
+        title: "角色授权 - ${name}",
+        body: {},
+      },
+    };
+  },
+
+  /** 删除角色 */
+  removeRole: () => {
+    return {
+      label: "删除",
+      type: "button",
+      size: "xs",
+      level: "danger",
+      actionType: "ajax",
+      api: {
+        method: "delete",
+        url: `${apiPath.RoleController.delRole}?domainId=$location.query.domainId&id=$id`,
+        adaptor: (payload: any) => ({ ...payload, data: {} }),
+      },
+      confirmText: "确认要删除该角色: ${name}?",
+    };
+  },
+};
+
+/** 角色管理 */
+function roleTab() {
+  return {
+    title: "角色管理",
+    body: crudTemplate({
+      api: {
+        method: "get",
+        url: apiPath.RoleController.pageQuery,
+        data: {
+          pageNo: "$pageNo",
+          pageSize: "$pageSize",
+          orderField: "$orderField",
+          sort: "$sort",
+          orderBy: "$orderBy",
+          orderDir: "$orderDir",
+          domainId: "$location.query.domainId",
+          id: "$id",
+          name: "$name",
+          enabled: "$enabled",
+          createAtStart: "$createAtStart",
+          createAtEnd: "$createAtEnd",
+        },
+      },
+      filter: {
+        title: "",
+        className: classnames(FormClassName.label4x, FormClassName.input12x, "mb-4"),
+        wrapWithPanel: false,
+        trimValues: true,
+        submitOnChange: false,
+        controls: [
+          { type: "text", label: "角色名称", name: "name", placeholder: "支持模糊匹配", clearable: true },
+          { type: "select", label: "是否启用", name: "enabled", options: enabled, clearable: true },
+          { type: "date", label: "创建时间", name: "createAtStart", placeholder: "创建时间-开始", format: "YYYY-MM-DD 00:00:00", clearable: true, maxDate: "$createAtEnd" },
+          { type: "date", label: "创建时间", name: "createAtEnd", placeholder: "创建时间-结束", format: "YYYY-MM-DD 23:59:59", clearable: true, minDate: "$createAtStart" },
+          { label: "查询", level: "primary", type: "submit" },
+          { label: "重置", type: "reset" },
+        ],
+      },
+      primaryField: "id",
+      columns: [
+        { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
+        { name: "name", label: "角色名称", type: "text", sortable: true },
+        { name: "enabled", label: "是否启用", sortable: true, width: 80, type: "mapping", map: enum2object(user.enabled) },
+        { name: "description", label: "说明", sortable: true },
+        { name: "createAt", label: "创建时间", sortable: true, width: 120 },
+        { name: "updateAt", label: "更新时间", sortable: true, width: 120 },
+        {
+          type: "operation", label: "操作", width: 120,
+          buttons: [roleTabOperations.updateRole(), roleTabOperations.roleBindPermissionDialog(), roleTabOperations.removeRole()]
+        },
+      ],
+      bulkActions: [
+        // { align: "left", type: 'button', level: 'danger', size: "sm", ...roleTabOperations.batchDisableRole() },
+      ],
+      headerToolbar: [
+        { align: "left", type: 'button', level: 'primary', size: "sm", ...roleTabOperations.addRole() },
+      ],
+      extProps: { multiple: true, keepItemSelectionOnPageChange: false },
+    }),
+  };
+}
+
 // ------------------------------------------------------------------------------------------------------------------------------------------------------- 菜单管理
+
+const apiTabOperations = {
+  /** api权限详情 */
+  apiDetailDialog: () => {
+    return {
+      type: "button",
+      label: "查看",
+      level: "info",
+      size: "xs",
+      actionType: "dialog",
+      dialog: {
+        title: "api权限详情",
+        closeOnEsc: true,
+        actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
+        body: {
+          type: "form",
+          className: classnames(FormClassName.flex_label9x),
+          controls: [
+            { name: "className", label: "controller类名称", type: "static" },
+            { name: "methodName", label: "controller类的方法名称", type: "static" },
+            { name: "methodParams", label: "controller类的方法参数签名", type: "static" },
+            { name: "apiPath", label: "API接口地址", type: "static" },
+            { name: "apiExist", label: "API接口是否存在", type: "static-mapping", map: enum2object(apiPermission.apiExist) },
+            { name: "createAt", label: "创建时间", type: "static" },
+            { name: "updateAt", label: "更新时间", type: "static" },
+            { type: "static", name: "description", label: "说明" },
+          ]
+        }
+      }
+    };
+  },
+};
+
+function apiTab() {
+  return {
+    title: "API权限",
+    body: crudTemplate({
+      api: {
+        method: "get",
+        url: apiPath.ApiPermissionController.pageQuery,
+        data: {
+          pageNo: "$pageNo",
+          pageSize: "$pageSize",
+          orderField: "$orderField",
+          sort: "$sort",
+          orderBy: "$orderBy",
+          orderDir: "$orderDir",
+          domainId: "$location.query.domainId",
+          name: "$name",
+          apiExist: "$apiExist",
+          createAtStart: "$createAtStart",
+          createAtEnd: "$createAtEnd",
+        },
+      },
+      filter: {
+        title: "",
+        className: classnames(FormClassName.label4x, FormClassName.input12x, "mb-4"),
+        wrapWithPanel: false,
+        trimValues: true,
+        submitOnChange: false,
+        controls: [
+          { type: "text", label: "API信息", name: "name", placeholder: "类名,方法名,参数签名,api地址", clearable: true },
+          { type: "select", label: "是否存在", name: "apiExist", options: apiPermission.apiExist, clearable: true },
+          { type: "date", label: "创建时间", name: "createAtStart", placeholder: "创建时间-开始", format: "YYYY-MM-DD 00:00:00", clearable: true, maxDate: "$createAtEnd" },
+          { type: "date", label: "创建时间", name: "createAtEnd", placeholder: "创建时间-结束", format: "YYYY-MM-DD 23:59:59", clearable: true, minDate: "$createAtStart" },
+          { label: "查询", level: "primary", type: "submit" },
+          { label: "重置", type: "reset" },
+        ],
+      },
+      primaryField: "id",
+      columns: [
+        { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
+        { name: "apiPath", label: "API地址", sortable: true },
+        // { name: "methodName", label: "API入口函数", type: "tpl", tpl: "${className}#${methodName}" },
+        { name: "className", label: "类型名称", sortable: true },
+        { name: "methodName", label: "函数名称", sortable: true },
+        // { name: "methodParams", label: "函数参数", sortable: true },
+        { name: "apiExist", label: "是否存在", sortable: true, type: "mapping", map: enum2object(apiPermission.apiExist) },
+        // { name: "description", label: "说明", sortable: true },
+        // { name: "createAt", label: "创建时间", sortable: true },
+        // { name: "updateAt", label: "更新时间", sortable: true },
+        { type: "operation", label: "操作", width: 35, buttons: [apiTabOperations.apiDetailDialog()] },
+      ],
+      bulkActions: [
+        { align: "left", type: 'button', level: 'danger', size: "sm", label: "取消授权", className: "mr-1" },
+        { align: "left", type: 'button', level: 'danger', size: "sm", label: "批量删除", className: "mr-1" },
+        // { align: "left", type: 'button', level: 'danger', size: "sm", ...apiTabOperations.xxx() },
+      ],
+      headerToolbar: [],
+      extProps: { multiple: true, keepItemSelectionOnPageChange: false },
+    }),
+  };
+}
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------- UI权限管理
 
@@ -480,73 +634,11 @@ const schema = {
       mode: "line",
       name: "tabs",
       tabs: [
-        domainDetail(),
+        domainTab(),
         userTab(),
+        roleTab(),
+        apiTab(),
 
-        {
-          title: "角色管理",
-          body: {
-            type: "crud",
-            // --------------------------------------------------------------- 常规配置
-            perPageAvailable: [10, 20, 50, 100],
-            syncLocation: false,
-            draggable: false,
-            hideQuickSaveBtn: false,
-            autoJumpToTopOnPagerChange: false,
-            affixHeader: false,
-            syncResponse2Query: true,
-            // --------------------------------------------------------------- 请求数据配置
-            api: {
-              method: "get",
-              url: apiPath.RoleController.pageQuery,
-              data: {
-                pageNo: "$pageNo",
-                pageSize: "$pageSize",
-                domainId: "$location.query.domainId",
-                id: "$id",
-                name: "$name",
-                enabled: "$enabled",
-              },
-            },
-            defaultParams: { pageNo: 1, pageSize: 10 },
-            pageField: "pageNo",
-            perPageField: "pageSize",
-            // --------------------------------------------------------------- 查询条件表单配置
-            // 条件过滤表单
-            filterTogglable: true,
-            filter: {
-              title: "",
-              className: classnames(FormClassName.label4x, FormClassName.input14x),
-              trimValues: true,
-              submitOnChange: false,
-              controls: [
-                { type: "text", label: "角色名称", name: "name", placeholder: "支持模糊匹配", clearable: true },
-                { type: "select", label: "是否启用", name: "enabled", options: enabled, clearable: true },
-                { label: "查询", level: "primary", type: "submit" },
-                { label: "重置", type: "reset" },
-              ],
-            },
-            // --------------------------------------------------------------- 表格列配置
-            primaryField: "id",
-            columns: [
-              { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
-              { name: "name", label: "角色名称", type: "text" },
-              { name: "enabled", label: "是否启用", type: "switch", trueValue: 1, falseValue: 0 },
-              { name: "createAt", label: "创建时间", sortable: true },
-              { type: "operation", label: "操作", width: 80, toggled: true, buttons: [updateRole(), removeRole()] },
-            ],
-            // --------------------------------------------------------------- 表格工具栏配置
-            headerToolbar: [
-              { align: "left", type: 'button', level: 'primary', size: "sm", ...addRole() },
-              { align: "right", type: "columns-toggler" },
-            ],
-            footerToolbar: [
-              { align: "right", type: "pagination" },
-              { align: "right", type: "switch-per-page" },
-              { align: "right", type: "statistics" },
-            ],
-          }
-        },
 
         {
           title: "菜单管理",
@@ -554,78 +646,7 @@ const schema = {
             type: "tabs",
             mode: "radio",
             tabs: [
-              {
-                title: "API权限",
-                body: {
-                  type: "crud",
-                  // --------------------------------------------------------------- 常规配置
-                  perPageAvailable: [10, 20, 50, 100],
-                  syncLocation: false,
-                  draggable: false,
-                  hideQuickSaveBtn: false,
-                  autoJumpToTopOnPagerChange: false,
-                  affixHeader: false,
-                  syncResponse2Query: true,
-                  // --------------------------------------------------------------- 请求数据配置
-                  api: {
-                    method: "get",
-                    url: apiPath.ApiPermissionController.pageQuery,
-                    data: {
-                      pageNo: "$pageNo",
-                      pageSize: "$pageSize",
-                      domainId: "$location.query.domainId",
-                      name: "$name",
-                      apiExist: "$apiExist",
-                      createAtStart: "$createAtStart",
-                      createAtEnd: "$createAtEnd",
-                    },
-                  },
-                  defaultParams: { pageNo: 1, pageSize: 10 },
-                  pageField: "pageNo",
-                  perPageField: "pageSize",
-                  // --------------------------------------------------------------- 查询条件表单配置
-                  // 条件过滤表单
-                  filterTogglable: true,
-                  filter: {
-                    title: "",
-                    className: classnames(FormClassName.label4x, FormClassName.input12x),
-                    trimValues: true,
-                    submitOnChange: false,
-                    // submitText: "查询",
-                    controls: [
-                      { type: "text", label: "api信息", name: "name", placeholder: "类名,方法名,参数签名,api地址", clearable: true },
-                      { type: "select", label: "是否存在", name: "apiExist", options: exist, clearable: true },
-                      { type: "html", html: "<br />" },
-                      { type: "date", label: "创建时间", name: "createAtStart", placeholder: "创建时间-开始", format: "YYYY-MM-DD 00:00:00", clearable: true, maxDate: "$createAtEnd" },
-                      { type: "date", label: "创建时间", name: "createAtEnd", placeholder: "创建时间-结束", format: "YYYY-MM-DD 23:59:59", clearable: true, minDate: "$createAtStart" },
-                      { type: "html", html: "&nbsp;&nbsp;&nbsp;&nbsp;" },
-                      { label: "查询", level: "primary", type: "submit" },
-                      { label: "重置", type: "reset" },
-                    ],
-                  },
-                  // --------------------------------------------------------------- 表格列配置
-                  primaryField: "id",
-                  columns: [
-                    { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
-                    { name: "methodName", label: "方法名", sortable: false },
-                    { name: "apiPath", label: "API接口地址", sortable: true },
-                    { name: "apiExist", label: "API接口是否存在", sortable: true, type: "mapping", map: enum2object(exist) },
-                    { name: "description", label: "说明", sortable: false },
-                    { name: "createAt", label: "创建时间", sortable: true },
-                    { name: "updateAt", label: "更新时间", sortable: true },
-                    { type: "operation", label: "操作", width: 35, toggled: true, buttons: [apiDetail()] },
-                  ],
-                  // --------------------------------------------------------------- 表格工具栏配置
-                  headerToolbar: [
-                    { align: "right", type: "columns-toggler" },
-                  ],
-                  footerToolbar: [
-                    { align: "right", type: "pagination" },
-                    { align: "right", type: "switch-per-page" },
-                    { align: "right", type: "statistics" },
-                  ],
-                },
-              },
+
               {
                 title: "UI权限",
                 body: {
@@ -676,7 +697,7 @@ const schema = {
                     { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
                     { name: "createAt", label: "创建时间", sortable: true },
                     { name: "updateAt", label: "更新时间", sortable: true },
-                    { type: "operation", label: "操作", width: 35, toggled: true, buttons: [uiDetail()] },
+                    { type: "operation", label: "操作", width: 35, buttons: [uiDetail()] },
                   ],
                   // --------------------------------------------------------------- 表格工具栏配置
                   headerToolbar: [
@@ -759,12 +780,12 @@ const schema = {
         },
 
         {
-          title: "UI权限",
+          title: "UI权限管理",
           body: {}
         },
 
         {
-          title: "API权限",
+          title: "API权限管理",
           body: {}
         },
       ]
