@@ -28,69 +28,6 @@ const getTabTitle: AmisPage["getTabTitle"] = (defaultName, currentMenu, location
   return defaultName;
 }
 
-/** ui权限详情 */
-function uiDetail() {
-  return {
-    type: "button",
-    label: "详情",
-    level: "info",
-    size: "xs",
-    actionType: "dialog",
-    dialog: {
-      title: "ui权限详情",
-      closeOnEsc: true,
-      actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
-      body: {
-        type: "form",
-        className: classnames(FormClassName.flex_label5x),
-        controls: [
-          { name: "uiName", label: "UI组件名", type: "static" },
-          { name: "title", label: "标题", type: "static" },
-          { name: "enabled", label: "是否启用", type: "static-mapping", map: enum2object(enabled) },
-          { name: "createAt", label: "创建时间", type: "static" },
-          { name: "updateAt", label: "更新时间", type: "static" },
-          { name: "description", label: "描述", type: "static" },
-        ]
-      }
-    }
-  };
-}
-
-/** menu权限详情 */
-function menuDetail() {
-  return {
-    type: "button",
-    label: "详情",
-    level: "info",
-    size: "xs",
-    actionType: "dialog",
-    dialog: {
-      title: "菜单权限详情",
-      closeOnEsc: true,
-      actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
-      body: {
-        type: "form",
-        className: classnames(FormClassName.flex_label5x),
-        controls: [
-          { name: "name", label: "菜单名称", type: "text" },
-          { name: "icon", label: "菜单图标", type: "text" },
-          { name: "path", label: "菜单路径", type: "text" },
-          { name: "pagePath", label: "页面路径", type: "text" },
-          { name: "hideMenu", label: "隐藏当前菜单和子菜单", type: "mapping", map: enum2object(isHideMenu) },
-          { name: "hideChildrenMenu", label: "隐藏子菜单", type: "mapping", map: enum2object(isHideMenu) },
-          { name: "extConfig", label: "菜单扩展配置", type: "text" },
-          { name: "menuSort", label: "菜单排序", type: "text" },
-          { name: "title", label: "标题", type: "text" },
-          { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
-          { name: "createAt", label: "创建时间", type: "text" },
-          { name: "updateAt", label: "更新时间", type: "text" },
-          { name: "description", label: "说明", type: "text" },
-        ]
-      }
-    }
-  };
-}
-
 // -------------------------------------------------------------------------------------------------------------------------------------------------------
 
 interface CrudTemplateParam {
@@ -526,8 +463,195 @@ function roleTab() {
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------- 菜单管理
 
+const menuTabOperations = {
+  /** menu权限详情 */
+  menuDetail: () => {
+    return {
+      type: "button",
+      label: "查看",
+      level: "info",
+      size: "xs",
+      actionType: "dialog",
+      dialog: {
+        title: "菜单权限详情",
+        closeOnEsc: true,
+        actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
+        body: {
+          type: "form",
+          className: classnames(FormClassName.flex_label5x),
+          controls: [
+            { name: "name", label: "菜单名称", type: "text" },
+            { name: "icon", label: "菜单图标", type: "text" },
+            { name: "path", label: "菜单路径", type: "text" },
+            { name: "pagePath", label: "页面路径", type: "text" },
+            { name: "hideMenu", label: "隐藏当前菜单和子菜单", type: "mapping", map: enum2object(isHideMenu) },
+            { name: "hideChildrenMenu", label: "隐藏子菜单", type: "mapping", map: enum2object(isHideMenu) },
+            { name: "extConfig", label: "菜单扩展配置", type: "text" },
+            { name: "menuSort", label: "菜单排序", type: "text" },
+            { name: "title", label: "标题", type: "text" },
+            { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
+            { name: "createAt", label: "创建时间", type: "text" },
+            { name: "updateAt", label: "更新时间", type: "text" },
+            { name: "description", label: "说明", type: "text" },
+          ]
+        }
+      }
+    };
+  },
+};
+
+function menuTab() {
+  return {
+    title: "菜单管理",
+    body: crudTemplate({
+      api: {
+        method: "get",
+        url: apiPath.MenuPermissionController.pageQuery,
+        data: {
+          pageNo: "$pageNo",
+          pageSize: "$pageSize",
+          orderField: "$orderField",
+          sort: "$sort",
+          orderBy: "$orderBy",
+          orderDir: "$orderDir",
+          domainId: "$location.query.domainId",
+          name: "$name",
+        },
+      },
+      filter: {
+        title: "",
+        className: classnames(FormClassName.label4x, FormClassName.input12x, "mb-4"),
+        wrapWithPanel: false,
+        trimValues: true,
+        submitOnChange: false,
+        controls: [
+          { type: "text", label: "菜单名称", name: "name", placeholder: "支持模糊搜索", clearable: true },
+          { label: "查询", level: "primary", type: "submit" },
+          { label: "重置", type: "reset" },
+        ],
+      },
+      primaryField: "id",
+      columns: [
+        { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
+        { name: "name", label: "菜单名称", sortable: false },
+        { name: "path", label: "菜单路径", sortable: false },
+        { name: "title", label: "标题", sortable: false },
+        { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
+        { name: "menuSort", label: "菜单排序", sortable: false },
+        { name: "createAt", label: "创建时间", sortable: true },
+        { name: "updateAt", label: "更新时间", sortable: true },
+        { type: "operation", label: "操作", width: 35, toggled: true, buttons: [menuTabOperations.menuDetail()] },
+      ],
+      bulkActions: [
+        // { align: "left", type: 'button', level: 'danger', size: "sm", ...roleTabOperations.batchDisableRole() },
+      ],
+      headerToolbar: [
+        // { align: "left", type: 'button', level: 'primary', size: "sm", ...roleTabOperations.addRole() },
+      ],
+      extProps: { multiple: true, keepItemSelectionOnPageChange: false },
+    }),
+  };
+}
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------------- UI权限管理
+
+const uiTabOperations = {
+  /** ui权限详情 */
+  uiDetail: () => {
+    return {
+      type: "button",
+      label: "查看",
+      level: "info",
+      size: "xs",
+      actionType: "dialog",
+      dialog: {
+        title: "ui权限详情",
+        closeOnEsc: true,
+        actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
+        body: {
+          type: "form",
+          className: classnames(FormClassName.flex_label5x),
+          controls: [
+            { name: "uiName", label: "UI组件名", type: "static" },
+            { name: "title", label: "标题", type: "static" },
+            { name: "enabled", label: "是否启用", type: "static-mapping", map: enum2object(enabled) },
+            { name: "createAt", label: "创建时间", type: "static" },
+            { name: "updateAt", label: "更新时间", type: "static" },
+            { name: "description", label: "描述", type: "static" },
+          ]
+        }
+      }
+    };
+  },
+};
+
+function uiTab() {
+  return {
+    title: "UI权限管理",
+    body: crudTemplate({
+      api: {
+        method: "get",
+        url: apiPath.MenuPermissionController.pageQuery,
+        data: {
+          pageNo: "$pageNo",
+          pageSize: "$pageSize",
+          orderField: "$orderField",
+          sort: "$sort",
+          orderBy: "$orderBy",
+          orderDir: "$orderDir",
+          domainId: "$location.query.domainId",
+          uiName: "$uiName",
+        },
+      },
+      filter: {
+        title: "",
+        className: classnames(FormClassName.label4x, FormClassName.input12x, "mb-4"),
+        wrapWithPanel: false,
+        trimValues: true,
+        submitOnChange: false,
+        controls: [
+          { type: "text", label: "ui名称", name: "uiName", placeholder: "支持模糊搜索", clearable: true },
+          { label: "查询", level: "primary", type: "submit" },
+          { label: "重置", type: "reset" },
+        ],
+      },
+      primaryField: "id",
+      columns: [
+        { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
+        { name: "uiName", label: "ui名称", sortable: false },
+        { name: "title", label: "标题", sortable: false },
+        { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
+        { name: "createAt", label: "创建时间", sortable: true },
+        { name: "updateAt", label: "更新时间", sortable: true },
+        { type: "operation", label: "操作", width: 35, buttons: [uiTabOperations.uiDetail()] },
+      ],
+      bulkActions: [
+        // { align: "left", type: 'button', level: 'danger', size: "sm", ...roleTabOperations.batchDisableRole() },
+      ],
+      headerToolbar: [
+        // { align: "left", type: 'button', level: 'primary', size: "sm", ...roleTabOperations.addRole() },
+      ],
+      extProps: { multiple: true, keepItemSelectionOnPageChange: false },
+    }),
+  };
+}
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------------- API权限管理
+
 const apiTabOperations = {
-  /** api权限详情 */
+  /** 更新API权限 */
+  updateApi: () => {
+    return {
+      type: "button",
+      label: "编辑",
+      level: "info",
+      size: "xs",
+      actionType: "dialog",
+      dialog: {},
+    };
+  },
+
+  /** API权限详情 */
   apiDetailDialog: () => {
     return {
       type: "button",
@@ -536,23 +660,51 @@ const apiTabOperations = {
       size: "xs",
       actionType: "dialog",
       dialog: {
-        title: "api权限详情",
+        title: "API权限详情",
+        size: "md",
         closeOnEsc: true,
         actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
         body: {
-          type: "form",
-          className: classnames(FormClassName.flex_label9x),
-          controls: [
-            { name: "className", label: "controller类名称", type: "static" },
-            { name: "methodName", label: "controller类的方法名称", type: "static" },
-            { name: "methodParams", label: "controller类的方法参数签名", type: "static" },
-            { name: "apiPath", label: "API接口地址", type: "static" },
-            { name: "apiExist", label: "API接口是否存在", type: "static-mapping", map: enum2object(apiPermission.apiExist) },
-            { name: "createAt", label: "创建时间", type: "static" },
-            { name: "updateAt", label: "更新时间", type: "static" },
-            { type: "static", name: "description", label: "说明" },
-          ]
-        }
+          type: "tabs",
+          mode: "radio",
+          tabs: [
+            {
+              title: "权限信息",
+              body: {
+                type: "form",
+                mode: "horizontal",
+                className: classnames(FormClassName.flex_label6x),
+                wrapWithPanel: false,
+                controls: [
+                  { name: "strFlag", label: "权限字符串", type: "static" },
+                  { name: "title", label: "API标题", type: "static" },
+                  { name: "permissionType", label: "权限类型", type: "static-mapping", map: enum2object(apiPermission.permissionType) },
+                  { name: "apiPath", label: "API接口地址", type: "static" },
+                  { name: "enabled", label: "是否启用授权", type: "static-mapping", map: enum2object(apiPermission.enabled) },
+                  { name: "description", label: "权限说明", type: "static" },
+                  { name: "createAt", label: "创建时间", type: "static" },
+                  { name: "updateAt", label: "更新时间", type: "static" },
+                ]
+              },
+            },
+            {
+              title: "Controller信息",
+              body: {
+                type: "form",
+                mode: "horizontal",
+                className: classnames(FormClassName.flex_label9x),
+                wrapWithPanel: false,
+                controls: [
+                  { name: "apiPath", label: "API接口地址", type: "static" },
+                  { name: "className", label: "Controller类名称", type: "static" },
+                  { name: "methodName", label: "Controller函数名称", type: "static" },
+                  { name: "methodParams", label: "Controller函数参数", type: "static" },
+                  { name: "apiExist", label: "接口是否存在", type: "static-mapping", map: enum2object(apiPermission.apiExist) },
+                ]
+              },
+            },
+          ],
+        },
       }
     };
   },
@@ -573,8 +725,12 @@ function apiTab() {
           orderBy: "$orderBy",
           orderDir: "$orderDir",
           domainId: "$location.query.domainId",
-          name: "$name",
+          title: "$title",
+          className: "$className",
+          methodName: "$methodName",
+          apiPath: "$apiPath",
           apiExist: "$apiExist",
+          enabled: "$enabled",
           createAtStart: "$createAtStart",
           createAtEnd: "$createAtEnd",
         },
@@ -586,8 +742,13 @@ function apiTab() {
         trimValues: true,
         submitOnChange: false,
         controls: [
-          { type: "text", label: "API信息", name: "name", placeholder: "类名,方法名,参数签名,api地址", clearable: true },
+          { type: "text", label: "API标题", name: "title", placeholder: "API标题(支持模糊匹配)", clearable: true },
+          { type: "text", label: "API类名称", name: "className", placeholder: "API类名称(支持模糊匹配)", clearable: true },
+          { type: "text", label: "函数名称", name: "methodName", placeholder: "函数名称(支持模糊匹配)", clearable: true },
+          { type: "text", label: "接口地址", name: "apiPath", placeholder: "API接口地址(支持模糊匹配)", clearable: true },
+          { type: "html", html: "<br />" },
           { type: "select", label: "是否存在", name: "apiExist", options: apiPermission.apiExist, clearable: true },
+          { type: "select", label: "启用授权", name: "enabled", options: apiPermission.enabled, clearable: true },
           { type: "date", label: "创建时间", name: "createAtStart", placeholder: "创建时间-开始", format: "YYYY-MM-DD 00:00:00", clearable: true, maxDate: "$createAtEnd" },
           { type: "date", label: "创建时间", name: "createAtEnd", placeholder: "创建时间-结束", format: "YYYY-MM-DD 23:59:59", clearable: true, minDate: "$createAtStart" },
           { label: "查询", level: "primary", type: "submit" },
@@ -597,16 +758,18 @@ function apiTab() {
       primaryField: "id",
       columns: [
         { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
+        { name: "title", label: "API标题", sortable: true },
         { name: "apiPath", label: "API地址", sortable: true },
+        // { name: "className", label: "类型名称", sortable: true, type: "tpl", tpl: "${className|split:.|last}" },
+        { name: "methodName", label: "Controller函数名称", sortable: true },
         // { name: "methodName", label: "API入口函数", type: "tpl", tpl: "${className}#${methodName}" },
-        { name: "className", label: "类型名称", sortable: true },
-        { name: "methodName", label: "函数名称", sortable: true },
         // { name: "methodParams", label: "函数参数", sortable: true },
+        { name: "enabled", label: "是否启用授权", sortable: true, type: "mapping", map: enum2object(apiPermission.enabled) },
         { name: "apiExist", label: "是否存在", sortable: true, type: "mapping", map: enum2object(apiPermission.apiExist) },
         // { name: "description", label: "说明", sortable: true },
         // { name: "createAt", label: "创建时间", sortable: true },
         // { name: "updateAt", label: "更新时间", sortable: true },
-        { type: "operation", label: "操作", width: 35, buttons: [apiTabOperations.apiDetailDialog()] },
+        { type: "operation", label: "操作", width: 80, buttons: [apiTabOperations.apiDetailDialog(), apiTabOperations.updateApi()] },
       ],
       bulkActions: [
         { align: "left", type: 'button', level: 'danger', size: "sm", label: "取消授权", className: "mr-1" },
@@ -619,9 +782,7 @@ function apiTab() {
   };
 }
 
-// ------------------------------------------------------------------------------------------------------------------------------------------------------- UI权限管理
-
-// ------------------------------------------------------------------------------------------------------------------------------------------------------- API权限管理
+// ------------------------------------------------------------------------------------------------------------------------------------------------------- schema
 
 const schema = {
   type: "page",
@@ -634,160 +795,18 @@ const schema = {
       mode: "line",
       name: "tabs",
       tabs: [
+        // 数据域信息
         domainTab(),
+        // 用户管理
         userTab(),
+        // 角色管理
         roleTab(),
+        // 菜单管理
+        menuTab(),
+        // UI权限管理
+        uiTab(),
+        // API权限管理
         apiTab(),
-
-
-        {
-          title: "菜单管理",
-          body: {
-            type: "tabs",
-            mode: "radio",
-            tabs: [
-
-              {
-                title: "UI权限",
-                body: {
-                  type: "crud",
-                  // --------------------------------------------------------------- 常规配置
-                  perPageAvailable: [10, 20, 50, 100],
-                  syncLocation: false,
-                  draggable: false,
-                  hideQuickSaveBtn: false,
-                  autoJumpToTopOnPagerChange: false,
-                  affixHeader: false,
-                  syncResponse2Query: true,
-                  // --------------------------------------------------------------- 请求数据配置
-                  api: {
-                    method: "get",
-                    url: apiPath.UiPermissionController.pageQuery,
-                    data: {
-                      pageNo: "$pageNo",
-                      pageSize: "$pageSize",
-                      domainId: "$location.query.domainId",
-                      uiName: "$uiName",
-                    },
-                  },
-                  defaultParams: { pageNo: 1, pageSize: 10 },
-                  pageField: "pageNo",
-                  perPageField: "pageSize",
-                  // --------------------------------------------------------------- 查询条件表单配置
-                  // 条件过滤表单
-                  filterTogglable: true,
-                  filter: {
-                    title: "",
-                    className: classnames(FormClassName.label4x, FormClassName.input12x),
-                    trimValues: true,
-                    submitOnChange: false,
-                    // submitText: "查询",
-                    controls: [
-                      { type: "text", label: "ui名称", name: "uiName", placeholder: "支持模糊搜索", clearable: true },
-                      { label: "查询", level: "primary", type: "submit" },
-                      { label: "重置", type: "reset" },
-                    ],
-                  },
-                  // --------------------------------------------------------------- 表格列配置
-                  primaryField: "id",
-                  columns: [
-                    { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
-                    { name: "uiName", label: "ui名称", sortable: false },
-                    { name: "title", label: "标题", sortable: false },
-                    { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
-                    { name: "createAt", label: "创建时间", sortable: true },
-                    { name: "updateAt", label: "更新时间", sortable: true },
-                    { type: "operation", label: "操作", width: 35, buttons: [uiDetail()] },
-                  ],
-                  // --------------------------------------------------------------- 表格工具栏配置
-                  headerToolbar: [
-                    { align: "right", type: "columns-toggler" },
-                  ],
-                  footerToolbar: [
-                    { align: "right", type: "pagination" },
-                    { align: "right", type: "switch-per-page" },
-                    { align: "right", type: "statistics" },
-                  ],
-                },
-              },
-              {
-                title: "菜单权限",
-                body: {
-                  type: "crud",
-                  // --------------------------------------------------------------- 常规配置
-                  perPageAvailable: [10, 20, 50, 100],
-                  syncLocation: false,
-                  draggable: false,
-                  hideQuickSaveBtn: false,
-                  autoJumpToTopOnPagerChange: false,
-                  affixHeader: false,
-                  syncResponse2Query: true,
-                  // --------------------------------------------------------------- 请求数据配置
-                  api: {
-                    method: "get",
-                    url: apiPath.MenuPermissionController.pageQuery,
-                    data: {
-                      pageNo: "$pageNo",
-                      pageSize: "$pageSize",
-                      domainId: "$location.query.domainId",
-                      name: "$name",
-                    },
-                  },
-                  defaultParams: { pageNo: 1, pageSize: 10 },
-                  pageField: "pageNo",
-                  perPageField: "pageSize",
-                  // --------------------------------------------------------------- 查询条件表单配置
-                  // 条件过滤表单
-                  filterTogglable: true,
-                  filter: {
-                    title: "",
-                    className: classnames(FormClassName.label4x, FormClassName.input12x),
-                    trimValues: true,
-                    submitOnChange: false,
-                    // submitText: "查询",
-                    controls: [
-                      { type: "text", label: "菜单名称", name: "name", placeholder: "支持模糊搜索", clearable: true },
-                      { label: "查询", level: "primary", type: "submit" },
-                      { label: "重置", type: "reset" },
-                    ],
-                  },
-                  // --------------------------------------------------------------- 表格列配置
-                  primaryField: "id",
-                  columns: [
-                    { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
-                    { name: "name", label: "菜单名称", sortable: false },
-                    { name: "path", label: "菜单路径", sortable: false },
-                    { name: "title", label: "标题", sortable: false },
-                    { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
-                    { name: "menuSort", label: "菜单排序", sortable: false },
-                    { name: "createAt", label: "创建时间", sortable: true },
-                    { name: "updateAt", label: "更新时间", sortable: true },
-                    { type: "operation", label: "操作", width: 35, toggled: true, buttons: [menuDetail()] },
-                  ],
-                  // --------------------------------------------------------------- 表格工具栏配置
-                  headerToolbar: [
-                    { align: "right", type: "columns-toggler" },
-                  ],
-                  footerToolbar: [
-                    { align: "right", type: "pagination" },
-                    { align: "right", type: "switch-per-page" },
-                    { align: "right", type: "statistics" },
-                  ],
-                },
-              },
-            ]
-          }
-        },
-
-        {
-          title: "UI权限管理",
-          body: {}
-        },
-
-        {
-          title: "API权限管理",
-          body: {}
-        },
       ]
     },
   ],

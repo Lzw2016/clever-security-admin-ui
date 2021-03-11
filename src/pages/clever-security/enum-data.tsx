@@ -111,11 +111,23 @@ const role: {
 const apiPermission: {
   /** API接口是否存在，0：不存在；1：存在 */
   apiExist: EnumArray;
+  /** 权限类型，1:API权限，2:菜单权限，3:页面UI权限 */
+  permissionType: EnumArray;
+  enabled: EnumArray;
   [name: string]: EnumArray;
 } = {
   apiExist: [
     { label: "不存在", value: "0" },
     { label: "存在", value: "1" },
+  ],
+  permissionType: [
+    { label: "API权限", value: "1" },
+    { label: "菜单权限", value: "2" },
+    { label: "页面UI权限", value: "3" },
+  ],
+  enabled: [
+    { label: "禁用", value: "0" },
+    { label: "启用", value: "1" },
   ],
 };
 
