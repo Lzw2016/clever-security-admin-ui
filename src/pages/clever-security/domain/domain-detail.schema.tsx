@@ -639,18 +639,6 @@ function uiTab() {
 // ------------------------------------------------------------------------------------------------------------------------------------------------------- API权限管理
 
 const apiTabOperations = {
-  /** 更新API权限 */
-  updateApi: () => {
-    return {
-      type: "button",
-      label: "编辑",
-      level: "info",
-      size: "xs",
-      actionType: "dialog",
-      dialog: {},
-    };
-  },
-
   /** API权限详情 */
   apiDetailDialog: () => {
     return {
@@ -707,6 +695,34 @@ const apiTabOperations = {
         },
       }
     };
+  },
+
+  /** 更新API权限 */
+  updateApi: () => {
+    return {
+      type: "button",
+      label: "编辑",
+      level: "info",
+      size: "xs",
+      actionType: "dialog",
+      dialog: {},
+    };
+  },
+
+  delApi: () => {
+    return {
+      label: "删除",
+      type: "button",
+      level: 'danger',
+      size: "xs",
+      actionType: "ajax",
+      // api: {
+      //   method: "delete",
+      //   url: `${apiPath.UserDomainController.delUserDomain}?domainId=$location.query.domainId&uid=$uid`,
+      //   adaptor: (payload: any) => ({ ...payload, data: {} }),
+      // },
+      confirmText: "确定删除API权限数据: ${title}?",
+    }
   },
 };
 
@@ -769,7 +785,10 @@ function apiTab() {
         // { name: "description", label: "说明", sortable: true },
         // { name: "createAt", label: "创建时间", sortable: true },
         // { name: "updateAt", label: "更新时间", sortable: true },
-        { type: "operation", label: "操作", width: 80, buttons: [apiTabOperations.apiDetailDialog(), apiTabOperations.updateApi()] },
+        {
+          type: "operation", label: "操作", width: 120,
+          buttons: [apiTabOperations.apiDetailDialog(), apiTabOperations.updateApi(), apiTabOperations.delApi()]
+        },
       ],
       bulkActions: [
         { align: "left", type: 'button', level: 'danger', size: "sm", label: "取消授权", className: "mr-1" },
