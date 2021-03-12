@@ -666,7 +666,7 @@ const apiTabOperations = {
                 controls: [
                   { name: "strFlag", label: "权限字符串", type: "static" },
                   { name: "title", label: "API标题", type: "static" },
-                  { name: "permissionType", label: "权限类型", type: "static-mapping", map: enum2object(apiPermission.permissionType) },
+                  // { name: "permissionType", label: "权限类型", type: "static-mapping", map: enum2object(apiPermission.permissionType) },
                   { name: "apiPath", label: "API接口地址", type: "static" },
                   { name: "enabled", label: "是否启用授权", type: "static-mapping", map: enum2object(apiPermission.enabled) },
                   { name: "description", label: "权限说明", type: "static" },
