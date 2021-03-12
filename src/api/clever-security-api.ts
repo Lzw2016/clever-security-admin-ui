@@ -46,6 +46,7 @@ const apiPath = {
   },
 
   MenuPermissionController: {
+    menuTree: `${serverHost}/security/admin/api/menu_permission/tree`,
     pageQuery: `${serverHost}/security/admin/api/menu_permission/page_query`,
   },
 

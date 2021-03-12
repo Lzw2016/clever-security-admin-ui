@@ -2,7 +2,8 @@ import { apiPath } from "@/api/clever-security-api";
 import classnames from "classnames";
 import { FormClassName } from "@/amis-types";
 import { enum2object } from "@/utils/enum";
-import { apiPermission, enabled, isHideMenu, role, user } from "../enum-data";
+import { apiPermission, enabled, isHideMenu, menuPermission, permission, role, user } from "../enum-data";
+import styles from "./domain-detail.schema.less";
 
 let globalData: AmisPageGlobalData | undefined;
 
@@ -316,8 +317,8 @@ const roleTabOperations = {
               inputClassName: "w-40", required: true,
             },
             {
-              type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 2, maxRows: 6,
-              validations: { maxLength: 500 }, validationErrors: {},
+              type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 3, maxRows: 6,
+              validations: { maxLength: 500 },
             },
           ]
         }
@@ -357,8 +358,8 @@ const roleTabOperations = {
               inputClassName: "w-40", required: true,
             },
             {
-              type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 2, maxRows: 6,
-              validations: { maxLength: 500 }, validationErrors: {},
+              type: "textarea", name: "description", label: "说明", placeholder: "请输入",
+              minRows: 3, maxRows: 6, validations: { maxLength: 500 },
             },
           ]
         }
@@ -464,6 +465,35 @@ function roleTab() {
 // ------------------------------------------------------------------------------------------------------------------------------------------------------- 菜单管理
 
 const menuTabOperations = {
+
+  /** 新增菜单 */
+  addMenu: () => {
+    return [
+      { type: "text", name: "name", label: "菜单名称", placeholder: "请输入菜单名称", labelClassName: styles.addMenuLabel, required: true },
+      { type: "text", name: "icon", label: "菜单图标", placeholder: "请输入菜单图标", labelClassName: styles.addMenuLabel, required: true },
+      { type: "text", name: "path", label: "菜单路径", placeholder: "请输入菜单路径", labelClassName: styles.addMenuLabel, required: true },
+      { type: "text", name: "pagePath", label: "页面路径", placeholder: "请输入页面路径", labelClassName: styles.addMenuLabel, required: true },
+      {
+        type: "radios", name: "hideMenu", label: "隐藏菜单", placeholder: "隐藏菜单", labelClassName: styles.addMenuLabel, required: true,
+        options: menuPermission.hideMenu, columnsCount: menuPermission.hideMenu.length, inputClassName: "w-40", value: "0",
+      },
+      {
+        type: "radios", name: "hideChildrenMenu", label: "隐藏子菜单", placeholder: "隐藏子菜单", labelClassName: styles.addMenuLabel, required: true,
+        options: menuPermission.hideChildrenMenu, columnsCount: menuPermission.hideChildrenMenu.length, inputClassName: "w-40", value: "0",
+      },
+      {
+        type: "radios", name: "enabled", label: "是否启用", placeholder: "是否启用", labelClassName: styles.addMenuLabel, required: true,
+        options: permission.enabled, columnsCount: permission.enabled.length, inputClassName: "w-40", value: "1",
+      },
+      { type: "number", name: "sort", label: "菜单排序", placeholder: "请输入菜单排序(由小到大)", labelClassName: styles.addMenuLabel, required: true, value: 0 },
+      // { type: "text", name: "extConfig", label: "扩展配置", placeholder: "请输入", labelClassName: styles.addMenuLabel, required: true },
+      {
+        type: "textarea", name: "description", label: "说明", placeholder: "请输入说明", labelClassName: styles.addMenuLabel,
+        minRows: 3, maxRows: 6, validations: { maxLength: 500 },
+      },
+    ];
+  },
+
   /** menu权限详情 */
   menuDetail: () => {
     return {
@@ -503,54 +533,127 @@ const menuTabOperations = {
 function menuTab() {
   return {
     title: "菜单管理",
-    body: crudTemplate({
-      api: {
-        method: "get",
-        url: apiPath.MenuPermissionController.pageQuery,
-        data: {
-          pageNo: "$pageNo",
-          pageSize: "$pageSize",
-          orderField: "$orderField",
-          sort: "$sort",
-          orderBy: "$orderBy",
-          orderDir: "$orderDir",
-          domainId: "$location.query.domainId",
-          name: "$name",
-        },
-      },
-      filter: {
-        title: "",
-        className: classnames(FormClassName.label4x, FormClassName.input12x, "mb-4"),
+    body: {
+      type: "page",
+      title: "",
+      asideClassName: classnames(styles.menuTabAside),
+      aside: {
+        name: "menuTreeForm",
+        type: "form",
+        target: "detailForm",
         wrapWithPanel: false,
-        trimValues: true,
-        submitOnChange: false,
+        submitOnChange: true,
+        debug: true,
+        // initApi: {
+        //   method: "get",
+        //   url: apiPath.MenuPermissionController.menuTree,
+        //   data: { domainId: "$location.query.domainId" },
+        //   adaptor: (payload: any) => {
+        //     const { data, ...other } = payload;
+        //     return { ...other, data: { options: data } };
+        //   },
+        // },
         controls: [
-          { type: "text", label: "菜单名称", name: "name", placeholder: "支持模糊搜索", clearable: true },
-          { label: "查询", level: "primary", type: "submit" },
-          { label: "重置", type: "reset" },
-        ],
+          {
+            type: "tree", name: "parentId", label: false, initiallyOpen: true, showIcon: false,
+            rootCreateTip: "新增一级菜单", labelField: "name", valueField: "id", source: {
+              method: "get",
+              url: apiPath.MenuPermissionController.menuTree,
+              data: { domainId: "$location.query.domainId" },
+              adaptor: (payload: any) => {
+                const { data, ...other } = payload;
+                return { ...other, data: { options: data } };
+              },
+            },
+            creatable: true, addControls: menuTabOperations.addMenu(), addApi: {
+              method: "post",
+              data: {
+                "&": "$$",
+                domainId: "$location.query.domainId",
+              },
+            },
+            removable: true, editable: true,
+          },
+        ]
       },
-      primaryField: "id",
-      columns: [
-        { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
-        { name: "name", label: "菜单名称", sortable: false },
-        { name: "path", label: "菜单路径", sortable: false },
-        { name: "title", label: "标题", sortable: false },
-        { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
-        { name: "menuSort", label: "菜单排序", sortable: false },
-        { name: "createAt", label: "创建时间", sortable: true },
-        { name: "updateAt", label: "更新时间", sortable: true },
-        { type: "operation", label: "操作", width: 35, toggled: true, buttons: [menuTabOperations.menuDetail()] },
-      ],
-      bulkActions: [
-        // { align: "left", type: 'button', level: 'danger', size: "sm", ...roleTabOperations.batchDisableRole() },
-      ],
-      headerToolbar: [
-        // { align: "left", type: 'button', level: 'primary', size: "sm", ...roleTabOperations.addRole() },
-      ],
-      extProps: { multiple: true, keepItemSelectionOnPageChange: false },
-    }),
+      body: {
+        name: "detailForm",
+        type: "form",
+        mode: "horizontal",
+        title: "",
+        // initApi: "https://3xsw4ap8wah59.cfc-execute.bj.baidubce.com/api/amis-mock/mock2/form/initData?keywords=${keywords}",
+        actions: [],
+        controls: [
+          "Form 模型除了用来提交数据外，还比较适合用来做详情数据的展示",
+          {
+            type: "divider"
+          },
+          {
+            label: "名称",
+            type: "static",
+            // "labelClassName": "text-muted",
+            name: "keywords"
+          },
+          {
+            label: "作者",
+            type: "static",
+            // "labelClassName": "text-muted",
+            name: "author"
+          },
+        ]
+      },
+    },
   };
+  // return {
+  //   title: "菜单管理",
+  //   body: crudTemplate({
+  //     api: {
+  //       method: "get",
+  //       url: apiPath.MenuPermissionController.pageQuery,
+  //       data: {
+  //         pageNo: "$pageNo",
+  //         pageSize: "$pageSize",
+  //         orderField: "$orderField",
+  //         sort: "$sort",
+  //         orderBy: "$orderBy",
+  //         orderDir: "$orderDir",
+  //         domainId: "$location.query.domainId",
+  //         name: "$name",
+  //       },
+  //     },
+  //     filter: {
+  //       title: "",
+  //       className: classnames(FormClassName.label4x, FormClassName.input12x, "mb-4"),
+  //       wrapWithPanel: false,
+  //       trimValues: true,
+  //       submitOnChange: false,
+  //       controls: [
+  //         { type: "text", label: "菜单名称", name: "name", placeholder: "支持模糊搜索", clearable: true },
+  //         { label: "查询", level: "primary", type: "submit" },
+  //         { label: "重置", type: "reset" },
+  //       ],
+  //     },
+  //     primaryField: "id",
+  //     columns: [
+  //       { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
+  //       { name: "name", label: "菜单名称", sortable: false },
+  //       { name: "path", label: "菜单路径", sortable: false },
+  //       { name: "title", label: "标题", sortable: false },
+  //       { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
+  //       { name: "menuSort", label: "菜单排序", sortable: false },
+  //       { name: "createAt", label: "创建时间", sortable: true },
+  //       { name: "updateAt", label: "更新时间", sortable: true },
+  //       { type: "operation", label: "操作", width: 35, toggled: true, buttons: [menuTabOperations.menuDetail()] },
+  //     ],
+  //     bulkActions: [
+  //       // { align: "left", type: 'button', level: 'danger', size: "sm", ...roleTabOperations.batchDisableRole() },
+  //     ],
+  //     headerToolbar: [
+  //       // { align: "left", type: 'button', level: 'primary', size: "sm", ...roleTabOperations.addRole() },
+  //     ],
+  //     extProps: { multiple: true, keepItemSelectionOnPageChange: false },
+  //   }),
+  // };
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------- UI权限管理
@@ -648,7 +751,7 @@ const apiTabOperations = {
       size: "xs",
       actionType: "dialog",
       dialog: {
-        title: "API权限详情",
+        title: "API权限详情 - ${title}",
         size: "md",
         closeOnEsc: true,
         actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
@@ -668,7 +771,7 @@ const apiTabOperations = {
                   { name: "title", label: "API标题", type: "static" },
                   // { name: "permissionType", label: "权限类型", type: "static-mapping", map: enum2object(apiPermission.permissionType) },
                   { name: "apiPath", label: "API接口地址", type: "static" },
-                  { name: "enabled", label: "是否启用授权", type: "static-mapping", map: enum2object(apiPermission.enabled) },
+                  { name: "enabled", label: "是否启用授权", type: "static-mapping", map: enum2object(permission.enabled) },
                   { name: "description", label: "权限说明", type: "static" },
                   { name: "createAt", label: "创建时间", type: "static" },
                   { name: "updateAt", label: "更新时间", type: "static" },
@@ -705,10 +808,41 @@ const apiTabOperations = {
       level: "info",
       size: "xs",
       actionType: "dialog",
-      dialog: {},
+      dialog: {
+        title: "编辑API权限 - ${title}",
+        body: {
+          type: "form",
+          className: classnames(FormClassName.flex_label6x),
+          trimValues: true,
+          api: {
+            // method: "put",
+            // url: apiPath.RoleController.addRole,
+            data: {
+              domainId: "$location.query.domainId",
+              strFlag: "$strFlag",
+              title: "$title",
+              enabled: "$enabled",
+              description: "$description",
+            },
+          },
+          controls: [
+            { type: "text", name: "strFlag", label: "权限字符串", placeholder: "请输入权限字符串", required: true },
+            { type: "text", name: "title", label: "API标题", placeholder: "请输入API标题", required: true },
+            {
+              type: "radios", name: "enabled", label: "启用授权", options: permission.enabled, columnsCount: permission.enabled.length,
+              inputClassName: "w-40", required: true,
+            },
+            {
+              type: "textarea", name: "description", label: "权限说明", placeholder: "请输入权限说明",
+              minRows: 3, maxRows: 6, validations: { maxLength: 500 },
+            },
+          ]
+        }
+      },
     };
   },
 
+  /** 删除API权限 */
   delApi: () => {
     return {
       label: "删除",
@@ -723,6 +857,36 @@ const apiTabOperations = {
       // },
       confirmText: "确定删除API权限数据: ${title}?",
     }
+  },
+
+  /** 禁用API权限 */
+  batchDisableApi: () => {
+    return {
+      label: "取消授权",
+      className: "mr-1",
+      icon: "fa fa-times",
+      actionType: "ajax",
+      // api: {
+      //   method: "delete",
+      //   url: `${serverHost}/!/amis-api/curd-page@mockDelete?orderId=$orderId`,
+      // },
+      confirmText: "确定批量取消选中API权限授权?",
+    };
+  },
+
+  /** 删除API权限 */
+  batchDelApi: () => {
+    return {
+      label: "批量删除",
+      className: "mr-1",
+      icon: "fa fa-times",
+      actionType: "ajax",
+      // api: {
+      //   method: "delete",
+      //   url: `${serverHost}/!/amis-api/curd-page@mockDelete?orderId=$orderId`,
+      // },
+      confirmText: "确定批量删除选中API权限?",
+    };
   },
 };
 
@@ -764,7 +928,7 @@ function apiTab() {
           { type: "text", label: "接口地址", name: "apiPath", placeholder: "API接口地址(支持模糊匹配)", clearable: true },
           { type: "html", html: "<br />" },
           { type: "select", label: "是否存在", name: "apiExist", options: apiPermission.apiExist, clearable: true },
-          { type: "select", label: "启用授权", name: "enabled", options: apiPermission.enabled, clearable: true },
+          { type: "select", label: "启用授权", name: "enabled", options: permission.enabled, clearable: true },
           { type: "date", label: "创建时间", name: "createAtStart", placeholder: "创建时间-开始", format: "YYYY-MM-DD 00:00:00", clearable: true, maxDate: "$createAtEnd" },
           { type: "date", label: "创建时间", name: "createAtEnd", placeholder: "创建时间-结束", format: "YYYY-MM-DD 23:59:59", clearable: true, minDate: "$createAtStart" },
           { label: "查询", level: "primary", type: "submit" },
@@ -780,7 +944,7 @@ function apiTab() {
         { name: "methodName", label: "Controller函数名称", sortable: true },
         // { name: "methodName", label: "API入口函数", type: "tpl", tpl: "${className}#${methodName}" },
         // { name: "methodParams", label: "函数参数", sortable: true },
-        { name: "enabled", label: "是否启用授权", sortable: true, type: "mapping", map: enum2object(apiPermission.enabled) },
+        { name: "enabled", label: "是否启用授权", sortable: true, type: "mapping", map: enum2object(permission.enabled) },
         { name: "apiExist", label: "是否存在", sortable: true, type: "mapping", map: enum2object(apiPermission.apiExist) },
         // { name: "description", label: "说明", sortable: true },
         // { name: "createAt", label: "创建时间", sortable: true },
@@ -791,9 +955,8 @@ function apiTab() {
         },
       ],
       bulkActions: [
-        { align: "left", type: 'button', level: 'danger', size: "sm", label: "取消授权", className: "mr-1" },
-        { align: "left", type: 'button', level: 'danger', size: "sm", label: "批量删除", className: "mr-1" },
-        // { align: "left", type: 'button', level: 'danger', size: "sm", ...apiTabOperations.xxx() },
+        { align: "left", type: 'button', level: 'danger', size: "sm", ...apiTabOperations.batchDelApi() },
+        { align: "left", type: 'button', level: 'danger', size: "sm", ...apiTabOperations.batchDisableApi() },
       ],
       headerToolbar: [],
       extProps: { multiple: true, keepItemSelectionOnPageChange: false },
