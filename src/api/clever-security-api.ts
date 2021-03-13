@@ -49,6 +49,7 @@ const apiPath = {
     menuTree: `${serverHost}/security/admin/api/menu_permission/tree`,
     pageQuery: `${serverHost}/security/admin/api/menu_permission/page_query`,
     addMenuPermission: `${serverHost}/security/admin/api/menu_permission/add`,
+    updateMenuPermission: `${serverHost}/security/admin/api/menu_permission/update`,
   },
 
   JwtTokenController: {

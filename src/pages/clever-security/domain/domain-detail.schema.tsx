@@ -497,6 +497,38 @@ const menuTabOperations = {
     ];
   },
 
+  /** 更新菜单 */
+  updateMenu: () => {
+    return [
+      // 
+      { type: "text", name: "name", label: "菜单名称", placeholder: "请输入菜单名称", labelClassName: styles.addMenuLabel, required: true },
+      { type: "text", name: "icon", label: "菜单图标", placeholder: "请输入菜单图标", labelClassName: styles.addMenuLabel },
+      { type: "text", name: "path", label: "菜单路径", placeholder: "请输入菜单路径", labelClassName: styles.addMenuLabel, required: true },
+      { type: "text", name: "pagePath", label: "页面路径", placeholder: "请输入页面路径", labelClassName: styles.addMenuLabel },
+      {
+        type: "radios", name: "hideMenu", label: "隐藏菜单", placeholder: "隐藏菜单", labelClassName: styles.addMenuLabel, required: true,
+        options: menuPermission.hideMenu, columnsCount: menuPermission.hideMenu.length, inputClassName: "w-40", value: "0",
+      },
+      {
+        type: "radios", name: "hideChildrenMenu", label: "隐藏子菜单", placeholder: "隐藏子菜单", labelClassName: styles.addMenuLabel, required: true,
+        options: menuPermission.hideChildrenMenu, columnsCount: menuPermission.hideChildrenMenu.length, inputClassName: "w-40", value: "0",
+      },
+      {
+        type: "radios", name: "enabled", label: "是否启用", placeholder: "是否启用", labelClassName: styles.addMenuLabel, required: true,
+        options: permission.enabled, columnsCount: permission.enabled.length, inputClassName: "w-40", value: "1",
+      },
+      // {
+      //   type: "editor", name: "extConfig", label: "扩展配置", placeholder: "请输入", language: "json",
+      //   mode: "normal", labelClassName: classnames(styles.addMenuLabel, "text-right", "pr-5"),
+      // },
+      { type: "number", name: "sort", label: "菜单排序", placeholder: "请输入菜单排序(由小到大)", labelClassName: styles.addMenuLabel, required: true, value: 0 },
+      {
+        type: "textarea", name: "description", label: "说明", placeholder: "请输入说明", labelClassName: styles.addMenuLabel,
+        minRows: 3, maxRows: 6, validations: { maxLength: 500 },
+      },
+    ];
+  },
+
   /** menu权限详情 */
   menuDetail: () => {
     return {
@@ -564,13 +596,25 @@ function menuTab() {
             creatable: true, addControls: menuTabOperations.addMenu(), addApi: {
               method: "post",
               url: apiPath.MenuPermissionController.addMenuPermission,
-              data: {
-                "&": "$$",
-                domainId: "$location.query.domainId",
-              },
+              data: { "&": "$$", domainId: "$location.query.domainId" },
               adaptor: (payload: any) => ({ ...payload, data: {} }),
             },
-            removable: true, editable: true,
+            // onAdd: (a: any, b: any, c: any, d: any) => {
+            //   console.log("--->", a, b, c, d);
+            // },
+            // onEdit: (a: any, b: any, c: any, d: any) => {
+            //   console.log("--->", a, b, c, d);
+            // },
+            // onDelete: (a: any, b: any, c: any, d: any) => {
+            //   console.log("--->", a, b, c, d);
+            // },
+            editable: true, editControls: menuTabOperations.updateMenu(), editApi: {
+              method: "put",
+              url: apiPath.MenuPermissionController.updateMenuPermission,
+              data: { "&": "$$" },
+              adaptor: (payload: any) => ({ ...payload, data: {} }),
+            },
+            removable: true,
           },
         ]
       },
