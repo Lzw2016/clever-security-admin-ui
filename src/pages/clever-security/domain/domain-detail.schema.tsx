@@ -468,7 +468,7 @@ const menuTabOperations = {
   /** 新增菜单 */
   addMenu: () => {
     return [
-      // { type: "text", name: "parentId", label: "上级菜单", labelClassName: styles.addMenuLabel, required: true },
+      { type: "text", name: "parent.name", label: "上级菜单", placeholder: "空", labelClassName: styles.addMenuLabel, disabled: true },
       { type: "text", name: "name", label: "菜单名称", placeholder: "请输入菜单名称", labelClassName: styles.addMenuLabel, required: true },
       { type: "text", name: "icon", label: "菜单图标", placeholder: "请输入菜单图标", labelClassName: styles.addMenuLabel },
       { type: "text", name: "path", label: "菜单路径", placeholder: "请输入菜单路径", labelClassName: styles.addMenuLabel, required: true },
@@ -500,7 +500,6 @@ const menuTabOperations = {
   /** 更新菜单 */
   updateMenu: () => {
     return [
-      // 
       { type: "text", name: "name", label: "菜单名称", placeholder: "请输入菜单名称", labelClassName: styles.addMenuLabel, required: true },
       { type: "text", name: "icon", label: "菜单图标", placeholder: "请输入菜单图标", labelClassName: styles.addMenuLabel },
       { type: "text", name: "path", label: "菜单路径", placeholder: "请输入菜单路径", labelClassName: styles.addMenuLabel, required: true },
@@ -582,8 +581,8 @@ function menuTab() {
         // debug: true,
         controls: [
           {
-            type: "tree", name: "selectedMenu", label: false, initiallyOpen: true, showIcon: false,
-            rootCreateTip: "新增一级菜单", labelField: "name", valueField: "id",
+            type: "tree", name: "selectedMenu", label: false, initiallyOpen: true, showIcon: true,
+            rootCreateTip: "新增一级菜单", labelField: "name", valueField: "id", optionLabel: "菜单",
             joinValues: false, extractValue: false, source: {
               method: "get",
               url: apiPath.MenuPermissionController.menuTree,
@@ -596,25 +595,20 @@ function menuTab() {
             creatable: true, addControls: menuTabOperations.addMenu(), addApi: {
               method: "post",
               url: apiPath.MenuPermissionController.addMenuPermission,
-              data: { "&": "$$", domainId: "$location.query.domainId" },
+              data: { "&": "$$", domainId: "$location.query.domainId", parentId: "${parent.id}" },
               adaptor: (payload: any) => ({ ...payload, data: {} }),
             },
-            // onAdd: (a: any, b: any, c: any, d: any) => {
-            //   console.log("--->", a, b, c, d);
-            // },
-            // onEdit: (a: any, b: any, c: any, d: any) => {
-            //   console.log("--->", a, b, c, d);
-            // },
-            // onDelete: (a: any, b: any, c: any, d: any) => {
-            //   console.log("--->", a, b, c, d);
-            // },
             editable: true, editControls: menuTabOperations.updateMenu(), editApi: {
               method: "put",
               url: apiPath.MenuPermissionController.updateMenuPermission,
-              data: { "&": "$$" },
+              data: { "&": "$$", id: "${id}" },
               adaptor: (payload: any) => ({ ...payload, data: {} }),
             },
-            removable: true,
+            removable: true, deleteConfirmText: "确定删掉当前菜单(包含子菜单)?", deleteApi: {
+              method: "delete",
+              url: `${apiPath.MenuPermissionController.delMenuPermission}?id=$id`,
+              adaptor: (payload: any) => ({ ...payload, data: {} }),
+            },
           },
         ]
       },

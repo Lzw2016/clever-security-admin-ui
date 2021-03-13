@@ -50,6 +50,7 @@ const apiPath = {
     pageQuery: `${serverHost}/security/admin/api/menu_permission/page_query`,
     addMenuPermission: `${serverHost}/security/admin/api/menu_permission/add`,
     updateMenuPermission: `${serverHost}/security/admin/api/menu_permission/update`,
+    delMenuPermission: `${serverHost}/security/admin/api/menu_permission/del`,
   },
 
   JwtTokenController: {
