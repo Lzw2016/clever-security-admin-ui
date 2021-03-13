@@ -1,3 +1,5 @@
+@import "/src/assets/css/amis-class-name";
+
 .menuTabAside {
   &:before {
     display: none;
@@ -5,6 +7,20 @@
 
   width: 24rem !important;
   max-width: 24rem !important;
+  background: unset !important;
+  border-right: none !important;
+
+  :global(.@{form}), :global(.@{form} .@{formItem}), :global(.@{form} .@{formItem} .@{formControl}) {
+    height: 100%;
+    margin: 0;
+    max-height: unset !important;
+  }
+}
+
+.menuTabBody {
+  border: 1px solid #d1d5db;
+  margin-left: 16px;
+  min-height: 500px;
 }
 
 .addMenuLabel {
