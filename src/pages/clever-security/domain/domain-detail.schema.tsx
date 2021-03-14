@@ -580,10 +580,12 @@ function menuTab() {
         submitOnChange: true,
         // debug: true,
         controls: [
+          // { type: "tpl", tpl: "<h3>系统菜单树</h3>" },
+          // { type: "divider" },
           {
             type: "tree", name: "selectedMenu", label: false, initiallyOpen: true, showIcon: true,
             rootCreateTip: "新增一级菜单", labelField: "name", valueField: "id", optionLabel: "菜单",
-            joinValues: false, extractValue: false, source: {
+            joinValues: false, extractValue: false, selectFirst: true, source: {
               method: "get",
               url: apiPath.MenuPermissionController.menuTree,
               data: { domainId: "$location.query.domainId" },
