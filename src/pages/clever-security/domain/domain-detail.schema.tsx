@@ -680,16 +680,16 @@ function uiTab() {
     body: crudTemplate({
       api: {
         method: "get",
-        url: apiPath.MenuPermissionController.pageQuery,
+        url: apiPath.MenuPermissionController.menuTree,
         data: {
-          pageNo: "$pageNo",
-          pageSize: "$pageSize",
-          orderField: "$orderField",
-          sort: "$sort",
-          orderBy: "$orderBy",
-          orderDir: "$orderDir",
+          // pageNo: "$pageNo",
+          // pageSize: "$pageSize",
+          // orderField: "$orderField",
+          // sort: "$sort",
+          // orderBy: "$orderBy",
+          // orderDir: "$orderDir",
           domainId: "$location.query.domainId",
-          uiName: "$uiName",
+          // uiName: "$uiName",
         },
       },
       filter: {
@@ -706,7 +706,7 @@ function uiTab() {
       },
       primaryField: "id",
       columns: [
-        { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
+        // { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
         { name: "uiName", label: "ui名称", sortable: false },
         { name: "title", label: "标题", sortable: false },
         { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
