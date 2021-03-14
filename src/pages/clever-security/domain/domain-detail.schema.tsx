@@ -845,6 +845,21 @@ const apiTabOperations = {
     }
   },
 
+  /** 启用API权限 */
+  batchEnabledApi: () => {
+    return {
+      label: "启用授权",
+      className: "mr-1",
+      icon: "fa fa-check",
+      actionType: "ajax",
+      // api: {
+      //   method: "delete",
+      //   url: `${serverHost}/!/amis-api/curd-page@mockDelete?orderId=$orderId`,
+      // },
+      confirmText: "确定批量<span class='text-primary'>启用</span>选中API权限授权?",
+    };
+  },
+
   /** 禁用API权限 */
   batchDisableApi: () => {
     return {
@@ -856,7 +871,7 @@ const apiTabOperations = {
       //   method: "delete",
       //   url: `${serverHost}/!/amis-api/curd-page@mockDelete?orderId=$orderId`,
       // },
-      confirmText: "确定批量取消选中API权限授权?",
+      confirmText: "确定批量<span class='text-danger'>禁用</span>选中API权限授权?",
     };
   },
 
@@ -865,13 +880,13 @@ const apiTabOperations = {
     return {
       label: "批量删除",
       className: "mr-1",
-      icon: "fa fa-times",
+      icon: "fa fa-trash",
       actionType: "ajax",
       // api: {
       //   method: "delete",
       //   url: `${serverHost}/!/amis-api/curd-page@mockDelete?orderId=$orderId`,
       // },
-      confirmText: "确定批量删除选中API权限?",
+      confirmText: "确定批量<span class='text-danger'>删除</span>选中API权限?",
     };
   },
 };
@@ -942,6 +957,7 @@ function apiTab() {
       ],
       bulkActions: [
         { align: "left", type: 'button', level: 'danger', size: "sm", ...apiTabOperations.batchDelApi() },
+        { align: "left", type: 'button', level: 'primary', size: "sm", ...apiTabOperations.batchEnabledApi() },
         { align: "left", type: 'button', level: 'danger', size: "sm", ...apiTabOperations.batchDisableApi() },
       ],
       headerToolbar: [],
