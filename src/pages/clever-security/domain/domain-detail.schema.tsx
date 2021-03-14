@@ -2,7 +2,7 @@ import { apiPath } from "@/api/clever-security-api";
 import classnames from "classnames";
 import { FormClassName } from "@/amis-types";
 import { enum2object } from "@/utils/enum";
-import { apiPermission, enabled, isHideMenu, menuPermission, permission, role, user } from "../enum-data";
+import { apiPermission, enabled, menuPermission, permission, role, user } from "../enum-data";
 import styles from "./domain-detail.schema.less";
 
 let globalData: AmisPageGlobalData | undefined;
@@ -531,35 +531,56 @@ const menuTabOperations = {
   /** menu权限详情 */
   menuDetail: () => {
     return {
-      type: "button",
-      label: "查看",
-      level: "info",
-      size: "xs",
-      actionType: "dialog",
-      dialog: {
-        title: "菜单权限详情",
-        closeOnEsc: true,
-        actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
-        body: {
-          type: "form",
-          className: classnames(FormClassName.flex_label5x),
+      type: "form",
+      mode: "horizontal",
+      className: classnames(FormClassName.label7x),
+      wrapWithPanel: false,
+      // debug: true,
+      controls: [
+        { type: "tpl", tpl: "<h3>菜单详情 - ${selectedMenu.name}</h3>" },
+        { type: "divider" },
+        {
+          type: "fieldSet",
+          title: "菜单信息",
+          hiddenOn: "!this.selectedMenu",
           controls: [
-            { name: "name", label: "菜单名称", type: "text" },
-            { name: "icon", label: "菜单图标", type: "text" },
-            { name: "path", label: "菜单路径", type: "text" },
-            { name: "pagePath", label: "页面路径", type: "text" },
-            { name: "hideMenu", label: "隐藏当前菜单和子菜单", type: "mapping", map: enum2object(isHideMenu) },
-            { name: "hideChildrenMenu", label: "隐藏子菜单", type: "mapping", map: enum2object(isHideMenu) },
-            { name: "extConfig", label: "菜单扩展配置", type: "text" },
-            { name: "menuSort", label: "菜单排序", type: "text" },
-            { name: "title", label: "标题", type: "text" },
-            { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
-            { name: "createAt", label: "创建时间", type: "text" },
-            { name: "updateAt", label: "更新时间", type: "text" },
-            { name: "description", label: "说明", type: "text" },
-          ]
-        }
-      }
+            { type: "static", name: "selectedMenu.name", label: "菜单名称" },
+            { type: "static", name: "selectedMenu.icon", label: "菜单图标" },
+            { type: "static", name: "selectedMenu.path", label: "菜单路径" },
+            { type: "static", name: "selectedMenu.pagePath", label: "页面路径" },
+            { type: "static-mapping", name: "selectedMenu.hideMenu", label: "隐藏当前菜单", map: enum2object(menuPermission.hideMenu) },
+            { type: "static-mapping", name: "selectedMenu.hideChildrenMenu", label: "隐藏子菜单", map: enum2object(menuPermission.hideChildrenMenu) },
+            { type: "static", name: "selectedMenu.sort", label: "菜单排序" },
+            { type: "static", name: "selectedMenu.description", label: "说明" },
+            { type: "static", name: "selectedMenu.createAt", label: "创建时间" },
+            { type: "static", name: "selectedMenu.updateAt", label: "更新时间" },
+          ],
+        },
+        { type: "divider", lineStyle: "dashed", hiddenOn: "!this.selectedMenu", },
+        {
+          type: "fieldSet",
+          title: "菜单扩展配置",
+          collapsable: true,
+          collapsed: true,
+          hiddenOn: "!this.selectedMenu",
+          controls: [
+            { type: "editor", name: "selectedMenu.extConfig", label: false, language: "json", disabled: true },
+          ],
+        },
+        { type: "divider", lineStyle: "dashed", hiddenOn: "!this.selectedMenu", },
+        {
+          type: "fieldSet",
+          title: "权限信息",
+          collapsable: true,
+          collapsed: false,
+          hiddenOn: "!this.selectedMenu",
+          controls: [
+            { type: "static", name: "selectedMenu.strFlag", label: "权限字符串" },
+            { type: "static-mapping", name: "selectedMenu.permissionType", label: "权限类型", map: enum2object(permission.permissionType) },
+            { type: "static-mapping", name: "selectedMenu.enabled", label: "是否启用", map: enum2object(permission.enabled) },
+          ],
+        },
+      ],
     };
   },
 };
@@ -615,59 +636,7 @@ function menuTab() {
         ]
       },
       body: [
-        {
-          name: "menuDetailForm",
-          type: "form",
-          mode: "horizontal",
-          className: classnames(FormClassName.label7x),
-          wrapWithPanel: false,
-          // debug: true,
-          controls: [
-            { type: "tpl", tpl: "<h3>菜单详情 - ${selectedMenu.name}</h3>" },
-            { type: "divider" },
-            {
-              type: "fieldSet",
-              title: "菜单信息",
-              hiddenOn: "!this.selectedMenu",
-              controls: [
-                { type: "static", name: "selectedMenu.name", label: "菜单名称" },
-                { type: "static", name: "selectedMenu.icon", label: "菜单图标" },
-                { type: "static", name: "selectedMenu.path", label: "菜单路径" },
-                { type: "static", name: "selectedMenu.pagePath", label: "页面路径" },
-                { type: "static-mapping", name: "selectedMenu.hideMenu", label: "隐藏当前菜单", map: enum2object(menuPermission.hideMenu) },
-                { type: "static-mapping", name: "selectedMenu.hideChildrenMenu", label: "隐藏子菜单", map: enum2object(menuPermission.hideChildrenMenu) },
-                { type: "static", name: "selectedMenu.sort", label: "菜单排序" },
-                { type: "static", name: "selectedMenu.description", label: "说明" },
-                { type: "static", name: "selectedMenu.createAt", label: "创建时间" },
-                { type: "static", name: "selectedMenu.updateAt", label: "更新时间" },
-              ],
-            },
-            { type: "divider", lineStyle: "dashed", hiddenOn: "!this.selectedMenu", },
-            {
-              type: "fieldSet",
-              title: "菜单扩展配置",
-              collapsable: true,
-              collapsed: true,
-              hiddenOn: "!this.selectedMenu",
-              controls: [
-                { type: "editor", name: "selectedMenu.extConfig", label: false, language: "json", disabled: true },
-              ],
-            },
-            { type: "divider", lineStyle: "dashed", hiddenOn: "!this.selectedMenu", },
-            {
-              type: "fieldSet",
-              title: "权限信息",
-              collapsable: true,
-              collapsed: true,
-              hiddenOn: "!this.selectedMenu",
-              controls: [
-                { type: "static", name: "selectedMenu.strFlag", label: "权限字符串" },
-                { type: "static-mapping", name: "selectedMenu.permissionType", label: "权限类型", map: enum2object(permission.permissionType) },
-                { type: "static-mapping", name: "selectedMenu.enabled", label: "是否启用", map: enum2object(permission.enabled) },
-              ],
-            },
-          ],
-        },
+        { name: "menuDetailForm", ...menuTabOperations.menuDetail() },
       ],
     },
   };
