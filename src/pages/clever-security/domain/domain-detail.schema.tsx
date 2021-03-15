@@ -750,7 +750,7 @@ const apiTabOperations = {
               body: {
                 type: "form",
                 mode: "horizontal",
-                className: classnames(FormClassName.flex_label6x),
+                className: classnames(FormClassName.flex_label7x),
                 wrapWithPanel: false,
                 controls: [
                   { name: "strFlag", label: "权限字符串", type: "static" },
