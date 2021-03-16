@@ -668,9 +668,8 @@ const uiTabOperations = {
           affixHeader: false,
           columns: [
             // { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
-            { name: "name", label: "菜单名称", sortable: false },
-            { name: "uiName", label: "ui名称", sortable: false },
-            { name: "title", label: "标题", sortable: false },
+            { name: "uiName", label: "UI名称", sortable: false },
+            // { name: "title", label: "标题", sortable: false },
             { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
             { name: "createAt", label: "创建时间", sortable: true },
             { name: "updateAt", label: "更新时间", sortable: true },
@@ -745,33 +744,6 @@ function uiTab() {
         { name: "uiDetailForm", ...uiTabOperations.uiDetail() },
       ],
     },
-    // body1: {
-    //   type: "service",
-    //   api: {
-    //     method: "get",
-    //     url: apiPath.UiPermissionController.menuAndUiTree,
-    //     data: { domainId: "$location.query.domainId" },
-    //     adaptor: (payload: any) => ({ ...payload, data: { item: payload?.data } }),
-    //   },
-    //   body: {
-    //     type: "table",
-    //     source: "${item}",
-    //     affixHeader: false,
-    //     columnsTogglable: false,
-    //     // initiallyOpen: true,
-    //     // primaryField: "id",
-    //     columns: [
-    //       // { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
-    //       { name: "name", label: "菜单名称", sortable: false },
-    //       { name: "uiName", label: "ui名称", sortable: false },
-    //       { name: "title", label: "标题", sortable: false },
-    //       { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
-    //       { name: "createAt", label: "创建时间", sortable: true },
-    //       { name: "updateAt", label: "更新时间", sortable: true },
-    //       { type: "operation", label: "操作", width: 35, buttons: [uiTabOperations.uiDetail()] },
-    //     ],
-    //   },
-    // },
   };
 }
 
