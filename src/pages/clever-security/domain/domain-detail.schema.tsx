@@ -652,10 +652,30 @@ const uiTabOperations = {
       mode: "horizontal",
       className: classnames(FormClassName.label7x),
       wrapWithPanel: false,
-      // debug: true,
+      initApi: {
+        method: "get",
+        // url: apiPath.UiPermissionController.menuTree,
+        data: { domainId: "$location.query.domainId", menuId: "${selectedMenu.id}" },
+      },
+      debug: true,
       controls: [
         { type: "tpl", tpl: "<h3>页面UI详情<%= (data.selectedMenu && data.selectedMenu.name) ? (' - ' + data.selectedMenu.name): '' %></h3>" },
         { type: "divider" },
+        {
+          type: "table",
+          // source: "${item}",
+          affixHeader: false,
+          columns: [
+            // { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
+            { name: "name", label: "菜单名称", sortable: false },
+            { name: "uiName", label: "ui名称", sortable: false },
+            { name: "title", label: "标题", sortable: false },
+            { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
+            { name: "createAt", label: "创建时间", sortable: true },
+            { name: "updateAt", label: "更新时间", sortable: true },
+            // { type: "operation", label: "操作", width: 35, buttons: [uiTabOperations.uiDetail()] },
+          ],
+        },
       ],
     };
   },
