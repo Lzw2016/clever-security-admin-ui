@@ -108,6 +108,7 @@ let config: Configuration = {
           // @ant-design/icons 相关
           isDevMode ? "/@ant-design/icons/dist/index.umd.js" : "/@ant-design/icons/dist/index.umd.min.js",
           // antd 相关
+          "/antd/dist/**/*.map",
           isDevMode ? "/antd/dist/antd.js" : "/antd/dist/antd.min.js",
           isDevMode ? "/antd/dist/antd-with-locales.js" : "/antd/dist/antd-with-locales.min.js",
           isDevMode ? "/antd/dist/antd.css" : "/antd/dist/antd.min.css",

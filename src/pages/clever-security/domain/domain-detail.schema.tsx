@@ -677,51 +677,32 @@ const uiTabOperations = {
 function uiTab() {
   return {
     title: "UI权限管理",
-    body: crudTemplate({
+    body: {
+      type: "service",
       api: {
         method: "get",
-        url: apiPath.MenuPermissionController.menuTree,
-        data: {
-          // pageNo: "$pageNo",
-          // pageSize: "$pageSize",
-          // orderField: "$orderField",
-          // sort: "$sort",
-          // orderBy: "$orderBy",
-          // orderDir: "$orderDir",
-          domainId: "$location.query.domainId",
-          // uiName: "$uiName",
-        },
+        url: apiPath.UiPermissionController.menuAndUiTree,
+        data: { domainId: "$location.query.domainId" },
+        adaptor: (payload: any) => ({ ...payload, data: { item: payload?.data } }),
       },
-      filter: {
-        title: "",
-        className: classnames(FormClassName.label4x, FormClassName.input12x, "mb-4"),
-        wrapWithPanel: false,
-        trimValues: true,
-        submitOnChange: false,
-        controls: [
-          { type: "text", label: "ui名称", name: "uiName", placeholder: "支持模糊搜索", clearable: true },
-          { label: "查询", level: "primary", type: "submit" },
-          { label: "重置", type: "reset" },
+      body: {
+        type: "table",
+        source: "${item}",
+        affixHeader: false,
+        columnsTogglable: false,
+        // initiallyOpen: true,
+        // primaryField: "id",
+        columns: [
+          // { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
+          { name: "uiName", label: "ui名称", sortable: false },
+          { name: "title", label: "标题", sortable: false },
+          { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
+          { name: "createAt", label: "创建时间", sortable: true },
+          { name: "updateAt", label: "更新时间", sortable: true },
+          { type: "operation", label: "操作", width: 35, buttons: [uiTabOperations.uiDetail()] },
         ],
       },
-      primaryField: "id",
-      columns: [
-        // { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
-        { name: "uiName", label: "ui名称", sortable: false },
-        { name: "title", label: "标题", sortable: false },
-        { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
-        { name: "createAt", label: "创建时间", sortable: true },
-        { name: "updateAt", label: "更新时间", sortable: true },
-        { type: "operation", label: "操作", width: 35, buttons: [uiTabOperations.uiDetail()] },
-      ],
-      bulkActions: [
-        // { align: "left", type: 'button', level: 'danger', size: "sm", ...roleTabOperations.batchDisableRole() },
-      ],
-      headerToolbar: [
-        // { align: "left", type: 'button', level: 'primary', size: "sm", ...roleTabOperations.addRole() },
-      ],
-      extProps: { multiple: true, keepItemSelectionOnPageChange: false },
-    }),
+    },
   };
 }
 
