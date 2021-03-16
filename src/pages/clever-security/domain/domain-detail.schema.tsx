@@ -649,20 +649,21 @@ const uiTabOperations = {
   uiDetail: () => {
     return {
       type: "form",
-      mode: "horizontal",
+      // mode: "horizontal",
       className: classnames(FormClassName.label7x),
       wrapWithPanel: false,
       initApi: {
         method: "get",
-        // url: apiPath.UiPermissionController.menuTree,
+        url: apiPath.UiPermissionController.menuAndUiTree,
         data: { domainId: "$location.query.domainId", menuId: "${selectedMenu.id}" },
       },
-      debug: true,
+      // debug: true,
       controls: [
         { type: "tpl", tpl: "<h3>页面UI详情<%= (data.selectedMenu && data.selectedMenu.name) ? (' - ' + data.selectedMenu.name): '' %></h3>" },
         { type: "divider" },
         {
           type: "table",
+          label: true,
           // source: "${item}",
           affixHeader: false,
           columns: [
