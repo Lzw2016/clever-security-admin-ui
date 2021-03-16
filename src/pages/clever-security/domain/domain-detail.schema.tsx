@@ -537,7 +537,7 @@ const menuTabOperations = {
       wrapWithPanel: false,
       // debug: true,
       controls: [
-        { type: "tpl", tpl: "<h3>菜单详情 - ${selectedMenu.name}</h3>" },
+        { type: "tpl", tpl: "<h3>菜单详情<%= (data.selectedMenu && data.selectedMenu.name) ? (' - ' + data.selectedMenu.name): '' %></h3>" },
         { type: "divider" },
         {
           type: "fieldSet",
@@ -648,6 +648,20 @@ const uiTabOperations = {
   /** ui权限详情 */
   uiDetail: () => {
     return {
+      type: "form",
+      mode: "horizontal",
+      className: classnames(FormClassName.label7x),
+      wrapWithPanel: false,
+      // debug: true,
+      controls: [
+        { type: "tpl", tpl: "<h3>页面UI详情<%= (data.selectedMenu && data.selectedMenu.name) ? (' - ' + data.selectedMenu.name): '' %></h3>" },
+        { type: "divider" },
+      ],
+    };
+  },
+
+  uiDetail2: () => {
+    return {
       type: "button",
       label: "查看",
       level: "info",
@@ -678,31 +692,65 @@ function uiTab() {
   return {
     title: "UI权限管理",
     body: {
-      type: "service",
-      api: {
-        method: "get",
-        url: apiPath.UiPermissionController.menuAndUiTree,
-        data: { domainId: "$location.query.domainId" },
-        adaptor: (payload: any) => ({ ...payload, data: { item: payload?.data } }),
+      type: "page",
+      title: "",
+      asideClassName: classnames(styles.uiTabAside),
+      bodyClassName: classnames(styles.uiTabBody),
+      aside: {
+        name: "uiTreeForm",
+        type: "form",
+        target: "uiDetailForm",
+        wrapWithPanel: false,
+        submitOnChange: true,
+        // debug: true,
+        controls: [
+          {
+            type: "tree", name: "selectedMenu", label: false, initiallyOpen: true, showIcon: true,
+            rootCreateTip: "新增一级菜单", labelField: "name", valueField: "id", optionLabel: "菜单",
+            joinValues: false, extractValue: false, selectFirst: true, source: {
+              method: "get",
+              url: apiPath.MenuPermissionController.menuTree,
+              data: { domainId: "$location.query.domainId" },
+              adaptor: (payload: any) => {
+                const { data, ...other } = payload;
+                return { ...other, data: { options: data } };
+              },
+            },
+            creatable: false, editable: false, removable: false,
+          },
+        ]
       },
-      body: {
-        type: "table",
-        source: "${item}",
-        affixHeader: false,
-        columnsTogglable: false,
-        // initiallyOpen: true,
-        // primaryField: "id",
-        columns: [
-          // { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
-          { name: "uiName", label: "ui名称", sortable: false },
-          { name: "title", label: "标题", sortable: false },
-          { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
-          { name: "createAt", label: "创建时间", sortable: true },
-          { name: "updateAt", label: "更新时间", sortable: true },
-          { type: "operation", label: "操作", width: 35, buttons: [uiTabOperations.uiDetail()] },
-        ],
-      },
+      body: [
+        { name: "uiDetailForm", ...uiTabOperations.uiDetail() },
+      ],
     },
+    // body1: {
+    //   type: "service",
+    //   api: {
+    //     method: "get",
+    //     url: apiPath.UiPermissionController.menuAndUiTree,
+    //     data: { domainId: "$location.query.domainId" },
+    //     adaptor: (payload: any) => ({ ...payload, data: { item: payload?.data } }),
+    //   },
+    //   body: {
+    //     type: "table",
+    //     source: "${item}",
+    //     affixHeader: false,
+    //     columnsTogglable: false,
+    //     // initiallyOpen: true,
+    //     // primaryField: "id",
+    //     columns: [
+    //       // { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
+    //       { name: "name", label: "菜单名称", sortable: false },
+    //       { name: "uiName", label: "ui名称", sortable: false },
+    //       { name: "title", label: "标题", sortable: false },
+    //       { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
+    //       { name: "createAt", label: "创建时间", sortable: true },
+    //       { name: "updateAt", label: "更新时间", sortable: true },
+    //       { type: "operation", label: "操作", width: 35, buttons: [uiTabOperations.uiDetail()] },
+    //     ],
+    //   },
+    // },
   };
 }
 
@@ -947,6 +995,18 @@ function apiTab() {
   };
 }
 
+// ------------------------------------------------------------------------------------------------------------------------------------------------------- API绑定
+
+// const apiBindTabOperations = {
+// };
+
+function apiBindTab() {
+  return {
+    title: "API绑定",
+    body: {},
+  }
+}
+
 // ------------------------------------------------------------------------------------------------------------------------------------------------------- schema
 
 const schema = {
@@ -972,6 +1032,8 @@ const schema = {
         uiTab(),
         // API权限管理
         apiTab(),
+        // API绑定
+        apiBindTab(),
       ]
     },
   ],
