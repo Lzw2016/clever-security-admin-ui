@@ -654,20 +654,22 @@ const uiTabOperations = {
       wrapWithPanel: false,
       initApi: {
         method: "get",
-        url: apiPath.UiPermissionController.menuAndUiTree,
+        url: apiPath.UiPermissionController.findUiByMenu,
         data: { domainId: "$location.query.domainId", menuId: "${selectedMenu.id}" },
+        sendOn: "this && this.selectedMenu && this.selectedMenu.id",
+        adaptor: (payload: any) => {
+          const { data, ...other } = payload;
+          return { ...other, data: { uiList: data } };
+        },
       },
       // debug: true,
       controls: [
         { type: "tpl", tpl: "<h3>页面UI详情<%= (data.selectedMenu && data.selectedMenu.name) ? (' - ' + data.selectedMenu.name): '' %></h3>" },
         { type: "divider" },
         {
-          type: "table",
-          label: true,
-          // source: "${item}",
-          affixHeader: false,
+          type: "table", name: "uiList", label: false, affixHeader: false,
           columns: [
-            // { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= (this.__super.pageNo - 1) * this.__super.pageSize + this.index + 1 %>" },
+            { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= this.index + 1 %>" },
             { name: "uiName", label: "UI名称", sortable: false },
             // { name: "title", label: "标题", sortable: false },
             { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
