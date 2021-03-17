@@ -645,44 +645,20 @@ function menuTab() {
 // ------------------------------------------------------------------------------------------------------------------------------------------------------- UI权限管理
 
 const uiTabOperations = {
-  /** ui权限详情 */
-  uiDetail: () => {
+  addUi: () => {
     return {
-      type: "form",
-      // mode: "horizontal",
-      className: classnames(FormClassName.label7x),
-      wrapWithPanel: false,
-      initApi: {
-        method: "get",
-        url: apiPath.UiPermissionController.findUiByMenu,
-        data: { domainId: "$location.query.domainId", menuId: "${selectedMenu.id}" },
-        sendOn: "this && this.selectedMenu && this.selectedMenu.id",
-        adaptor: (payload: any) => {
-          const { data, ...other } = payload;
-          return { ...other, data: { uiList: data } };
-        },
-      },
-      // debug: true,
-      controls: [
-        { type: "tpl", tpl: "<h3>页面UI详情<%= (data.selectedMenu && data.selectedMenu.name) ? (' - ' + data.selectedMenu.name): '' %></h3>" },
-        { type: "divider" },
-        {
-          type: "table", name: "uiList", label: false, affixHeader: false,
-          columns: [
-            { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= this.index + 1 %>" },
-            { name: "uiName", label: "UI名称", sortable: false },
-            // { name: "title", label: "标题", sortable: false },
-            { name: "enabled", label: "启用授权", type: "mapping", map: enum2object(enabled) },
-            { name: "createAt", label: "创建时间", sortable: true },
-            { name: "updateAt", label: "更新时间", sortable: true },
-            // { type: "operation", label: "操作", width: 35, buttons: [uiTabOperations.uiDetail()] },
-          ],
-        },
-      ],
+      label: "新增",
+      className: "mr-1",
+      icon: "fa fa-plus",
+      actionType: "dialog",
+      dialog: {
+        title: "新增页面UI权限",
+        body: ""
+      }
     };
   },
 
-  uiDetail2: () => {
+  uiDetails: () => {
     return {
       type: "button",
       label: "查看",
@@ -690,22 +666,48 @@ const uiTabOperations = {
       size: "xs",
       actionType: "dialog",
       dialog: {
-        title: "ui权限详情",
+        title: "页面UI权限详情 - ${uiName}",
         closeOnEsc: true,
         actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
         body: {
           type: "form",
           className: classnames(FormClassName.flex_label5x),
           controls: [
-            { name: "uiName", label: "UI组件名", type: "static" },
-            { name: "title", label: "标题", type: "static" },
-            { name: "enabled", label: "是否启用", type: "static-mapping", map: enum2object(enabled) },
-            { name: "createAt", label: "创建时间", type: "static" },
-            { name: "updateAt", label: "更新时间", type: "static" },
-            { name: "description", label: "描述", type: "static" },
-          ]
+            { name: "uiName", label: "UI名称", type: "static" },
+          ],
+        },
+      },
+    };
+  },
+
+  updateUi: () => {
+    return {
+      type: "button",
+      label: "编辑",
+      level: "info",
+      size: "xs",
+      actionType: "dialog",
+      dialog: {
+        title: "修改角色 - ${name}",
+        body: {
+          type: "form",
+          className: classnames(FormClassName.flex_label5x),
+          controls: [],
         }
-      }
+      },
+    };
+  },
+
+  batchDelUi: () => {
+    return {
+      label: "批量删除",
+      icon: "fa fa-times",
+      actionType: "ajax",
+      // api: {
+      //   method: "delete",
+      //   url: `${serverHost}/!/amis-api/curd-page@mockDelete?orderId=$orderId`,
+      // },
+      confirmText: "确定删除选中页面UI权限?",
     };
   },
 };
@@ -743,7 +745,40 @@ function uiTab() {
         ]
       },
       body: [
-        { name: "uiDetailForm", ...uiTabOperations.uiDetail() },
+        crudTemplate({
+          api: {
+            method: "get",
+            url: apiPath.UiPermissionController.findUiByMenu,
+            data: { domainId: "$location.query.domainId", menuId: "${selectedMenu.id}" },
+            sendOn: "this && this.selectedMenu && this.selectedMenu.id",
+            adaptor: (payload: any) => {
+              const { data, ...other } = payload;
+              return { ...other, data: { rows: data, count: data.length } };
+            },
+          },
+          filter: undefined,
+          primaryField: "id",
+          columns: [
+            { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= this.index + 1 %>" },
+            { name: "uiName", label: "UI名称", sortable: false },
+            { name: "strFlag", label: "权限字符串", sortable: false },
+            { name: "enabled", label: "启用授权", width: 50, type: "mapping", map: enum2object(permission.enabled), sortable: false },
+            { name: "description", label: "说明", sortable: false },
+            { name: "createAt", label: "创建时间", width: 120, sortable: false },
+            { name: "updateAt", label: "更新时间", width: 120, sortable: false },
+            { type: "operation", label: "操作", width: 80, buttons: [uiTabOperations.uiDetails(), uiTabOperations.updateUi()] },
+          ],
+          bulkActions: [
+            { align: "left", type: 'button', level: 'danger', size: "sm", ...uiTabOperations.batchDelUi() },
+          ],
+          headerToolbar: [
+            { align: "left", type: 'button', level: 'primary', size: "sm", ...uiTabOperations.addUi() },
+          ],
+          extProps: {
+            name: "uiDetailForm", loadDataOnce: true, multiple: true, keepItemSelectionOnPageChange: false,
+            footerToolbar: [{ align: "right", type: "statistics" }],
+          },
+        })
       ],
     },
   };
