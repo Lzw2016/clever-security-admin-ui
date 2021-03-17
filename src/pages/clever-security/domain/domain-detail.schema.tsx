@@ -668,7 +668,7 @@ const uiTabOperations = {
           // debug: true,
           controls: [
             {
-              type: "text", name: "uiName", label: "UI权限名称", placeholder: "请输入域名称",
+              type: "text", name: "uiName", label: "UI权限名称", placeholder: "请输入UI权限名称",
               required: true, validations: { minLength: 4, maxLength: 100 }, validationErrors: {},
             },
             {
@@ -715,13 +715,46 @@ const uiTabOperations = {
       size: "xs",
       actionType: "dialog",
       dialog: {
-        title: "修改角色 - ${name}",
+        title: "修改UI权限 - ${uiName}",
         body: {
           type: "form",
-          className: classnames(FormClassName.flex_label5x),
-          controls: [],
+          className: classnames(FormClassName.flex_label6x),
+          api: {
+            method: "put",
+            url: apiPath.UiPermissionController.updateUiPermission,
+          },
+          controls: [
+            { type: "text", name: "id", label: "UI权限ID", disabled: true },
+            {
+              type: "text", name: "uiName", label: "UI权限名称", placeholder: "请输入UI权限名称",
+              required: true, validations: { minLength: 4, maxLength: 100 }, validationErrors: {},
+            },
+            {
+              type: "radios", name: "enabled", label: "是否启用", placeholder: "是否启用", labelClassName: styles.addMenuLabel, required: true,
+              options: permission.enabled, columnsCount: permission.enabled.length, inputClassName: "w-40", value: "1",
+            },
+            {
+              type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 3, maxRows: 6,
+              validations: { maxLength: 500 }, validationErrors: {},
+            },
+          ],
         }
       },
+    };
+  },
+
+  delUi: () => {
+    return {
+      label: "删除",
+      type: "button",
+      level: 'danger',
+      size: "xs",
+      actionType: "ajax",
+      // api: {
+      //   method: "delete",
+      //   url: `${serverHost}/!/amis-api/curd-page@mockDelete?orderId=$orderId`,
+      // },
+      confirmText: "确定删除页面UI权限: ${uiName}?",
     };
   },
 
@@ -795,7 +828,10 @@ function uiTab() {
             { name: "description", label: "说明", sortable: false },
             { name: "createAt", label: "创建时间", width: 120, sortable: false },
             { name: "updateAt", label: "更新时间", width: 120, sortable: false },
-            { type: "operation", label: "操作", width: 80, buttons: [uiTabOperations.uiDetails(), uiTabOperations.updateUi()] },
+            {
+              type: "operation", label: "操作", width: 120,
+              buttons: [uiTabOperations.uiDetails(), uiTabOperations.updateUi(), uiTabOperations.delUi()]
+            },
           ],
           bulkActions: [
             { align: "left", type: 'button', level: 'danger', size: "sm", ...uiTabOperations.batchDelUi() },
