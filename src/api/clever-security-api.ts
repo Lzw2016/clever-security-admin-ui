@@ -44,6 +44,7 @@ const apiPath = {
   UiPermissionController: {
     menuAndUiTree: `${serverHost}/security/admin/api/ui_permission/menu_and_ui_tree`,
     findUiByMenu: `${serverHost}/security/admin/api/ui_permission/find_ui_by_menu`,
+    addUiPermission: `${serverHost}/security/admin/api/ui_permission/add`,
     pageQuery: `${serverHost}/security/admin/api/ui_permission/page_query`,
   },
 
