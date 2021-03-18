@@ -1104,7 +1104,60 @@ function apiTab() {
 function apiBindTab() {
   return {
     title: "API绑定",
-    body: {},
+    body: {
+      type: "page",
+      title: "",
+      asideClassName: classnames(styles.apiBindTabAside),
+      bodyClassName: classnames(styles.apiBindTabBody),
+      aside: {
+        name: "apiBindTreeForm",
+        type: "form",
+        target: "apiBindDetailForm",
+        wrapWithPanel: false,
+        submitOnChange: true,
+        // debug: true,
+        controls: [
+          {
+            type: "tree", name: "selectedMenu", label: false, initiallyOpen: true, showIcon: true,
+            rootCreateTip: "新增一级菜单", labelField: "treeName", valueField: "id", optionLabel: "菜单",
+            joinValues: false, extractValue: false, selectFirst: true, source: {
+              method: "get",
+              url: apiPath.UiPermissionController.menuAndUiTree,
+              data: { domainId: "$location.query.domainId" },
+              adaptor: (payload: any) => {
+                const { data, ...other } = payload;
+                let nextLeve: any[] = [];
+                let currentLeve: any[] = data;
+                while (currentLeve && currentLeve.length > 0) {
+                  nextLeve = [];
+                  currentLeve.forEach(item => {
+                    const { children, permissionType } = item;
+                    if (permissionType === 2) {
+                      item.treeName = item.name;
+                      item.icon = "fa fa-bars";
+                      // item.icon = "fa fa-square";
+                    } else if (permissionType === 3) {
+                      item.treeName = item.uiName;
+                      item.icon = "fa fa-star";
+                    }
+                    if (children && children.length > 0) {
+                      nextLeve.push(...(children as any[]));
+                    }
+                    currentLeve = nextLeve;
+                  });
+                }
+                return { ...other, data: { options: data } };
+              },
+            },
+            creatable: false, editable: false, removable: false,
+          },
+        ]
+      },
+      body: [
+        { type: "tpl", tpl: "<h3>绑定的API列表</h3>" },
+        { type: "divider" },
+      ],
+    },
   }
 }
 

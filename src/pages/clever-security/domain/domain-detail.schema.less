@@ -57,3 +57,36 @@
 .addUiLabel {
   width: 6rem !important;
 }
+
+// ----------------- api-bind
+
+.apiBindTabAside {
+  &:before {
+    display: none;
+  }
+
+  width: 16rem !important;
+  max-width: 24rem !important;
+  background: unset !important;
+  border-right: none !important;
+
+  :global(.@{form}), :global(.@{form} .@{formItem}), :global(.@{form} .@{formItem} .@{formControl}) {
+    height: 100%;
+    margin: 0;
+    max-height: unset !important;
+  }
+
+  :global(.@{form} .icon.icon-file), :global(.@{form} .icon.icon-folder) {
+    display: none;
+  }
+}
+
+.apiBindTabBody {
+  border: 1px solid #d1d5db;
+  margin-left: 16px;
+  min-height: 500px;
+}
+
+.addApiBindLabel {
+  width: 6rem !important;
+}
