@@ -1134,13 +1134,13 @@ function apiBindTab() {
                     const { children, permissionType } = item;
                     if (permissionType === 2) {
                       item.treeName = item.name;
-                      item.icon = "fa fa-bars";
-                      // item.icon = "fa fa-square";
+                      item.icon = "fa fa-window-maximize";
                     } else if (permissionType === 3) {
                       item.treeName = item.uiName;
                       item.icon = "fa fa-star";
                     }
                     if (children && children.length > 0) {
+                      item.icon = "fa fa-folder";
                       nextLeve.push(...(children as any[]));
                     }
                     currentLeve = nextLeve;
@@ -1180,12 +1180,12 @@ const schema = {
         userTab(),
         // 角色管理
         roleTab(),
+        // API权限管理
+        apiTab(),
         // 菜单管理
         menuTab(),
         // UI权限管理
         uiTab(),
-        // API权限管理
-        apiTab(),
         // API绑定
         apiBindTab(),
       ]
