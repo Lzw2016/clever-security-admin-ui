@@ -84,6 +84,30 @@ function crudTemplate({ api, filter, primaryField, columns, bulkActions, headerT
   };
 }
 
+function getTreeData(data: any[]): any[] {
+  let nextLeve: any[] = [];
+  let currentLeve: any[] = data;
+  while (currentLeve && currentLeve.length > 0) {
+    nextLeve = [];
+    currentLeve.forEach(item => {
+      const { children, permissionType } = item;
+      if (permissionType === 2) {
+        item.treeName = item.name;
+        item.icon = "fa fa-window-maximize";
+      } else if (permissionType === 3) {
+        item.treeName = item.uiName;
+        item.icon = "fa fa-star";
+      }
+      if (children && children.length > 0) {
+        item.icon = "fa fa-folder";
+        nextLeve.push(...(children as any[]));
+      }
+      currentLeve = nextLeve;
+    });
+  }
+  return data;
+}
+
 // ------------------------------------------------------------------------------------------------------------------------------------------------------- 数据域信息
 
 /** 数据域信息叶签 */
@@ -462,399 +486,6 @@ function roleTab() {
   };
 }
 
-// ------------------------------------------------------------------------------------------------------------------------------------------------------- 菜单管理
-
-const menuTabOperations = {
-  /** 新增菜单 */
-  addMenu: () => {
-    return [
-      { type: "text", name: "parent.name", label: "上级菜单", placeholder: "空", labelClassName: styles.addMenuLabel, disabled: true },
-      { type: "text", name: "name", label: "菜单名称", placeholder: "请输入菜单名称", labelClassName: styles.addMenuLabel, required: true },
-      { type: "text", name: "icon", label: "菜单图标", placeholder: "请输入菜单图标", labelClassName: styles.addMenuLabel },
-      { type: "text", name: "path", label: "菜单路径", placeholder: "请输入菜单路径", labelClassName: styles.addMenuLabel, required: true },
-      { type: "text", name: "pagePath", label: "页面路径", placeholder: "请输入页面路径", labelClassName: styles.addMenuLabel },
-      {
-        type: "radios", name: "hideMenu", label: "隐藏菜单", placeholder: "隐藏菜单", labelClassName: styles.addMenuLabel, required: true,
-        options: menuPermission.hideMenu, columnsCount: menuPermission.hideMenu.length, inputClassName: "w-40", value: "0",
-      },
-      {
-        type: "radios", name: "hideChildrenMenu", label: "隐藏子菜单", placeholder: "隐藏子菜单", labelClassName: styles.addMenuLabel, required: true,
-        options: menuPermission.hideChildrenMenu, columnsCount: menuPermission.hideChildrenMenu.length, inputClassName: "w-40", value: "0",
-      },
-      {
-        type: "radios", name: "enabled", label: "是否启用", placeholder: "是否启用", labelClassName: styles.addMenuLabel, required: true,
-        options: permission.enabled, columnsCount: permission.enabled.length, inputClassName: "w-40", value: "1",
-      },
-      // {
-      //   type: "editor", name: "extConfig", label: "扩展配置", placeholder: "请输入", language: "json",
-      //   mode: "normal", labelClassName: classnames(styles.addMenuLabel, "text-right", "pr-5"),
-      // },
-      { type: "number", name: "sort", label: "菜单排序", placeholder: "请输入菜单排序(由小到大)", labelClassName: styles.addMenuLabel, required: true, value: 0 },
-      {
-        type: "textarea", name: "description", label: "说明", placeholder: "请输入说明", labelClassName: styles.addMenuLabel,
-        minRows: 3, maxRows: 6, validations: { maxLength: 500 },
-      },
-    ];
-  },
-
-  /** 更新菜单 */
-  updateMenu: () => {
-    return [
-      { type: "text", name: "name", label: "菜单名称", placeholder: "请输入菜单名称", labelClassName: styles.addMenuLabel, required: true },
-      { type: "text", name: "icon", label: "菜单图标", placeholder: "请输入菜单图标", labelClassName: styles.addMenuLabel },
-      { type: "text", name: "path", label: "菜单路径", placeholder: "请输入菜单路径", labelClassName: styles.addMenuLabel, required: true },
-      { type: "text", name: "pagePath", label: "页面路径", placeholder: "请输入页面路径", labelClassName: styles.addMenuLabel },
-      {
-        type: "radios", name: "hideMenu", label: "隐藏菜单", placeholder: "隐藏菜单", labelClassName: styles.addMenuLabel, required: true,
-        options: menuPermission.hideMenu, columnsCount: menuPermission.hideMenu.length, inputClassName: "w-40", value: "0",
-      },
-      {
-        type: "radios", name: "hideChildrenMenu", label: "隐藏子菜单", placeholder: "隐藏子菜单", labelClassName: styles.addMenuLabel, required: true,
-        options: menuPermission.hideChildrenMenu, columnsCount: menuPermission.hideChildrenMenu.length, inputClassName: "w-40", value: "0",
-      },
-      {
-        type: "radios", name: "enabled", label: "是否启用", placeholder: "是否启用", labelClassName: styles.addMenuLabel, required: true,
-        options: permission.enabled, columnsCount: permission.enabled.length, inputClassName: "w-40", value: "1",
-      },
-      // {
-      //   type: "editor", name: "extConfig", label: "扩展配置", placeholder: "请输入", language: "json",
-      //   mode: "normal", labelClassName: classnames(styles.addMenuLabel, "text-right", "pr-5"),
-      // },
-      { type: "number", name: "sort", label: "菜单排序", placeholder: "请输入菜单排序(由小到大)", labelClassName: styles.addMenuLabel, required: true, value: 0 },
-      {
-        type: "textarea", name: "description", label: "说明", placeholder: "请输入说明", labelClassName: styles.addMenuLabel,
-        minRows: 3, maxRows: 6, validations: { maxLength: 500 },
-      },
-    ];
-  },
-
-  /** menu权限详情 */
-  menuDetail: () => {
-    return {
-      type: "form",
-      mode: "horizontal",
-      className: classnames(FormClassName.label7x),
-      wrapWithPanel: false,
-      // debug: true,
-      controls: [
-        { type: "tpl", tpl: "<h3>菜单详情<%= (data.selectedMenu && data.selectedMenu.name) ? (' - ' + data.selectedMenu.name): '' %></h3>" },
-        { type: "divider" },
-        {
-          type: "fieldSet",
-          title: "菜单信息",
-          hiddenOn: "!this.selectedMenu",
-          controls: [
-            { type: "static", name: "selectedMenu.name", label: "菜单名称" },
-            { type: "static", name: "selectedMenu.icon", label: "菜单图标" },
-            { type: "static", name: "selectedMenu.path", label: "菜单路径" },
-            { type: "static", name: "selectedMenu.pagePath", label: "页面路径" },
-            { type: "static-mapping", name: "selectedMenu.hideMenu", label: "隐藏当前菜单", map: enum2object(menuPermission.hideMenu) },
-            { type: "static-mapping", name: "selectedMenu.hideChildrenMenu", label: "隐藏子菜单", map: enum2object(menuPermission.hideChildrenMenu) },
-            { type: "static", name: "selectedMenu.sort", label: "菜单排序" },
-            { type: "static", name: "selectedMenu.description", label: "说明" },
-            { type: "static", name: "selectedMenu.createAt", label: "创建时间" },
-            { type: "static", name: "selectedMenu.updateAt", label: "更新时间" },
-          ],
-        },
-        { type: "divider", lineStyle: "dashed", hiddenOn: "!this.selectedMenu", },
-        {
-          type: "fieldSet",
-          title: "菜单扩展配置",
-          collapsable: true,
-          collapsed: true,
-          hiddenOn: "!this.selectedMenu",
-          controls: [
-            { type: "editor", name: "selectedMenu.extConfig", label: false, language: "json", disabled: true },
-          ],
-        },
-        { type: "divider", lineStyle: "dashed", hiddenOn: "!this.selectedMenu", },
-        {
-          type: "fieldSet",
-          title: "权限信息",
-          collapsable: true,
-          collapsed: false,
-          hiddenOn: "!this.selectedMenu",
-          controls: [
-            { type: "static", name: "selectedMenu.strFlag", label: "权限字符串" },
-            { type: "static-mapping", name: "selectedMenu.permissionType", label: "权限类型", map: enum2object(permission.permissionType) },
-            { type: "static-mapping", name: "selectedMenu.enabled", label: "是否启用", map: enum2object(permission.enabled) },
-          ],
-        },
-      ],
-    };
-  },
-};
-
-function menuTab() {
-  return {
-    title: "菜单管理",
-    body: {
-      type: "page",
-      title: "",
-      asideClassName: classnames(styles.menuTabAside),
-      bodyClassName: classnames(styles.menuTabBody),
-      aside: {
-        name: "menuTreeForm",
-        type: "form",
-        target: "menuDetailForm",
-        wrapWithPanel: false,
-        submitOnChange: true,
-        // debug: true,
-        controls: [
-          // { type: "tpl", tpl: "<h3>系统菜单树</h3>" },
-          // { type: "divider" },
-          {
-            type: "tree", name: "selectedMenu", label: false, initiallyOpen: true, showIcon: true,
-            rootCreateTip: "新增一级菜单", labelField: "name", valueField: "id", optionLabel: "菜单",
-            joinValues: false, extractValue: false, selectFirst: true, source: {
-              method: "get",
-              url: apiPath.MenuPermissionController.menuTree,
-              data: { domainId: "$location.query.domainId" },
-              adaptor: (payload: any) => {
-                const { data, ...other } = payload;
-                return { ...other, data: { options: data } };
-              },
-            },
-            creatable: true, addControls: menuTabOperations.addMenu(), addApi: {
-              method: "post",
-              url: apiPath.MenuPermissionController.addMenuPermission,
-              data: { "&": "$$", domainId: "$location.query.domainId", parentId: "${parent.id}" },
-              adaptor: (payload: any) => ({ ...payload, data: {} }),
-            },
-            editable: true, editControls: menuTabOperations.updateMenu(), editApi: {
-              method: "put",
-              url: apiPath.MenuPermissionController.updateMenuPermission,
-              data: { "&": "$$", id: "${id}" },
-              adaptor: (payload: any) => ({ ...payload, data: {} }),
-            },
-            removable: true, deleteConfirmText: "确定删掉当前菜单(包含子菜单)?", deleteApi: {
-              method: "delete",
-              url: `${apiPath.MenuPermissionController.delMenuPermission}?id=$id`,
-              adaptor: (payload: any) => ({ ...payload, data: {} }),
-            },
-          },
-        ]
-      },
-      body: [
-        { name: "menuDetailForm", ...menuTabOperations.menuDetail() },
-      ],
-    },
-  };
-}
-
-// ------------------------------------------------------------------------------------------------------------------------------------------------------- UI权限管理
-
-const uiTabOperations = {
-  addUi: () => {
-    return {
-      label: "新增",
-      className: "mr-1",
-      icon: "fa fa-plus",
-      actionType: "dialog",
-      dialog: {
-        title: "新增页面UI权限",
-        body: {
-          type: "form",
-          className: classnames(FormClassName.flex_label6x),
-          api: {
-            method: "post",
-            url: apiPath.UiPermissionController.addUiPermission,
-            requestAdaptor: (api: any) => {
-              if (api.body && api.data) api.data.menuId = api.body.__super?.__super?.__super?.__super?.__super?.selectedMenu?.id;
-              return api;
-            },
-          },
-          trimValues: true,
-          // debug: true,
-          controls: [
-            {
-              type: "text", name: "uiName", label: "UI权限名称", placeholder: "请输入UI权限名称",
-              required: true, validations: { minLength: 4, maxLength: 100 }, validationErrors: {},
-            },
-            {
-              type: "radios", name: "enabled", label: "是否启用", placeholder: "是否启用", labelClassName: styles.addMenuLabel, required: true,
-              options: permission.enabled, columnsCount: permission.enabled.length, inputClassName: "w-40", value: "1",
-            },
-            {
-              type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 3, maxRows: 6,
-              validations: { maxLength: 500 }, validationErrors: {},
-            },
-          ],
-        }
-      }
-    };
-  },
-
-  uiDetails: () => {
-    return {
-      type: "button",
-      label: "查看",
-      level: "info",
-      size: "xs",
-      actionType: "dialog",
-      dialog: {
-        title: "页面UI权限详情 - ${uiName}",
-        closeOnEsc: true,
-        actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
-        body: {
-          type: "form",
-          className: classnames(FormClassName.flex_label5x),
-          controls: [
-            { name: "uiName", label: "UI名称", type: "static" },
-          ],
-        },
-      },
-    };
-  },
-
-  updateUi: () => {
-    return {
-      type: "button",
-      label: "编辑",
-      level: "info",
-      size: "xs",
-      actionType: "dialog",
-      dialog: {
-        title: "修改UI权限 - ${uiName}",
-        body: {
-          type: "form",
-          className: classnames(FormClassName.flex_label6x),
-          api: {
-            method: "put",
-            url: apiPath.UiPermissionController.updateUiPermission,
-          },
-          controls: [
-            { type: "text", name: "id", label: "UI权限ID", disabled: true },
-            {
-              type: "text", name: "uiName", label: "UI权限名称", placeholder: "请输入UI权限名称",
-              required: true, validations: { minLength: 4, maxLength: 100 }, validationErrors: {},
-            },
-            {
-              type: "radios", name: "enabled", label: "是否启用", placeholder: "是否启用", labelClassName: styles.addMenuLabel, required: true,
-              options: permission.enabled, columnsCount: permission.enabled.length, inputClassName: "w-40", value: "1",
-            },
-            {
-              type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 3, maxRows: 6,
-              validations: { maxLength: 500 }, validationErrors: {},
-            },
-          ],
-        }
-      },
-    };
-  },
-
-  delUi: () => {
-    return {
-      label: "删除",
-      type: "button",
-      level: 'danger',
-      size: "xs",
-      actionType: "ajax",
-      api: {
-        method: "delete",
-        url: `${apiPath.UiPermissionController.delUiPermission}?id=$id`,
-      },
-      confirmText: "确定删除页面UI权限: ${uiName}?",
-    };
-  },
-
-  batchDelUi: () => {
-    return {
-      label: "批量删除",
-      icon: "fa fa-times",
-      actionType: "ajax",
-      // api: {
-      //   method: "delete",
-      //   url: `${serverHost}/!/amis-api/curd-page@mockDelete?orderId=$orderId`,
-      // },
-      confirmText: "确定删除选中页面UI权限?",
-    };
-  },
-};
-
-function uiTab() {
-  return {
-    title: "UI权限管理",
-    body: {
-      type: "page",
-      title: "",
-      asideClassName: classnames(styles.uiTabAside),
-      bodyClassName: classnames(styles.uiTabBody),
-      aside: {
-        name: "uiTreeForm",
-        type: "form",
-        target: "uiDetailForm",
-        wrapWithPanel: false,
-        submitOnChange: true,
-        // debug: true,
-        controls: [
-          {
-            type: "tree", name: "selectedMenu", label: false, initiallyOpen: true, showIcon: true,
-            rootCreateTip: "新增一级菜单", labelField: "name", valueField: "id", optionLabel: "菜单",
-            joinValues: false, extractValue: false, selectFirst: true, source: {
-              method: "get",
-              url: apiPath.MenuPermissionController.menuTree,
-              data: { domainId: "$location.query.domainId" },
-              adaptor: (payload: any) => {
-                const { data, ...other } = payload;
-                return { ...other, data: { options: data } };
-              },
-            },
-            creatable: false, editable: false, removable: false,
-          },
-        ]
-      },
-      body: [
-        { type: "tpl", tpl: "<h3>UI权限详情</h3>" },
-        { type: "divider" },
-        crudTemplate({
-          api: {
-            method: "get",
-            url: apiPath.UiPermissionController.findUiByMenu,
-            data: { domainId: "$location.query.domainId", menuId: "${selectedMenu.id}" },
-            sendOn: "this.selectedMenu && this.selectedMenu.id",
-            adaptor: (payload: any) => {
-              const { data, ...other } = payload;
-              return { ...other, data: { rows: data, count: data.length } };
-            },
-          },
-          filter: undefined,
-          primaryField: "id",
-          columns: [
-            { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= this.index + 1 %>" },
-            { name: "uiName", label: "UI权限名称", sortable: false },
-            { name: "strFlag", label: "权限字符串", sortable: false },
-            { name: "enabled", label: "启用授权", width: 50, type: "mapping", map: enum2object(permission.enabled), sortable: false },
-            { name: "description", label: "说明", sortable: false },
-            { name: "createAt", label: "创建时间", width: 120, sortable: false },
-            { name: "updateAt", label: "更新时间", width: 120, sortable: false },
-            {
-              type: "operation", label: "操作", width: 120,
-              buttons: [uiTabOperations.uiDetails(), uiTabOperations.updateUi(), uiTabOperations.delUi()]
-            },
-          ],
-          bulkActions: [
-            { align: "left", type: 'button', level: 'danger', size: "sm", ...uiTabOperations.batchDelUi() },
-          ],
-          headerToolbar: [
-            {
-              align: "left",
-              type: 'button',
-              level: 'primary',
-              size: "sm", ...uiTabOperations.addUi(),
-              disabledOn: "!this.__super || !this.__super.__super || !this.__super.__super.selectedMenu"
-            },
-          ],
-          extProps: {
-            name: "uiDetailForm", loadDataOnce: true, multiple: true, keepItemSelectionOnPageChange: false,
-            footerToolbar: [{ align: "right", type: "statistics" }],
-          },
-        })
-      ],
-    },
-  };
-}
-
 // ------------------------------------------------------------------------------------------------------------------------------------------------------- API权限管理
 
 const apiTabOperations = {
@@ -1096,6 +727,399 @@ function apiTab() {
   };
 }
 
+// ------------------------------------------------------------------------------------------------------------------------------------------------------- 菜单管理
+
+const menuTabOperations = {
+  /** 新增菜单 */
+  addMenu: () => {
+    return [
+      { type: "text", name: "parent.name", label: "上级菜单", placeholder: "空", labelClassName: styles.addMenuLabel, disabled: true },
+      { type: "text", name: "name", label: "菜单名称", placeholder: "请输入菜单名称", labelClassName: styles.addMenuLabel, required: true },
+      { type: "text", name: "icon", label: "菜单图标", placeholder: "请输入菜单图标", labelClassName: styles.addMenuLabel },
+      { type: "text", name: "path", label: "菜单路径", placeholder: "请输入菜单路径", labelClassName: styles.addMenuLabel, required: true },
+      { type: "text", name: "pagePath", label: "页面路径", placeholder: "请输入页面路径", labelClassName: styles.addMenuLabel },
+      {
+        type: "radios", name: "hideMenu", label: "隐藏菜单", placeholder: "隐藏菜单", labelClassName: styles.addMenuLabel, required: true,
+        options: menuPermission.hideMenu, columnsCount: menuPermission.hideMenu.length, inputClassName: "w-40", value: "0",
+      },
+      {
+        type: "radios", name: "hideChildrenMenu", label: "隐藏子菜单", placeholder: "隐藏子菜单", labelClassName: styles.addMenuLabel, required: true,
+        options: menuPermission.hideChildrenMenu, columnsCount: menuPermission.hideChildrenMenu.length, inputClassName: "w-40", value: "0",
+      },
+      {
+        type: "radios", name: "enabled", label: "是否启用", placeholder: "是否启用", labelClassName: styles.addMenuLabel, required: true,
+        options: permission.enabled, columnsCount: permission.enabled.length, inputClassName: "w-40", value: "1",
+      },
+      // {
+      //   type: "editor", name: "extConfig", label: "扩展配置", placeholder: "请输入", language: "json",
+      //   mode: "normal", labelClassName: classnames(styles.addMenuLabel, "text-right", "pr-5"),
+      // },
+      { type: "number", name: "sort", label: "菜单排序", placeholder: "请输入菜单排序(由小到大)", labelClassName: styles.addMenuLabel, required: true, value: 0 },
+      {
+        type: "textarea", name: "description", label: "说明", placeholder: "请输入说明", labelClassName: styles.addMenuLabel,
+        minRows: 3, maxRows: 6, validations: { maxLength: 500 },
+      },
+    ];
+  },
+
+  /** 更新菜单 */
+  updateMenu: () => {
+    return [
+      { type: "text", name: "name", label: "菜单名称", placeholder: "请输入菜单名称", labelClassName: styles.addMenuLabel, required: true },
+      { type: "text", name: "icon", label: "菜单图标", placeholder: "请输入菜单图标", labelClassName: styles.addMenuLabel },
+      { type: "text", name: "path", label: "菜单路径", placeholder: "请输入菜单路径", labelClassName: styles.addMenuLabel, required: true },
+      { type: "text", name: "pagePath", label: "页面路径", placeholder: "请输入页面路径", labelClassName: styles.addMenuLabel },
+      {
+        type: "radios", name: "hideMenu", label: "隐藏菜单", placeholder: "隐藏菜单", labelClassName: styles.addMenuLabel, required: true,
+        options: menuPermission.hideMenu, columnsCount: menuPermission.hideMenu.length, inputClassName: "w-40", value: "0",
+      },
+      {
+        type: "radios", name: "hideChildrenMenu", label: "隐藏子菜单", placeholder: "隐藏子菜单", labelClassName: styles.addMenuLabel, required: true,
+        options: menuPermission.hideChildrenMenu, columnsCount: menuPermission.hideChildrenMenu.length, inputClassName: "w-40", value: "0",
+      },
+      {
+        type: "radios", name: "enabled", label: "是否启用", placeholder: "是否启用", labelClassName: styles.addMenuLabel, required: true,
+        options: permission.enabled, columnsCount: permission.enabled.length, inputClassName: "w-40", value: "1",
+      },
+      // {
+      //   type: "editor", name: "extConfig", label: "扩展配置", placeholder: "请输入", language: "json",
+      //   mode: "normal", labelClassName: classnames(styles.addMenuLabel, "text-right", "pr-5"),
+      // },
+      { type: "number", name: "sort", label: "菜单排序", placeholder: "请输入菜单排序(由小到大)", labelClassName: styles.addMenuLabel, required: true, value: 0 },
+      {
+        type: "textarea", name: "description", label: "说明", placeholder: "请输入说明", labelClassName: styles.addMenuLabel,
+        minRows: 3, maxRows: 6, validations: { maxLength: 500 },
+      },
+    ];
+  },
+
+  /** menu权限详情 */
+  menuDetail: () => {
+    return {
+      type: "form",
+      mode: "horizontal",
+      className: classnames(FormClassName.label7x),
+      wrapWithPanel: false,
+      // debug: true,
+      controls: [
+        { type: "tpl", tpl: "<h3>菜单详情<%= (data.selectedMenu && data.selectedMenu.name) ? (' - ' + data.selectedMenu.name): '' %></h3>" },
+        { type: "divider" },
+        {
+          type: "fieldSet",
+          title: "菜单信息",
+          hiddenOn: "!this.selectedMenu",
+          controls: [
+            { type: "static", name: "selectedMenu.name", label: "菜单名称" },
+            { type: "static", name: "selectedMenu.icon", label: "菜单图标" },
+            { type: "static", name: "selectedMenu.path", label: "菜单路径" },
+            { type: "static", name: "selectedMenu.pagePath", label: "页面路径" },
+            { type: "static-mapping", name: "selectedMenu.hideMenu", label: "隐藏当前菜单", map: enum2object(menuPermission.hideMenu) },
+            { type: "static-mapping", name: "selectedMenu.hideChildrenMenu", label: "隐藏子菜单", map: enum2object(menuPermission.hideChildrenMenu) },
+            { type: "static", name: "selectedMenu.sort", label: "菜单排序" },
+            { type: "static", name: "selectedMenu.description", label: "说明" },
+            { type: "static", name: "selectedMenu.createAt", label: "创建时间" },
+            { type: "static", name: "selectedMenu.updateAt", label: "更新时间" },
+          ],
+        },
+        { type: "divider", lineStyle: "dashed", hiddenOn: "!this.selectedMenu", },
+        {
+          type: "fieldSet",
+          title: "菜单扩展配置",
+          collapsable: true,
+          collapsed: true,
+          hiddenOn: "!this.selectedMenu",
+          controls: [
+            { type: "editor", name: "selectedMenu.extConfig", label: false, language: "json", disabled: true },
+          ],
+        },
+        { type: "divider", lineStyle: "dashed", hiddenOn: "!this.selectedMenu", },
+        {
+          type: "fieldSet",
+          title: "权限信息",
+          collapsable: true,
+          collapsed: false,
+          hiddenOn: "!this.selectedMenu",
+          controls: [
+            { type: "static", name: "selectedMenu.strFlag", label: "权限字符串" },
+            { type: "static-mapping", name: "selectedMenu.permissionType", label: "权限类型", map: enum2object(permission.permissionType) },
+            { type: "static-mapping", name: "selectedMenu.enabled", label: "是否启用", map: enum2object(permission.enabled) },
+          ],
+        },
+      ],
+    };
+  },
+};
+
+function menuTab() {
+  return {
+    title: "菜单管理",
+    body: {
+      type: "page",
+      title: "",
+      asideClassName: classnames(styles.menuTabAside),
+      bodyClassName: classnames(styles.menuTabBody),
+      aside: {
+        name: "menuTreeForm",
+        type: "form",
+        target: "menuDetailForm",
+        wrapWithPanel: false,
+        submitOnChange: true,
+        // debug: true,
+        controls: [
+          // { type: "tpl", tpl: "<h3>系统菜单树</h3>" },
+          // { type: "divider" },
+          {
+            type: "tree", name: "selectedMenu", label: false, initiallyOpen: true, showIcon: true,
+            rootCreateTip: "新增一级菜单", labelField: "name", valueField: "id", optionLabel: "菜单",
+            joinValues: false, extractValue: false, selectFirst: true, source: {
+              method: "get",
+              url: apiPath.MenuPermissionController.menuTree,
+              data: { domainId: "$location.query.domainId" },
+              adaptor: (payload: any) => {
+                const { data, ...other } = payload;
+                return { ...other, data: { options: getTreeData(data) } };
+              },
+            },
+            creatable: true, addControls: menuTabOperations.addMenu(), addApi: {
+              method: "post",
+              url: apiPath.MenuPermissionController.addMenuPermission,
+              data: { "&": "$$", domainId: "$location.query.domainId", parentId: "${parent.id}" },
+              adaptor: (payload: any) => ({ ...payload, data: {} }),
+            },
+            editable: true, editControls: menuTabOperations.updateMenu(), editApi: {
+              method: "put",
+              url: apiPath.MenuPermissionController.updateMenuPermission,
+              data: { "&": "$$", id: "${id}" },
+              adaptor: (payload: any) => ({ ...payload, data: {} }),
+            },
+            removable: true, deleteConfirmText: "确定删掉当前菜单(包含子菜单)?", deleteApi: {
+              method: "delete",
+              url: `${apiPath.MenuPermissionController.delMenuPermission}?id=$id`,
+              adaptor: (payload: any) => ({ ...payload, data: {} }),
+            },
+          },
+        ]
+      },
+      body: [
+        { name: "menuDetailForm", ...menuTabOperations.menuDetail() },
+      ],
+    },
+  };
+}
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------------- UI权限管理
+
+const uiTabOperations = {
+  addUi: () => {
+    return {
+      label: "新增",
+      className: "mr-1",
+      icon: "fa fa-plus",
+      actionType: "dialog",
+      dialog: {
+        title: "新增页面UI权限",
+        body: {
+          type: "form",
+          className: classnames(FormClassName.flex_label6x),
+          api: {
+            method: "post",
+            url: apiPath.UiPermissionController.addUiPermission,
+            requestAdaptor: (api: any) => {
+              if (api.body && api.data) api.data.menuId = api.body.__super?.__super?.__super?.__super?.__super?.selectedMenu?.id;
+              return api;
+            },
+          },
+          trimValues: true,
+          // debug: true,
+          controls: [
+            {
+              type: "text", name: "uiName", label: "UI权限名称", placeholder: "请输入UI权限名称",
+              required: true, validations: { minLength: 4, maxLength: 100 }, validationErrors: {},
+            },
+            {
+              type: "radios", name: "enabled", label: "是否启用", placeholder: "是否启用", labelClassName: styles.addMenuLabel, required: true,
+              options: permission.enabled, columnsCount: permission.enabled.length, inputClassName: "w-40", value: "1",
+            },
+            {
+              type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 3, maxRows: 6,
+              validations: { maxLength: 500 }, validationErrors: {},
+            },
+          ],
+        }
+      }
+    };
+  },
+
+  uiDetails: () => {
+    return {
+      type: "button",
+      label: "查看",
+      level: "info",
+      size: "xs",
+      actionType: "dialog",
+      dialog: {
+        title: "页面UI权限详情 - ${uiName}",
+        closeOnEsc: true,
+        actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
+        body: {
+          type: "form",
+          className: classnames(FormClassName.flex_label5x),
+          controls: [
+            { name: "uiName", label: "UI名称", type: "static" },
+          ],
+        },
+      },
+    };
+  },
+
+  updateUi: () => {
+    return {
+      type: "button",
+      label: "编辑",
+      level: "info",
+      size: "xs",
+      actionType: "dialog",
+      dialog: {
+        title: "修改UI权限 - ${uiName}",
+        body: {
+          type: "form",
+          className: classnames(FormClassName.flex_label6x),
+          api: {
+            method: "put",
+            url: apiPath.UiPermissionController.updateUiPermission,
+          },
+          controls: [
+            { type: "text", name: "id", label: "UI权限ID", disabled: true },
+            {
+              type: "text", name: "uiName", label: "UI权限名称", placeholder: "请输入UI权限名称",
+              required: true, validations: { minLength: 4, maxLength: 100 }, validationErrors: {},
+            },
+            {
+              type: "radios", name: "enabled", label: "是否启用", placeholder: "是否启用", labelClassName: styles.addMenuLabel, required: true,
+              options: permission.enabled, columnsCount: permission.enabled.length, inputClassName: "w-40", value: "1",
+            },
+            {
+              type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 3, maxRows: 6,
+              validations: { maxLength: 500 }, validationErrors: {},
+            },
+          ],
+        }
+      },
+    };
+  },
+
+  delUi: () => {
+    return {
+      label: "删除",
+      type: "button",
+      level: 'danger',
+      size: "xs",
+      actionType: "ajax",
+      api: {
+        method: "delete",
+        url: `${apiPath.UiPermissionController.delUiPermission}?id=$id`,
+      },
+      confirmText: "确定删除页面UI权限: ${uiName}?",
+    };
+  },
+
+  batchDelUi: () => {
+    return {
+      label: "批量删除",
+      icon: "fa fa-times",
+      actionType: "ajax",
+      // api: {
+      //   method: "delete",
+      //   url: `${serverHost}/!/amis-api/curd-page@mockDelete?orderId=$orderId`,
+      // },
+      confirmText: "确定删除选中页面UI权限?",
+    };
+  },
+};
+
+function uiTab() {
+  return {
+    title: "UI权限管理",
+    body: {
+      type: "page",
+      title: "",
+      asideClassName: classnames(styles.uiTabAside),
+      bodyClassName: classnames(styles.uiTabBody),
+      aside: {
+        name: "uiTreeForm",
+        type: "form",
+        target: "uiDetailForm",
+        wrapWithPanel: false,
+        submitOnChange: true,
+        // debug: true,
+        controls: [
+          {
+            type: "tree", name: "selectedMenu", label: false, initiallyOpen: true, showIcon: true,
+            rootCreateTip: "新增一级菜单", labelField: "name", valueField: "id", optionLabel: "菜单",
+            joinValues: false, extractValue: false, selectFirst: true, source: {
+              method: "get",
+              url: apiPath.MenuPermissionController.menuTree,
+              data: { domainId: "$location.query.domainId" },
+              adaptor: (payload: any) => {
+                const { data, ...other } = payload;
+                return { ...other, data: { options: getTreeData(data) } };
+              },
+            },
+            creatable: false, editable: false, removable: false,
+          },
+        ]
+      },
+      body: [
+        { type: "tpl", tpl: "<h3>UI权限详情</h3>" },
+        { type: "divider" },
+        crudTemplate({
+          api: {
+            method: "get",
+            url: apiPath.UiPermissionController.findUiByMenu,
+            data: { domainId: "$location.query.domainId", menuId: "${selectedMenu.id}" },
+            sendOn: "this.selectedMenu && this.selectedMenu.id",
+            adaptor: (payload: any) => {
+              const { data, ...other } = payload;
+              return { ...other, data: { rows: data, count: data.length } };
+            },
+          },
+          filter: undefined,
+          primaryField: "id",
+          columns: [
+            { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= this.index + 1 %>" },
+            { name: "uiName", label: "UI权限名称", sortable: false },
+            { name: "strFlag", label: "权限字符串", sortable: false },
+            { name: "enabled", label: "启用授权", width: 50, type: "mapping", map: enum2object(permission.enabled), sortable: false },
+            { name: "description", label: "说明", sortable: false },
+            { name: "createAt", label: "创建时间", width: 120, sortable: false },
+            { name: "updateAt", label: "更新时间", width: 120, sortable: false },
+            {
+              type: "operation", label: "操作", width: 120,
+              buttons: [uiTabOperations.uiDetails(), uiTabOperations.updateUi(), uiTabOperations.delUi()]
+            },
+          ],
+          bulkActions: [
+            { align: "left", type: 'button', level: 'danger', size: "sm", ...uiTabOperations.batchDelUi() },
+          ],
+          headerToolbar: [
+            {
+              align: "left",
+              type: 'button',
+              level: 'primary',
+              size: "sm", ...uiTabOperations.addUi(),
+              disabledOn: "!this.__super || !this.__super.__super || !this.__super.__super.selectedMenu"
+            },
+          ],
+          extProps: {
+            name: "uiDetailForm", loadDataOnce: true, multiple: true, keepItemSelectionOnPageChange: false,
+            footerToolbar: [{ align: "right", type: "statistics" }],
+          },
+        })
+      ],
+    },
+  };
+}
+
 // ------------------------------------------------------------------------------------------------------------------------------------------------------- API绑定
 
 // const apiBindTabOperations = {
@@ -1126,27 +1150,7 @@ function apiBindTab() {
               data: { domainId: "$location.query.domainId" },
               adaptor: (payload: any) => {
                 const { data, ...other } = payload;
-                let nextLeve: any[] = [];
-                let currentLeve: any[] = data;
-                while (currentLeve && currentLeve.length > 0) {
-                  nextLeve = [];
-                  currentLeve.forEach(item => {
-                    const { children, permissionType } = item;
-                    if (permissionType === 2) {
-                      item.treeName = item.name;
-                      item.icon = "fa fa-window-maximize";
-                    } else if (permissionType === 3) {
-                      item.treeName = item.uiName;
-                      item.icon = "fa fa-star";
-                    }
-                    if (children && children.length > 0) {
-                      item.icon = "fa fa-folder";
-                      nextLeve.push(...(children as any[]));
-                    }
-                    currentLeve = nextLeve;
-                  });
-                }
-                return { ...other, data: { options: data } };
+                return { ...other, data: { options: getTreeData(data) } };
               },
             },
             creatable: false, editable: false, removable: false,

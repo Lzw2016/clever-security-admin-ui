@@ -21,6 +21,10 @@
     margin: 0;
     max-height: @treeMaxHeight !important;
   }
+
+  :global(.@{form} .icon.icon-file), :global(.@{form} .icon.icon-folder) {
+    display: none;
+  }
 }
 
 .menuTabBody {
@@ -49,6 +53,10 @@
     height: @treeHeight;
     margin: 0;
     max-height: @treeMaxHeight !important;
+  }
+
+  :global(.@{form} .icon.icon-file), :global(.@{form} .icon.icon-folder) {
+    display: none;
   }
 }
 
