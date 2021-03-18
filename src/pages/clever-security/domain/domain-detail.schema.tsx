@@ -750,10 +750,10 @@ const uiTabOperations = {
       level: 'danger',
       size: "xs",
       actionType: "ajax",
-      // api: {
-      //   method: "delete",
-      //   url: `${serverHost}/!/amis-api/curd-page@mockDelete?orderId=$orderId`,
-      // },
+      api: {
+        method: "delete",
+        url: `${apiPath.UiPermissionController.delUiPermission}?id=$id`,
+      },
       confirmText: "确定删除页面UI权限: ${uiName}?",
     };
   },

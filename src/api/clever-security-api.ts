@@ -46,6 +46,7 @@ const apiPath = {
     findUiByMenu: `${serverHost}/security/admin/api/ui_permission/find_ui_by_menu`,
     addUiPermission: `${serverHost}/security/admin/api/ui_permission/add`,
     updateUiPermission: `${serverHost}/security/admin/api/ui_permission/update`,
+    delUiPermission: `${serverHost}/security/admin/api/ui_permission/del`,
     pageQuery: `${serverHost}/security/admin/api/ui_permission/page_query`,
   },
 
