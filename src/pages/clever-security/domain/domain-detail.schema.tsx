@@ -93,13 +93,16 @@ function getTreeData(data: any[]): any[] {
       const { children, permissionType } = item;
       if (permissionType === 2) {
         item.treeName = item.name;
-        item.icon = "fa fa-window-maximize";
+        if(children && children.length > 0 && children[0].permissionType === 2) {
+          item.icon = "fa fa-folder";
+        } else {
+          item.icon = "fa fa-window-maximize";
+        }
       } else if (permissionType === 3) {
         item.treeName = item.uiName;
         item.icon = "fa fa-star";
       }
       if (children && children.length > 0) {
-        item.icon = "fa fa-folder";
         nextLeve.push(...(children as any[]));
       }
       currentLeve = nextLeve;
@@ -1077,7 +1080,7 @@ function uiTab() {
             method: "get",
             url: apiPath.UiPermissionController.findUiByMenu,
             data: { domainId: "$location.query.domainId", menuId: "${selectedMenu.id}" },
-            sendOn: "this.selectedMenu && this.selectedMenu.id",
+            sendOn: "this.selectedMenu && this.selectedMenu.id && this.selectedMenu.children.length<=0",
             adaptor: (payload: any) => {
               const { data, ...other } = payload;
               return { ...other, data: { rows: data, count: data.length } };
@@ -1107,7 +1110,7 @@ function uiTab() {
               type: 'button',
               level: 'primary',
               size: "sm", ...uiTabOperations.addUi(),
-              disabledOn: "!this.__super || !this.__super.__super || !this.__super.__super.selectedMenu"
+              disabledOn: "!this.__super || !this.__super.__super || !this.__super.__super.selectedMenu || this.__super.__super.selectedMenu.children.length>0"
             },
           ],
           extProps: {
