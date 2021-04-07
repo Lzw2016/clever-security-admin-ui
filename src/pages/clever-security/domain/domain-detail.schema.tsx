@@ -24,7 +24,7 @@ const shouldPageUpdate: AmisPage["shouldPageUpdate"] = nextGlobalData => {
 }
 
 /** 获取多标签页显示页签名 */
-const getTabTitle: AmisPage["getTabTitle"] = (defaultName, currentMenu, location, match) => {
+const getTabTitle: AmisPage["getTabTitle"] = (defaultName, currentMenu, location) => {
   if (location.query?.name) return `${defaultName}-${location.query.name}`;
   return defaultName;
 }
@@ -90,10 +90,10 @@ function getTreeData(data: any[]): any[] {
   while (currentLeve && currentLeve.length > 0) {
     nextLeve = [];
     currentLeve.forEach(item => {
-      const { children, permissionType } = item;
+      const { children, permissionType, pagePath } = item;
       if (permissionType === 2) {
         item.treeName = item.name;
-        if (children && children.length > 0 && children[0].permissionType === 2) {
+        if (!pagePath || pagePath.trim().length <= 0) {
           item.icon = "fa fa-folder";
         } else {
           item.icon = "fa fa-window-maximize";
@@ -1110,7 +1110,7 @@ function uiTab() {
               type: 'button',
               level: 'primary',
               size: "sm", ...uiTabOperations.addUi(),
-              disabledOn: "!this.__super || !this.__super.__super || !this.__super.__super.selectedMenu || this.__super.__super.selectedMenu.children.length>0"
+              disabledOn: "!this.__super || !this.__super.__super || !this.__super.__super.selectedMenu || !this.__super.__super.selectedMenu.pagePath"
             },
           ],
           extProps: {

@@ -1783,10 +1783,10 @@ alphanum-sort@^1.0.0:
   resolved "https://registry.npm.taobao.org/alphanum-sort/download/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
   integrity sha1-l6ERlkmyEa0zaR2fn0hqjsn74KM=
 
-amis@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.npm.taobao.org/amis/download/amis-1.1.4.tgz?cache=0&sync_timestamp=1612520984468&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Famis%2Fdownload%2Famis-1.1.4.tgz#27261ba572ff926ad94a5ed7df94531f598b05d3"
-  integrity sha1-JyYbpXL/kmrZSl7X35RTH1mLBdM=
+amis@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.npm.taobao.org/amis/download/amis-1.1.5.tgz#d0a14cb67b656b2bdc76cebdc455ff494f45b043"
+  integrity sha1-0KFMtntlayvcds69xFX/SU9FsEM=
   dependencies:
     ansi-to-react "^6.1.4"
     async "2.6.0"
@@ -1812,7 +1812,7 @@ amis@^1.1.4:
     mobx-react "^6.1.4"
     mobx-state-tree "^3.7.0"
     moment "^2.19.3"
-    monaco-editor "0.21.2"
+    monaco-editor "0.23.0"
     papaparse "^5.3.0"
     prop-types "^15.6.1"
     qrcode.react "^0.8.0"
@@ -1833,7 +1833,7 @@ amis@^1.1.4:
     setimmediate "1.0.5"
     sortablejs "1.10.0"
     tinymce "5.6.2"
-    tslib "^1.10.0"
+    tslib "^2.1.0"
     uncontrollable "7.0.2"
     video-react "0.14.1"
 
@@ -6269,10 +6269,10 @@ moment@^2.19.3, moment@^2.24.0, moment@^2.25.3:
   resolved "https://registry.npm.taobao.org/moment/download/moment-2.29.1.tgz?cache=0&sync_timestamp=1601983320283&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fmoment%2Fdownload%2Fmoment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
   integrity sha1-sr52n6MZQL6e7qZGnAdeNQBvo9M=
 
-monaco-editor@0.21.2:
-  version "0.21.2"
-  resolved "https://registry.npm.taobao.org/monaco-editor/download/monaco-editor-0.21.2.tgz#37054e63e480d51a2dd17d609dcfb192304d5605"
-  integrity sha1-NwVOY+SA1Rot0X1gnc+xkjBNVgU=
+monaco-editor@0.23.0:
+  version "0.23.0"
+  resolved "https://registry.npm.taobao.org/monaco-editor/download/monaco-editor-0.23.0.tgz#24844ba5640c7adb3a2a3ff3b520cf2d7170a6f0"
+  integrity sha1-JIRLpWQMets6Kj/ztSDPLXFwpvA=
 
 move-concurrently@^1.0.1:
   version "1.0.1"
@@ -9706,6 +9706,11 @@ tslib@^2.0.1, tslib@^2.0.3:
   version "2.0.3"
   resolved "https://registry.npm.taobao.org/tslib/download/tslib-2.0.3.tgz?cache=0&sync_timestamp=1602286603545&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ftslib%2Fdownload%2Ftslib-2.0.3.tgz#8e0741ac45fc0c226e58a17bfc3e64b9bc6ca61c"
   integrity sha1-jgdBrEX8DCJuWKF7/D5kubxsphw=
+
+tslib@^2.1.0:
+  version "2.2.0"
+  resolved "https://registry.npm.taobao.org/tslib/download/tslib-2.2.0.tgz?cache=0&sync_timestamp=1617648005378&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ftslib%2Fdownload%2Ftslib-2.2.0.tgz#fb2c475977e35e241311ede2693cee1ec6698f5c"
+  integrity sha1-+yxHWXfjXiQTEe3iaTzuHsZpj1w=
 
 tty-browserify@0.0.0:
   version "0.0.0"
