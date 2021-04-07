@@ -1125,8 +1125,47 @@ function uiTab() {
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------- API绑定
 
-// const apiBindTabOperations = {
-// };
+const apiBindTabOperations = {
+  addBindApi: () => {
+    return {
+      label: "关联API",
+      className: "mr-1",
+      icon: "fa fa-plus",
+      actionType: "dialog",
+      dialog: {
+        title: "新增页面UI权限",
+        // body: {
+        //   type: "form",
+        //   className: classnames(FormClassName.flex_label6x),
+        //   api: {
+        //     method: "post",
+        //     url: apiPath.UiPermissionController.addUiPermission,
+        //     requestAdaptor: (api: any) => {
+        //       if (api.body && api.data) api.data.menuId = api.body.__super?.__super?.__super?.__super?.__super?.selectedMenu?.id;
+        //       return api;
+        //     },
+        //   },
+        //   trimValues: true,
+        //   // debug: true,
+        //   controls: [
+        //     {
+        //       type: "text", name: "uiName", label: "UI权限名称", placeholder: "请输入UI权限名称",
+        //       required: true, validations: { minLength: 4, maxLength: 100 }, validationErrors: {},
+        //     },
+        //     {
+        //       type: "radios", name: "enabled", label: "是否启用", placeholder: "是否启用", labelClassName: styles.addMenuLabel, required: true,
+        //       options: permission.enabled, columnsCount: permission.enabled.length, inputClassName: "w-40", value: "1",
+        //     },
+        //     {
+        //       type: "textarea", name: "description", label: "说明", placeholder: "请输入", minRows: 3, maxRows: 6,
+        //       validations: { maxLength: 500 }, validationErrors: {},
+        //     },
+        //   ],
+        // }
+      }
+    };
+  }
+};
 
 function apiBindTab() {
   return {
@@ -1163,6 +1202,50 @@ function apiBindTab() {
       body: [
         { type: "tpl", tpl: "<h3>绑定的API列表</h3>" },
         { type: "divider" },
+        crudTemplate({
+          api: {
+            // method: "get",
+            // url: apiPath.UiPermissionController.findUiByMenu,
+            // data: { domainId: "$location.query.domainId", menuId: "${selectedMenu.id}" },
+            // sendOn: "this.selectedMenu && this.selectedMenu.id",
+            // adaptor: (payload: any) => {
+            //   const { data, ...other } = payload;
+            //   return { ...other, data: { rows: data, count: data.length } };
+            // },
+          },
+          filter: undefined,
+          primaryField: "id",
+          columns: [
+            { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= this.index + 1 %>" },
+            { name: "uiName", label: "UI权限名称", sortable: false },
+            { name: "strFlag", label: "权限字符串", sortable: false },
+            { name: "enabled", label: "启用授权", width: 50, type: "mapping", map: enum2object(permission.enabled), sortable: false },
+            { name: "description", label: "说明", sortable: false },
+            { name: "createAt", label: "创建时间", width: 120, sortable: false },
+            { name: "updateAt", label: "更新时间", width: 120, sortable: false },
+            // {
+            //   type: "operation", label: "操作", width: 120,
+            //   buttons: [uiTabOperations.uiDetails(), uiTabOperations.updateUi(), uiTabOperations.delUi()]
+            // },
+          ],
+          bulkActions: [
+            // { align: "left", type: 'button', level: 'danger', size: "sm", ...uiTabOperations.batchDelUi() },
+          ],
+          headerToolbar: [
+            {
+              align: "left",
+              type: 'button',
+              level: 'primary',
+              size: "sm", ...apiBindTabOperations.addBindApi(),
+              disabledOn: "!this.__super || !this.__super.__super || !this.__super.__super.selectedMenu" +
+                " || (!this.__super.__super.selectedMenu.pagePath && this.__super.__super.selectedMenu.permissionType!=3)"
+            },
+          ],
+          extProps: {
+            name: "apiBindDetailForm", loadDataOnce: true, multiple: true, keepItemSelectionOnPageChange: false,
+            footerToolbar: [{ align: "right", type: "statistics" }],
+          },
+        })
       ],
     },
   }
