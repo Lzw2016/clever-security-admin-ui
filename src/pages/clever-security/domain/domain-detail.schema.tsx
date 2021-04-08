@@ -1164,7 +1164,57 @@ const apiBindTabOperations = {
         // }
       }
     };
-  }
+  },
+
+  apiDetails: () => {
+    return {
+      type: "button",
+      label: "查看",
+      level: "info",
+      size: "xs",
+      actionType: "dialog",
+      dialog: {
+        title: "API详情 - ${title}",
+        closeOnEsc: true,
+        actions: [{ type: "button", label: "关闭", level: "primary", actionType: "close" }],
+        body: {
+          type: "form",
+          className: classnames(FormClassName.flex_label5x),
+          controls: [
+            // { name: "uiName", label: "UI名称", type: "static" },
+          ],
+        },
+      },
+    };
+  },
+
+  delBindApi: () => {
+    return {
+      label: "移除",
+      type: "button",
+      level: 'danger',
+      size: "xs",
+      actionType: "ajax",
+      // api: {
+      //   method: "delete",
+      //   url: `${apiPath.UiPermissionController.delUiPermission}?id=$id`,
+      // },
+      confirmText: "确定移除API关联: ${title}?",
+    };
+  },
+
+  batchDelBindApi: () => {
+    return {
+      label: "批量移除",
+      icon: "fa fa-times",
+      actionType: "ajax",
+      // api: {
+      //   method: "delete",
+      //   url: `${serverHost}/!/amis-api/curd-page@mockDelete?orderId=$orderId`,
+      // },
+      confirmText: "确定批量移除选中的API关联?",
+    };
+  },
 };
 
 function apiBindTab() {
@@ -1205,31 +1255,30 @@ function apiBindTab() {
         crudTemplate({
           api: {
             // method: "get",
-            // url: apiPath.UiPermissionController.findUiByMenu,
-            // data: { domainId: "$location.query.domainId", menuId: "${selectedMenu.id}" },
-            // sendOn: "this.selectedMenu && this.selectedMenu.id",
-            // adaptor: (payload: any) => {
-            //   const { data, ...other } = payload;
-            //   return { ...other, data: { rows: data, count: data.length } };
-            // },
+            url: apiPath.ApiPermissionController.findApiByPermission,
+            data: { domainId: "$location.query.domainId", permissionType: "${selectedMenu.permissionType}", id: "${selectedMenu.id}" },
+            sendOn: "this.selectedMenu && this.selectedMenu.id",
+            adaptor: (payload: any) => {
+              const { data, ...other } = payload;
+              return { ...other, data: { rows: data, count: data.length } };
+            },
           },
           filter: undefined,
           primaryField: "id",
           columns: [
             { name: "index", label: "序号", width: 50, type: "tpl", tpl: "<%= this.index + 1 %>" },
-            { name: "uiName", label: "UI权限名称", sortable: false },
-            { name: "strFlag", label: "权限字符串", sortable: false },
-            { name: "enabled", label: "启用授权", width: 50, type: "mapping", map: enum2object(permission.enabled), sortable: false },
-            { name: "description", label: "说明", sortable: false },
+            { name: "title", label: "API标题", sortable: false },
+            { name: "apiPath", label: "API接口地址", sortable: false },
+            { name: "apiExist", label: "是否存在", width: 50, type: "mapping", map: enum2object(apiPermission.apiExist), sortable: false },
             { name: "createAt", label: "创建时间", width: 120, sortable: false },
             { name: "updateAt", label: "更新时间", width: 120, sortable: false },
-            // {
-            //   type: "operation", label: "操作", width: 120,
-            //   buttons: [uiTabOperations.uiDetails(), uiTabOperations.updateUi(), uiTabOperations.delUi()]
-            // },
+            {
+              type: "operation", label: "操作", width: 80,
+              buttons: [apiBindTabOperations.apiDetails(), apiBindTabOperations.delBindApi()]
+            },
           ],
           bulkActions: [
-            // { align: "left", type: 'button', level: 'danger', size: "sm", ...uiTabOperations.batchDelUi() },
+            { align: "left", type: 'button', level: 'danger', size: "sm", ...apiBindTabOperations.batchDelBindApi() },
           ],
           headerToolbar: [
             {

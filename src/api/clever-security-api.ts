@@ -35,6 +35,7 @@ const apiPath = {
   },
 
   ApiPermissionController: {
+    findApiByPermission: `${serverHost}/security/admin/api/api_permission/find_api_by_permission`,
     pageQuery: `${serverHost}/security/admin/api/api_permission/page_query`,
     addApiPermission: `${serverHost}/security/admin/api/api_permission/add`,
     updateApiPermission: `${serverHost}/security/admin/api/api_permission/update`,
