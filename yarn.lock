@@ -1155,23 +1155,22 @@
   dependencies:
     mkdirp "^1.0.4"
 
-"@types/ali-oss@^6.0.7":
-  version "6.0.7"
-  resolved "https://registry.npm.taobao.org/@types/ali-oss/download/@types/ali-oss-6.0.7.tgz#e3cc05f5989f1084ccef2ae1709d9b0bd168c3c0"
-  integrity sha1-48wF9ZifEITM7yrhcJ2bC9Fow8A=
+"@types/ali-oss@^6.0.8":
+  version "6.0.8"
+  resolved "https://registry.npm.taobao.org/@types/ali-oss/download/@types/ali-oss-6.0.8.tgz#55ff45aba7e61e97998109932c1334db7bce9ea6"
+  integrity sha1-Vf9Fq6fmHpeZgQmTLBM023vOnqY=
 
 "@types/anymatch@*":
   version "1.3.1"
   resolved "https://registry.npm.taobao.org/@types/anymatch/download/@types/anymatch-1.3.1.tgz#336badc1beecb9dacc38bea2cf32adf627a8421a"
   integrity sha1-M2utwb7sudrMOL6izzKt9ieoQho=
 
-"@types/autoprefixer@^9.7.2":
-  version "9.7.2"
-  resolved "https://registry.npm.taobao.org/@types/autoprefixer/download/@types/autoprefixer-9.7.2.tgz#64b3251c9675feef5a631b7dd34cfea50a8fdbcc"
-  integrity sha1-ZLMlHJZ1/u9aYxt900z+pQqP28w=
+"@types/autoprefixer@^10.2.0":
+  version "10.2.0"
+  resolved "https://registry.npm.taobao.org/@types/autoprefixer/download/@types/autoprefixer-10.2.0.tgz#cb6cd67f00337607433b17ebf2cee511db957b9e"
+  integrity sha1-y2zWfwAzdgdDOxfr8s7lEduVe54=
   dependencies:
-    "@types/browserslist" "*"
-    postcss "7.x.x"
+    autoprefixer "*"
 
 "@types/base16@^1.0.2":
   version "1.0.2"
@@ -1186,15 +1185,12 @@
     "@types/connect" "*"
     "@types/node" "*"
 
-"@types/browserslist@*":
-  version "4.8.0"
-  resolved "https://registry.npm.taobao.org/@types/browserslist/download/@types/browserslist-4.8.0.tgz#60489aefdf0fcb56c2d8eb65267ff08dad7a526d"
-  integrity sha1-YEia798Py1bC2OtlJn/wja16Um0=
-
-"@types/classnames@^2.2.11":
-  version "2.2.11"
-  resolved "https://registry.npm.taobao.org/@types/classnames/download/@types/classnames-2.2.11.tgz?cache=0&sync_timestamp=1605053119706&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fclassnames%2Fdownload%2F%40types%2Fclassnames-2.2.11.tgz#2521cc86f69d15c5b90664e4829d84566052c1cf"
-  integrity sha1-JSHMhvadFcW5BmTkgp2EVmBSwc8=
+"@types/classnames@^2.3.1":
+  version "2.3.1"
+  resolved "https://registry.nlark.com/@types/classnames/download/@types/classnames-2.3.1.tgz?cache=0&sync_timestamp=1618930121705&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Fclassnames%2Fdownload%2F%40types%2Fclassnames-2.3.1.tgz#3c2467aa0f1a93f1f021e3b9bcf938bd5dfdc0dd"
+  integrity sha1-PCRnqg8ak/HwIeO5vPk4vV39wN0=
+  dependencies:
+    classnames "*"
 
 "@types/connect-history-api-fallback@*":
   version "1.3.3"
@@ -2176,7 +2172,7 @@ autobind-decorator@^1.3.4:
   resolved "https://registry.npm.taobao.org/autobind-decorator/download/autobind-decorator-1.4.3.tgz#4c96ffa77b10622ede24f110f5dbbf56691417d1"
   integrity sha1-TJb/p3sQYi7eJPEQ9du/VmkUF9E=
 
-autoprefixer@^10.2.5:
+autoprefixer@*, autoprefixer@^10.2.5:
   version "10.2.5"
   resolved "https://registry.nlark.com/autoprefixer/download/autoprefixer-10.2.5.tgz?cache=0&sync_timestamp=1618847172960&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fautoprefixer%2Fdownload%2Fautoprefixer-10.2.5.tgz#096a0337dbc96c0873526d7fef5de4428d05382d"
   integrity sha1-CWoDN9vJbAhzUm1/713kQo0FOC0=
@@ -2871,7 +2867,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@2.3.1, classnames@^2.3.1:
+classnames@*, classnames@2.3.1, classnames@^2.3.1:
   version "2.3.1"
   resolved "https://registry.npm.taobao.org/classnames/download/classnames-2.3.1.tgz#dfcfa3891e306ec1dad105d0e88f4417b8535e8e"
   integrity sha1-38+jiR4wbsHa0QXQ6I9EF7hTXo4=
@@ -7708,15 +7704,6 @@ postcss-write-svg@^3.0.1:
     postcss "^5.2.6"
     postcss-value-parser "^3.3.0"
 
-postcss@7.x.x, postcss@^7.0.0, postcss@^7.0.1, postcss@^7.0.14, postcss@^7.0.17, postcss@^7.0.2, postcss@^7.0.27, postcss@^7.0.32, postcss@^7.0.5, postcss@^7.0.6:
-  version "7.0.35"
-  resolved "https://registry.npm.taobao.org/postcss/download/postcss-7.0.35.tgz?cache=0&sync_timestamp=1603498622087&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fpostcss%2Fdownload%2Fpostcss-7.0.35.tgz#d2be00b998f7f211d8a276974079f2e92b970e24"
-  integrity sha1-0r4AuZj38hHYonaXQHny6SuXDiQ=
-  dependencies:
-    chalk "^2.4.2"
-    source-map "^0.6.1"
-    supports-color "^6.1.0"
-
 postcss@>=5.0.2, postcss@^8.1.2:
   version "8.1.4"
   resolved "https://registry.npm.taobao.org/postcss/download/postcss-8.1.4.tgz?cache=0&sync_timestamp=1603498622087&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fpostcss%2Fdownload%2Fpostcss-8.1.4.tgz#356dfef367a70f3d04347f74560c85846e20e4c1"
@@ -7736,6 +7723,15 @@ postcss@^5.2.6:
     js-base64 "^2.1.9"
     source-map "^0.5.6"
     supports-color "^3.2.3"
+
+postcss@^7.0.0, postcss@^7.0.1, postcss@^7.0.14, postcss@^7.0.17, postcss@^7.0.2, postcss@^7.0.27, postcss@^7.0.32, postcss@^7.0.5, postcss@^7.0.6:
+  version "7.0.35"
+  resolved "https://registry.npm.taobao.org/postcss/download/postcss-7.0.35.tgz?cache=0&sync_timestamp=1603498622087&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fpostcss%2Fdownload%2Fpostcss-7.0.35.tgz#d2be00b998f7f211d8a276974079f2e92b970e24"
+  integrity sha1-0r4AuZj38hHYonaXQHny6SuXDiQ=
+  dependencies:
+    chalk "^2.4.2"
+    source-map "^0.6.1"
+    supports-color "^6.1.0"
 
 postcss@^8.2.10, postcss@^8.2.13:
   version "8.2.13"
